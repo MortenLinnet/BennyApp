@@ -15,4 +15,9 @@ public class BennyMain extends AppCompatActivity {
         Toast.makeText(this, "olo", Toast.LENGTH_SHORT).show();
 
     }
+
+    public void lol(){
+
+        
+    }
 }
