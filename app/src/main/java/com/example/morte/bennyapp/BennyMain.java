@@ -12,5 +12,7 @@ public class BennyMain extends AppCompatActivity {
         setContentView(R.layout.activity_benny_main);
 
         Toast.makeText(this, "olo", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "olo", Toast.LENGTH_SHORT).show();
+
     }
 }
