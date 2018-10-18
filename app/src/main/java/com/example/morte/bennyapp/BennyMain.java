@@ -34,6 +34,38 @@ public class BennyMain extends AppCompatActivity {
         TextView playModeText = (TextView) findViewById(R.id.playButton);
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/bennyNormal.ttf");
         playModeText.setTypeface(custom_font);
+
+
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = 1F; //https://developer.android.com/reference/android/view/WindowManager.LayoutParams#screenBrightness 1 er max value
+        getWindow().setAttributes(layout);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);   // disable sleep også i manifest.
+
+        // Ting vi skal have tilladelse til:
+        //Optage Lyd
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
+                    RECORD_AUDIO);
+        }
+        // Tilgå External Storage
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+
+            }
+            else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+
+            }
+
+        }
+        else{
+            // Tænker bare det er her vi initialiserer vores arrays af lyd.  doStuff();
+
+        }
+
     }
 
 
@@ -68,41 +100,14 @@ public class BennyMain extends AppCompatActivity {
                 whatText = 5;
                 break;
         }
-        WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.screenBrightness = 1F; //https://developer.android.com/reference/android/view/WindowManager.LayoutParams#screenBrightness 1 er max value
-        getWindow().setAttributes(layout);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);   // disable sleep også i manifest.
 
-        // Ting vi skal have tilladelse til:
-        //Optage Lyd
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
-                    RECORD_AUDIO);
-        }
-        // Tilgå External Storage
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
-
-            }
-            else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
-
-            }
-
-        }
-        else{
-          // Tænker bare det er her vi initialiserer vores arrays af lyd.  doStuff();
-
-        }
 
     }
 
     public void onClick(View v) {
         if (whatText == 1) {
             //Insert name of the class to be redirected to.
+            Intent i = new Intent(this, BennyEyes.class); startActivity(i);
 
             //Intent i = new Intent(this, .class);
             //startActivity(i);
@@ -117,7 +122,7 @@ public class BennyMain extends AppCompatActivity {
 
         }
 
-
+    }
 
 
 
@@ -130,6 +135,27 @@ public class BennyMain extends AppCompatActivity {
 
         // New activity with options to calibrate, about us and so on.
 
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,  int[] grantResults) {
+        switch (requestCode){
+            case MY_PERMISSION_REQUEST: {
+                if (grantResults.length> 0 && grantResults[0] ==  PackageManager.PERMISSION_GRANTED){
+
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE) ==  PackageManager.PERMISSION_GRANTED) {
+
+
+                        // doStuff();
+                    }
+                } else  {
+                    Toast.makeText(this, "You have to give access", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+            }
+        }
 
     }
 }

@@ -3,6 +3,7 @@ package com.example.morte.bennyapp;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -14,8 +15,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.util.Locale;
+import java.util.Random;
 
 public class BennyEyes extends AppCompatActivity {
 
@@ -60,16 +63,21 @@ public class BennyEyes extends AppCompatActivity {
             }
 
             if (amp > 7){
+
+                PlayBennyHappyOjne();
+
+
+
                 //Button Klodsindtaget = findViewById(R.id.forsjov);
                 //Klodsindtaget.setAlpha(1);
-             //   ImageView lol = findViewById(R.id.ojneview);
-               // lol.setImageResource(R.drawable.venstre1);
+             //   ImageView PlayBennyOjne = findViewById(R.id.ojneview);
+               // PlayBennyOjne.setImageResource(R.drawable.venstre1);
             }
             else {
 
 
-               // ImageView lol = findViewById(R.id.ojneview);
-                //lol.setImageResource(R.drawable.ligeud);
+               // ImageView PlayBennyOjne = findViewById(R.id.ojneview);
+                //PlayBennyOjne.setImageResource(R.drawable.ligeud);
                 // Button Klodsindtaget = findViewById(R.id.forsjov);
                 //Klodsindtaget.setAlpha(0);
             }
@@ -100,8 +108,10 @@ public class BennyEyes extends AppCompatActivity {
     private long TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
 
     private boolean BrickDetected;
-
-
+    private VideoView OjneView;
+    String[] BennyHappyOjneArray;
+    String[] BennyNoFeelingOjneArray;
+    String[] BennyNotPleasedOjneArray;
 
 
     @Override
@@ -114,7 +124,7 @@ SuperRequestTimeTextView = findViewById(R.id.SuperRequestTView);         //Timer
 RequestNotActiveTextView = findViewById(R.id.RequestNotActiveTView);     //Timer
 FeedbackCDTextView = findViewById(R.id.FeedbackTView);                   //Timer
 DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
-
+OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
 
 SuperRequestTimerStart();                                                //Timer
 RequestNotActiveTimerStart();                                            //Timer
@@ -128,6 +138,11 @@ PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
 
+
+
+        InitBennyOjneArray();
+        Toast.makeText(this, "PlayBennyOjne", Toast.LENGTH_SHORT).show();
+
     }
     @Override
     public void onResume() {
@@ -140,16 +155,91 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
             start();
         }
     }
+
     @Override
     public void onStop() {
         super.onStop();
         // Log.i("Noise", "==== onStop ===");
         //Stop noise monitoring
         stop();
+
+    }
+
+    public void InitBennyOjneArray(){
+
+        BennyHappyOjneArray = new String[]{
+
+
+         //Insert Happy Eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang
+
+
+        };
+
+        BennyNoFeelingOjneArray = new String[]{
+
+        //Insert No feeling eyes
+
+        };
+
+        BennyNotPleasedOjneArray = new String[]{
+
+        //Insert Not pleased eyes
+
+
+        };
     }
 
 
 
+    public void LevelOfDifficulty(View view) {
+        Random r = new Random();
+        int n = r.nextInt(100);
+
+        if (n <= 40) //HardTask;
+        {
+           //Play Hard Request.
+        }
+
+        if (n > 40) //EzTask
+        {
+           //Play Ez request.
+        }
+
+
+    }
+
+    public void PlayFeedBack (int i){
+        // modtag sværhedsgraden af request iform af int
+    }
+
+    public void PlayBennyHappyOjne(){
+
+         String PathToBennyEyes = BennyHappyOjneArray[0];
+         Uri uriLang =Uri.parse(PathToBennyEyes);
+         OjneView.setVideoURI(uriLang);
+         OjneView.start();
+
+    }
+
+    public void PlayBennyNoFeelingOjne(){
+
+         String PathToBennyEyes = BennyNoFeelingOjneArray[0];
+         Uri uriLang =Uri.parse(PathToBennyEyes);
+         OjneView.setVideoURI(uriLang);
+         OjneView.start();
+
+    }
+
+    public void PlayBennyNotPleasedOjne(){
+
+         String PathToBennyEyes = BennyNotPleasedOjneArray[0];
+         Uri uriLang =Uri.parse(PathToBennyEyes);
+         OjneView.setVideoURI(uriLang);
+         OjneView.start();
+
+    }
 
     private void start() {
 
