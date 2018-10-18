@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">BennyApp</string>
+    <string name="menu1">Menu One</string>
+    <string name="menu2">Menu Two</string>
+    <string name="menu3">Menu Three</string>
+    <string name="menu4">Menu Four</string>
+    <string name="menu5">Menu Five</string>
+    <string name="menu6">Settings</string>
+    <string name="menu7">Play</string>
+    <string name="playText">Select Mode</string>
+    <string name="animation1">Animation1</string>
+    <string name="animation2">Animation2</string>
+    <string name="animation3">Animation3</string>
+    <string name="animation4">Animation4</string>
+    <string name="animation5">Animation5</string>
+    <string name="animation6">Animation6</string>
 </resources>
