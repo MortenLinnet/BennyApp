@@ -22,6 +22,10 @@ import java.util.Random;
 
 public class BennyEyes extends AppCompatActivity {
 
+
+    public boolean BrickDetected;                             //ARGHGHGHGHGHGGHGHGHGHGH
+   public boolean ReadyForFeedback;
+
     /* constants */
     private static final int POLL_INTERVAL = 300;
 
@@ -64,7 +68,8 @@ public class BennyEyes extends AppCompatActivity {
 
             if (amp > 7){
 
-                PlayBennyHappyOjne();
+                lol();
+
 
 
 
@@ -86,7 +91,9 @@ public class BennyEyes extends AppCompatActivity {
         }
     };
 
-// Super request (Det omkring liggende)
+
+
+    // Super request (Det omkring liggende)
     private static long SuperRequestTid = 40000;
     private TextView SuperRequestTimeTextView;
     private CountDownTimer SuperRequestTidCountdownTimer;
@@ -101,13 +108,13 @@ public class BennyEyes extends AppCompatActivity {
     private long TimeLeftInMillisRequestNotActive = RequestNotActiveTime;
 
 // Feedback
-    private static long FeedbackCooldown = 5000;
+    private static long FeedbackCooldown = 7000;
     private TextView FeedbackCDTextView;
     private CountDownTimer FeedbackCoolDownCountdowntimer;
     private boolean FeedBackCoolDownIsRunning;
     private long TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
 
-    private boolean BrickDetected;
+
     private VideoView OjneView;
     String[] BennyHappyOjneArray;
     String[] BennyNoFeelingOjneArray;
@@ -138,10 +145,10 @@ PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
 
-
+ReadyForFeedback = false;
 
         InitBennyOjneArray();
-        Toast.makeText(this, "PlayBennyOjne", Toast.LENGTH_SHORT).show();
+
 
     }
     @Override
@@ -165,32 +172,18 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
     }
 
-    public void InitBennyOjneArray(){
 
-        BennyHappyOjneArray = new String[]{
+    public void lol() {
 
-
-         //Insert Happy Eyes
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang
-
-
-        };
-
-        BennyNoFeelingOjneArray = new String[]{
-
-        //Insert No feeling eyes
-
-        };
-
-        BennyNotPleasedOjneArray = new String[]{
-
-        //Insert Not pleased eyes
-
-
-        };
+        if (ReadyForFeedback == true){
+            PlayBennyHappyOjne();
+            ReadyForFeedback = false;
+            FeedbackCoolDownCountdowntimer.start();
+        }
+        if (ReadyForFeedback ==false)
+            Toast.makeText(this, "I else", Toast.LENGTH_SHORT).show();
+       // FeedbackCoolDownCountdowntimer.start();
     }
-
 
 
     public void LevelOfDifficulty(View view) {
@@ -200,6 +193,7 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
         if (n <= 40) //HardTask;
         {
            //Play Hard Request.
+
         }
 
         if (n > 40) //EzTask
@@ -212,11 +206,79 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
     public void PlayFeedBack (int i){
         // modtag sværhedsgraden af request iform af int
+        Random r = new Random();
+        int n = r.nextInt(100);
+
+        if (i == 1){                        //Nem Opgave
+
+        if (n <= 33) //HappyFeedBack
+            {
+            //Play Happy Feedback
+            }
+
+        if (n >=34 && n<=63) //NotSoHapppyFeedback
+            {
+            //Play Not so happy feedback
+            }
+
+         if (n >=64) //AngryFeedback
+            {
+            //Play angry Feedback
+            }
+
+
     }
+    if (i==2){                          //Svær opgave
+
+        if (n <= 50) //HappyFeedBack
+        {
+            //Play Happy Feedback
+        }
+
+        if (n<=51) //NotSoHapppyFeedback
+        {
+            //Play Not so happy feedback
+        }
+
+    }
+    }
+
+    public void InitBennyOjneArray(){
+
+        BennyHappyOjneArray = new String[]{
+
+
+                //Insert Happy Eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf
+
+
+
+        };
+
+        BennyNoFeelingOjneArray = new String[]{
+
+                //Insert No feeling eyes
+
+        };
+
+        BennyNotPleasedOjneArray = new String[]{
+
+                //Insert Not pleased eyes
+
+
+        };
+    }      //Arrays til alle Benny's øjne
 
     public void PlayBennyHappyOjne(){
 
-         String PathToBennyEyes = BennyHappyOjneArray[0];
+
+        Random r = new Random();
+        int ArrayLength = BennyHappyOjneArray.length;
+        int nyrandom = r.nextInt((ArrayLength - 0)+1)+0;    //Der er noget galt her. Den går udover det tilltdte
+        Toast.makeText(this, "Nummmeret er " + nyrandom, Toast.LENGTH_SHORT).show();
+         String PathToBennyEyes = BennyHappyOjneArray[nyrandom];
          Uri uriLang =Uri.parse(PathToBennyEyes);
          OjneView.setVideoURI(uriLang);
          OjneView.start();
@@ -312,7 +374,7 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
     }
 
     private void RequestNotActiveTimerStart(){
-        RequestNotActiveCountdownTimer  = new CountDownTimer(RequestNotActiveTime, 1000) {
+        RequestNotActiveCountdownTimer  = new CountDownTimer(TimeLeftInMillisRequestNotActive, 1000) {
 
             @Override
             public void onTick(long millisuntillfinish2) {
@@ -332,8 +394,8 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
         FeedbackCoolDownCountdowntimer = new CountDownTimer(TimeLeftInMillisFeedbackCooldDown, 1000) {
 
             @Override
-            public void onTick(long millisuntillfinish2) {
-                TimeLeftInMillisFeedbackCooldDown = millisuntillfinish2;
+            public void onTick(long millisuntillfinish3) {
+                TimeLeftInMillisFeedbackCooldDown = millisuntillfinish3;
                 UpdateFeedbackCooldownTextView();
             }
 
@@ -357,7 +419,7 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
         if (TimeLeftInMillisSuperRequestTime < 2000){
 
 
-            resettimer();
+            //resettimer();
 
         }
     }
@@ -370,8 +432,11 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
         FeedbackCDTextView.setText(TimeleftFormatted);
 
         if (TimeLeftInMillisFeedbackCooldDown < 2000) {
-           // resettimer();
 
+            ReadyForFeedback = true;
+         //   Toast.makeText(this, "cd", Toast.LENGTH_SHORT).show();
+            FeedbackCoolDownCountdowntimer.cancel();
+           // FeedbackCoolDownCountdowntimer.start();
         }
     }
 
@@ -388,23 +453,27 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
         }
     }
-
+/*
     private void resettimer(){
         TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
         UpdateFeedbackCooldownTextView();
         FeedbackCoolDownCountdowntimer.cancel();
 
 
-
-
     }
-
-    public void Klodsindtaget(View view) {
+*/
+   public void Klodsindtaget(View view) {
        FeedbackTimerTimerStart();
         BrickDetected = true;
 
     }
 
+
+   public void CancelRequestRound(){
+       FeedbackCoolDownCountdowntimer.cancel();
+       RequestNotActiveCountdownTimer.cancel();
+       SuperRequestTidCountdownTimer.cancel();
+   }
 }
 
 
