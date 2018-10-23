@@ -3,6 +3,7 @@ package com.example.morte.bennyapp;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -19,12 +20,13 @@ import android.widget.VideoView;
 
 import java.util.Locale;
 import java.util.Random;
+import java.util.logging.Level;
 
 public class BennyEyes extends AppCompatActivity {
 
-
-    public boolean BrickDetected;                             //ARGHGHGHGHGHGGHGHGHGHGH
+   public boolean BrickDetected;                             //ARGHGHGHGHGHGGHGHGHGHGH
    public boolean ReadyForFeedback;
+   public boolean IsMediaPlayerOccupied;
 
     /* constants */
     private static final int POLL_INTERVAL = 300;
@@ -68,7 +70,7 @@ public class BennyEyes extends AppCompatActivity {
 
             if (amp > 7){
 
-                lol();
+                FeedbackWhenMicrohoneIsTriggered();
 
 
 
@@ -94,7 +96,7 @@ public class BennyEyes extends AppCompatActivity {
 
 
     // Super request (Det omkring liggende)
-    private static long SuperRequestTid = 40000;
+    private static long SuperRequestTid = 10000;
     private TextView SuperRequestTimeTextView;
     private CountDownTimer SuperRequestTidCountdownTimer;
     private boolean SuperRequestTidIsRunning;
@@ -119,7 +121,7 @@ public class BennyEyes extends AppCompatActivity {
     String[] BennyHappyOjneArray;
     String[] BennyNoFeelingOjneArray;
     String[] BennyNotPleasedOjneArray;
-
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +139,7 @@ SuperRequestTimerStart();                                                //Timer
 RequestNotActiveTimerStart();                                            //Timer
 FeedbackTimerTimerStart();                                               //Timer
 
-
+StartRequestRound();
 
  // Used to record Sound
 mSensor = new DetectNoise();
@@ -166,6 +168,10 @@ ReadyForFeedback = false;
     @Override
     public void onStop() {
         super.onStop();
+        FeedbackCoolDownCountdowntimer.cancel();
+        RequestNotActiveCountdownTimer.cancel();
+        SuperRequestTidCountdownTimer.cancel();
+     //   Toast.makeText(this, "", Toast.LENGTH_SHORT).cancel();
         // Log.i("Noise", "==== onStop ===");
         //Stop noise monitoring
         stop();
@@ -173,32 +179,51 @@ ReadyForFeedback = false;
     }
 
 
-    public void lol() {
-
+    public void FeedbackWhenMicrohoneIsTriggered() {
+        findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
         if (ReadyForFeedback == true){
             PlayBennyHappyOjne();
             ReadyForFeedback = false;
             FeedbackCoolDownCountdowntimer.start();
+            RequestNotActiveCountdownTimer.cancel();
+            RequestNotActiveCountdownTimer.start();
+            PlayFeedBack(1);
         }
-        if (ReadyForFeedback ==false)
-            Toast.makeText(this, "I else", Toast.LENGTH_SHORT).show();
+      //  if (ReadyForFeedback == false)
+  //          Toast.makeText(this, "I else", Toast.LENGTH_SHORT).show();
        // FeedbackCoolDownCountdowntimer.start();
     }
 
 
-    public void LevelOfDifficulty(View view) {
+    public void LevelOfRequestDifficulty() {
         Random r = new Random();
         int n = r.nextInt(100);
 
         if (n <= 40) //HardTask;
         {
-           //Play Hard Request.
+            mediaPlayer = MediaPlayer.create(this, R.raw.sultenalleklodser);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mediaPlayer.reset();
+                }
+            });
 
         }
 
         if (n > 40) //EzTask
         {
            //Play Ez request.
+            mediaPlayer = MediaPlayer.create(this, R.raw.sultenblaaklodser);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mediaPlayer.reset();
+                }
+            });
+
         }
 
 
@@ -213,17 +238,41 @@ ReadyForFeedback = false;
 
         if (n <= 33) //HappyFeedBack
             {
-            //Play Happy Feedback
+                mediaPlayer = MediaPlayer.create(this, R.raw.jadenergod);
+                mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.reset();
+                    }
+                });
             }
 
         if (n >=34 && n<=63) //NotSoHapppyFeedback
             {
-            //Play Not so happy feedback
+                mediaPlayer = MediaPlayer.create(this, R.raw.lakkerrt);
+                mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.reset();
+
+
+                    }
+                });
             }
 
          if (n >=64) //AngryFeedback
             {
-            //Play angry Feedback
+                mediaPlayer = MediaPlayer.create(this, R.raw.smagtesjovt);
+                mediaPlayer.start();
+
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.reset();
+                    }
+                });
             }
 
 
@@ -251,8 +300,22 @@ ReadyForFeedback = false;
                 //Insert Happy Eyes
                 "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort,
                 "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf
-
+                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf1,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf2,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf3,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf4,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf5,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort1,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort2,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort3,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort4,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort5,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang1,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang2,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang3,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang4,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang5,
 
 
         };
@@ -276,8 +339,8 @@ ReadyForFeedback = false;
 
         Random r = new Random();
         int ArrayLength = BennyHappyOjneArray.length;
-        int nyrandom = r.nextInt((ArrayLength - 0)+1)+0;    //Der er noget galt her. Den går udover det tilltdte
-        Toast.makeText(this, "Nummmeret er " + nyrandom, Toast.LENGTH_SHORT).show();
+        int nyrandom = r.nextInt(ArrayLength - 0)+0;    //Der er noget galt her. Den går udover det tilltdte   har slettet et +1 og nogle parenteser
+       // Toast.makeText(this, "Nummmeret er " + nyrandom, Toast.LENGTH_SHORT).show();
          String PathToBennyEyes = BennyHappyOjneArray[nyrandom];
          Uri uriLang =Uri.parse(PathToBennyEyes);
          OjneView.setVideoURI(uriLang);
@@ -349,8 +412,8 @@ ReadyForFeedback = false;
 
         //stop();
         // Show alert when noise thersold crossed
-        Toast.makeText(getApplicationContext(), "Noise Thersold Crossed, do here your stuff.",
-                Toast.LENGTH_LONG).show();
+     //   Toast.makeText(getApplicationContext(), "Noise Thersold Crossed, do here your stuff.",
+       //         Toast.LENGTH_LONG).show();
         Log.d("SONUND", String.valueOf(signalEMA));
         DecibelTextView.setText(signalEMA+"dB");
     }
@@ -367,6 +430,15 @@ ReadyForFeedback = false;
 
             @Override
             public void onFinish() {
+               if (!mediaPlayer.isPlaying()){
+
+                   StartRequestRound();
+               }
+               else {
+                   Toast.makeText(BennyEyes.this, "Issuses", Toast.LENGTH_SHORT).show();
+
+
+               }
                 SuperRequestTidIsRunning = false;
             }
         }.start();
@@ -385,6 +457,7 @@ ReadyForFeedback = false;
             @Override
             public void onFinish() {
                 RequestNotActiveeIsRunning = false;
+                StartRequestRound();
             }
         }.start();
         RequestNotActiveeIsRunning = true;
@@ -446,12 +519,7 @@ ReadyForFeedback = false;
 
         String TimeleftFormatted = String.format(Locale.getDefault(),"%02d:%02d", min, secs);
         RequestNotActiveTextView.setText(TimeleftFormatted);
-        if (BrickDetected == true){
-            RequestNotActiveCountdownTimer.cancel();    // Super gay måde at løse problemet med at nulstille tiden men det virker, beklager fremtidige Morten.
-            RequestNotActiveTimerStart();
-            BrickDetected = false;
 
-        }
     }
 /*
     private void resettimer(){
@@ -469,10 +537,17 @@ ReadyForFeedback = false;
     }
 
 
-   public void CancelRequestRound(){
+   public void StartRequestRound(){
+       Toast.makeText(this, "New Round", Toast.LENGTH_SHORT).show();
        FeedbackCoolDownCountdowntimer.cancel();
        RequestNotActiveCountdownTimer.cancel();
        SuperRequestTidCountdownTimer.cancel();
+       LevelOfRequestDifficulty();
+       FeedbackCoolDownCountdowntimer.start();
+       RequestNotActiveCountdownTimer.start();
+       SuperRequestTidCountdownTimer.start();
+
+
    }
 }
 
