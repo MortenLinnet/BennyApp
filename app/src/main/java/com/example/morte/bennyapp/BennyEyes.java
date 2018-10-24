@@ -24,7 +24,10 @@ public class BennyEyes extends AppCompatActivity {
 
 
     public boolean BrickDetected;                             //ARGHGHGHGHGHGGHGHGHGHGH
-   public boolean ReadyForFeedback;
+    public boolean ReadyForFeedback;
+    private double ampTilTest; //NILAN
+    private static double PrevAmp = 0;
+
 
     /* constants */
     private static final int POLL_INTERVAL = 300;
@@ -57,6 +60,7 @@ public class BennyEyes extends AppCompatActivity {
 
         public void run() {
             double amp = mSensor.getAmplitude();
+            ampTilTest = amp; //NILAN
             //Log.i("Noise", "runnable mPollTask");
 
             updateDisplay("Listening for bricks....", amp);
@@ -96,6 +100,7 @@ public class BennyEyes extends AppCompatActivity {
     // Super request (Det omkring liggende)
     private static long SuperRequestTid = 40000;
     private TextView SuperRequestTimeTextView;
+    private TextView HighestValue; //NILAN
     private CountDownTimer SuperRequestTidCountdownTimer;
     private boolean SuperRequestTidIsRunning;
     private long TimeLeftInMillisSuperRequestTime = SuperRequestTid;
@@ -132,6 +137,7 @@ RequestNotActiveTextView = findViewById(R.id.RequestNotActiveTView);     //Timer
 FeedbackCDTextView = findViewById(R.id.FeedbackTView);                   //Timer
 DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
 OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
+HighestValue = (TextView) findViewById(R.id.highestTextView);            //NILAN Test, fjern senere
 
 SuperRequestTimerStart();                                                //Timer
 RequestNotActiveTimerStart();                                            //Timer
@@ -279,7 +285,7 @@ ReadyForFeedback = false;
         int nyrandom = r.nextInt((ArrayLength - 0)+1)+0;    //Der er noget galt her. Den går udover det tilltdte
         Toast.makeText(this, "Nummmeret er " + nyrandom, Toast.LENGTH_SHORT).show();
          String PathToBennyEyes = BennyHappyOjneArray[nyrandom];
-         Uri uriLang =Uri.parse(PathToBennyEyes);
+         Uri uriLang = Uri.parse(PathToBennyEyes);
          OjneView.setVideoURI(uriLang);
          OjneView.start();
 
@@ -343,6 +349,7 @@ ReadyForFeedback = false;
        
         Log.d("SONUND", String.valueOf(signalEMA));
         DecibelTextView.setText(signalEMA+"dB");
+        Highest(); //NILAN
     }
 
     private void callForHelp(double signalEMA) {
@@ -473,6 +480,14 @@ ReadyForFeedback = false;
        FeedbackCoolDownCountdowntimer.cancel();
        RequestNotActiveCountdownTimer.cancel();
        SuperRequestTidCountdownTimer.cancel();
+   }
+
+   public void Highest () { //NILAN
+       if (ampTilTest > 7 && ampTilTest > PrevAmp) {
+           PrevAmp = ampTilTest;
+           String InString = String.valueOf(PrevAmp);
+           HighestValue.setText(InString);
+       }
    }
 }
 
