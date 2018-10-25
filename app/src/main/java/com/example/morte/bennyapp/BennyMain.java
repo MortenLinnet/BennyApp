@@ -3,7 +3,6 @@ package com.example.morte.bennyapp;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,13 +13,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 public class BennyMain extends AppCompatActivity {
-    public static int whatText;
-    public static int previousEffect;
+    public static int whatText; //Bruges til at finde ud af teksten på playButton-knappen
+    public static int previousEffect; //Skal måske bruges til animationer
 
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
@@ -74,24 +72,22 @@ public class BennyMain extends AppCompatActivity {
         Button playB = (Button) findViewById(R.id.playButton);
         switch (clickedButton.getId()) {
             case R.id.imageButton1:
-
-                playB.setText("Let's Play Nurse!");
+                playB.setText("@strings/nurse");
                 whatText = 1;
                 break;
 
             case R.id.imageButton2:
-
-                playB.setText("Let's Play Hero!");
+                playB.setText("@strings/hero");
                 whatText = 2;
                 break;
 
             case R.id.imageButton3:
-                playB.setText("Let's Play Cowboy!");
+                playB.setText("@strings/cowboy!");
                 whatText = 3;
                 break;
 
             case R.id.imageButton4:
-                playB.setText("Let's Play Cactus!");
+                playB.setText("@strings/cactus!");
                 whatText = 4;
                 break;
 
@@ -113,6 +109,8 @@ public class BennyMain extends AppCompatActivity {
             //startActivity(i);
 
         } else if (whatText == 2) {
+            Intent i = new Intent(this, NilanTestActivity.class); startActivity(i);
+
 
         } else if (whatText == 3) {
 
@@ -121,22 +119,9 @@ public class BennyMain extends AppCompatActivity {
         } else if (whatText == 5) {
 
         }
-
     }
 
 
-
-
-    public void GoToBennyEyes(View view) {
-        Intent i = new Intent(this, BennyEyes.class); startActivity(i);
-    }
-
-    public void Settings(View view) {
-
-        // New activity with options to calibrate, about us and so on.
-
-
-    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,  int[] grantResults) {
         switch (requestCode){
@@ -158,4 +143,20 @@ public class BennyMain extends AppCompatActivity {
         }
 
     }
+
+    private void permissionForExcelExport (String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+
+                // If user has denied access, then it asks again
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            }
+        }
+        else {
+            Toast.makeText(this, permission + " is already granted.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
