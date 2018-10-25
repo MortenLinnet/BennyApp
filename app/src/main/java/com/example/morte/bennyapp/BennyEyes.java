@@ -2,6 +2,7 @@ package com.example.morte.bennyapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,8 +53,8 @@ public class BennyEyes extends AppCompatActivity {
         public void run() {
             //Log.i("Noise", "runnable mSleepTask");
             mSensor.start();
-        }
-    };
+             }
+             };
 
     // Create runnable thread to Monitor Voice
     private Runnable mPollTask = new Runnable() {
@@ -69,34 +71,20 @@ public class BennyEyes extends AppCompatActivity {
             }
 
             if (amp > 7){
-
                 FeedbackWhenMicrohoneIsTriggered();
-
-
-
-
-                //Button Klodsindtaget = findViewById(R.id.forsjov);
-                //Klodsindtaget.setAlpha(1);
-             //   ImageView PlayBennyOjne = findViewById(R.id.ojneview);
-               // PlayBennyOjne.setImageResource(R.drawable.venstre1);
             }
             else {
 
-
-               // ImageView PlayBennyOjne = findViewById(R.id.ojneview);
-                //PlayBennyOjne.setImageResource(R.drawable.ligeud);
-                // Button Klodsindtaget = findViewById(R.id.forsjov);
-                //Klodsindtaget.setAlpha(0);
             }
             // Runnable(mPollTask) will again execute after POLL_INTERVAL
             mHandler.postDelayed(mPollTask, POLL_INTERVAL);
-        }
-    };
+             }
+             };
 
 
 
     // Super request (Det omkring liggende)
-    private static long SuperRequestTid = 10000;
+    private static long SuperRequestTid = 20000;
     private TextView SuperRequestTimeTextView;
     private CountDownTimer SuperRequestTidCountdownTimer;
     private boolean SuperRequestTidIsRunning;
@@ -122,11 +110,33 @@ public class BennyEyes extends AppCompatActivity {
     String[] BennyNoFeelingOjneArray;
     String[] BennyNotPleasedOjneArray;
     MediaPlayer mediaPlayer;
+    Integer Language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_benny_eyes);
+
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = 1F; //https://developer.android.com/reference/android/view/WindowManager.LayoutParams#screenBrightness 1 er max value
+        getWindow().setAttributes(layout);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
+        try {
+            Language= 0;
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            Integer lol = bundle.getInt("Language");
+            Language = lol;
+            Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
+            }
+        catch (NullPointerException e){
+            Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
+            }
+
+SetLanguage(Language);
+
 
 
 SuperRequestTimeTextView = findViewById(R.id.SuperRequestTView);         //Timer
@@ -148,11 +158,11 @@ mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
 
 ReadyForFeedback = false;
-
-        InitBennyOjneArray();
+InitBennyOjneArray();
 
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -178,7 +188,6 @@ ReadyForFeedback = false;
 
     }
 
-
     public void FeedbackWhenMicrohoneIsTriggered() {
         findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
         if (ReadyForFeedback == true){
@@ -193,7 +202,6 @@ ReadyForFeedback = false;
   //          Toast.makeText(this, "I else", Toast.LENGTH_SHORT).show();
        // FeedbackCoolDownCountdowntimer.start();
     }
-
 
     public void LevelOfRequestDifficulty() {
         Random r = new Random();
@@ -435,8 +443,13 @@ ReadyForFeedback = false;
                    StartRequestRound();
                }
                else {
-                   Toast.makeText(BennyEyes.this, "Issuses", Toast.LENGTH_SHORT).show();
+                   while (mediaPlayer.isPlaying()){    //Sørger for at den ikke giver ny request mens der er feedback
 
+
+                   }
+
+                   Toast.makeText(BennyEyes.this, "Issuses", Toast.LENGTH_SHORT).show();
+                   StartRequestRound();
 
                }
                 SuperRequestTidIsRunning = false;
@@ -521,23 +534,8 @@ ReadyForFeedback = false;
         RequestNotActiveTextView.setText(TimeleftFormatted);
 
     }
-/*
-    private void resettimer(){
-        TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
-        UpdateFeedbackCooldownTextView();
-        FeedbackCoolDownCountdowntimer.cancel();
 
-
-    }
-*/
-   public void Klodsindtaget(View view) {
-       FeedbackTimerTimerStart();
-        BrickDetected = true;
-
-    }
-
-
-   public void StartRequestRound(){
+    public void StartRequestRound(){
        Toast.makeText(this, "New Round", Toast.LENGTH_SHORT).show();
        FeedbackCoolDownCountdowntimer.cancel();
        RequestNotActiveCountdownTimer.cancel();
@@ -547,6 +545,17 @@ ReadyForFeedback = false;
        RequestNotActiveCountdownTimer.start();
        SuperRequestTidCountdownTimer.start();
 
+
+   }
+
+    public void SetLanguage(Integer WhatLanguage){
+TextView LagnuageText = findViewById(R.id.LanguageTextView);
+       if (WhatLanguage == 1){
+           LagnuageText.setText("American");
+       }
+       if (WhatLanguage == 2){
+           LagnuageText.setText("Dansk");
+       }
 
    }
 }

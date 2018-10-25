@@ -1,6 +1,7 @@
 package com.example.morte.bennyapp;
 
 import android.content.Intent;
+import android.graphics.ImageFormat;
 import android.graphics.Typeface;
 import android.Manifest;
 import android.content.Intent;
@@ -21,6 +22,15 @@ import android.widget.Toast;
 public class BennyMain extends AppCompatActivity {
     public static int whatText;
     public static int previousEffect;
+    public Integer Language;
+    String Nurse;
+    String Hero;
+    String Cowboy;
+    String Cactus;
+    String Pirate;
+    String Settings;
+    String LetsPlay;
+    String SelectMode;
 
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
@@ -35,6 +45,26 @@ public class BennyMain extends AppCompatActivity {
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/bennyNormal.ttf");
         playModeText.setTypeface(custom_font);
 
+
+
+
+try {
+    Language= 1;
+    Intent intent = getIntent();
+    Bundle bundle = intent.getExtras();
+    Integer languageIdentifyer = bundle.getInt("Language");
+    Language = languageIdentifyer;
+
+
+    Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
+
+}
+catch (NullPointerException e){
+    Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
+}
+
+
+SetStrings(Language);
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = 1F; //https://developer.android.com/reference/android/view/WindowManager.LayoutParams#screenBrightness 1 er max value
@@ -68,35 +98,58 @@ public class BennyMain extends AppCompatActivity {
 
     }
 
+public void SetStrings(Integer lang){
+    if (lang== 1){
+         Nurse = "Nurse";
+         Hero = "Hero";
+         Cowboy = "Cowboy";
+         Cactus = "Cactus";
+         Pirate = "Pirate";
+         Settings = "Settings";
+         LetsPlay = "Let us play ";
+         SelectMode = "Select Mode";
 
+    }
+    if ( lang==2){
+        Nurse = "Sygeplejerske";
+        Hero = "Helt";
+        Cowboy = "Kodreng";
+        Cactus = "Kaktus";
+        Pirate = "Pirat";
+        Settings = "Indstillinger";
+        LetsPlay = "Lad os lege";
+        SelectMode = "Vælg mode";
+
+    }
+}
     public void viewMessage(View view) {
         ImageButton clickedButton = (ImageButton) view;
         Button playB = (Button) findViewById(R.id.playButton);
         switch (clickedButton.getId()) {
             case R.id.imageButton1:
 
-                playB.setText("Let's Play Nurse!");
+                playB.setText(LetsPlay + " " + Nurse);
                 whatText = 1;
                 break;
 
             case R.id.imageButton2:
 
-                playB.setText("Let's Play Hero!");
+                playB.setText(LetsPlay + " " + Hero);
                 whatText = 2;
                 break;
 
             case R.id.imageButton3:
-                playB.setText("Let's Play Cowboy!");
+                playB.setText(LetsPlay + " " + Cowboy);
                 whatText = 3;
                 break;
 
             case R.id.imageButton4:
-                playB.setText("Let's Play Cactus!");
+                playB.setText(LetsPlay + " " + Cactus);
                 whatText = 4;
                 break;
 
             case R.id.imageButton5:
-                playB.setText("Let's Play Pirate!");
+                playB.setText(LetsPlay + " " + Pirate);
                 whatText = 5;
                 break;
         }
@@ -107,7 +160,13 @@ public class BennyMain extends AppCompatActivity {
     public void onClick(View v) {
         if (whatText == 1) {
             //Insert name of the class to be redirected to.
-            Intent i = new Intent(this, BennyEyes.class); startActivity(i);
+
+            Bundle bundle = new Bundle();
+            Integer language = Language;
+            bundle.putInt("Language", language);
+            Intent i = new Intent(this, BennyEyes.class);
+            i.putExtras(bundle);
+            startActivity(i);
 
             //Intent i = new Intent(this, .class);
             //startActivity(i);
@@ -127,14 +186,12 @@ public class BennyMain extends AppCompatActivity {
 
 
 
-    public void GoToBennyEyes(View view) {
-        Intent i = new Intent(this, BennyEyes.class); startActivity(i);
-    }
+
 
     public void Settings(View view) {
 
         // New activity with options to calibrate, about us and so on.
-
+        Intent i = new Intent(this, Settings.class); startActivity(i);
 
     }
     @Override
