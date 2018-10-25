@@ -1,25 +1,33 @@
 package com.example.morte.bennyapp;
 
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Constraints;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class SizeOfEyes extends AppCompatActivity {
 
     private static SeekBar seek_bar;
+    private static TextView textView;
     private ImageView Eye_view;
-    Integer SeekBarValue;
+    private static Integer SeekBarValue;
+    private int lol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_size_of_eyes);
 
-
+seekbar();
     }
 
     /*@Override
@@ -30,35 +38,40 @@ public class SizeOfEyes extends AppCompatActivity {
     public void seekbar(){
         seek_bar = findViewById(R.id.seekBar);
         Eye_view = findViewById(R.id.SizeofEyesView);
+        textView = findViewById(R.id.Sizeofeyestextview);
+final int WidthOfWindow = Eye_view.getLayoutParams().width;
+final int HeightOfWindow = Eye_view.getLayoutParams().height;
+
+        textView.setText("Covered : " + seek_bar.getProgress() + " / "+ seek_bar.getMax());
 
         seek_bar.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                       /* SeekBarValue = progress;
+                        SeekBarValue = progress;
 
-                        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,  (Eye_view.getLayoutParams().height * (progress/100)), getResources().getDisplayMetrics());
-                        int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,  (Eye_view.getLayoutParams().width * (progress/100)), getResources().getDisplayMetrics());
+                       int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,  (Eye_view.getLayoutParams().height * (SeekBarValue/100)), getResources().getDisplayMetrics());
+                       int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,  (Eye_view.getLayoutParams().width * (SeekBarValue/100)), getResources().getDisplayMetrics());
 
 
-                        Eye_view.getLayoutParams().height = height;
-                        Eye_view.getLayoutParams().width = width;
+                        Eye_view.getLayoutParams().height = (HeightOfWindow * (SeekBarValue * (-30)));
+                        Eye_view.getLayoutParams().width =  (WidthOfWindow * (SeekBarValue * (-30)));
                         Eye_view.requestLayout();
-*/
+                        textView.setText("Covered : " + SeekBarValue + " / "+ seek_bar.getMax());
+                        Toast.makeText(SizeOfEyes.this, "værdi er" + lol, Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
                     public void onStartTrackingTouch(SeekBar seekBar) {
-                        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
-                        int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getResources().getDisplayMetrics());
-                        Eye_view.getLayoutParams().height = height;
-                        Eye_view.getLayoutParams().width = width;
-                        Eye_view.requestLayout();
+
+
+
                     }
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-
+                        textView.setText("Covered : " + SeekBarValue + " / "+ seek_bar.getMax());
 
                     }
 
