@@ -172,6 +172,8 @@ public void SetStrings(Integer lang){
             //startActivity(i);
 
         } else if (whatText == 2) {
+            Intent i = new Intent(this, LoggingData.class);
+            startActivity(i);
 
         } else if (whatText == 3) {
 
@@ -214,5 +216,20 @@ public void SetStrings(Integer lang){
             }
         }
 
+    }
+
+    public void permissionForExcelExport (String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+
+                // If user has denied access, then it asks again
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            }
+        }
+        else {
+            Toast.makeText(this, permission + " is already granted.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

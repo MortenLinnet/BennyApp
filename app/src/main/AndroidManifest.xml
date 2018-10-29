@@ -26,9 +26,10 @@
             android:name=".BennyEyes"
             android:screenOrientation="landscape" />
         <activity android:name=".Settings" />
-        <activity android:name=".SizeOfEyes"
-            android:screenOrientation="landscape"
-            ></activity>
+        <activity
+            android:name=".SizeOfEyes"
+            android:screenOrientation="landscape" />
+        <activity android:name=".LoggingData" />
     </application>
 
 </manifest>
