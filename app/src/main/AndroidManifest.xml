@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     // Permission to use mic
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    // Permission to acces local phone storage
+    // Permission to access local phone storage
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    // Permission to access write
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     // disable sleep
     <application
@@ -18,7 +20,6 @@
         <activity android:name=".BennyMain">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -31,5 +32,4 @@
             android:screenOrientation="landscape" />
         <activity android:name=".LoggingData" />
     </application>
-
 </manifest>

@@ -14,13 +14,13 @@
         android:background="@drawable/gradient"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8">
+        android:layout_weight="9">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2.5"
             android:layout_gravity="center">
 
             <ImageButton
@@ -28,7 +28,7 @@
                 android:id="@+id/imageButton1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.25"
                 android:layout_gravity="center"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
@@ -43,7 +43,7 @@
                 android:id="@+id/imageButton2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.25"
                 android:layout_gravity="center"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
@@ -58,7 +58,31 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.25"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/nurseText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="NURSE"
+                android:layout_weight="0.25"/>
+
+            <TextView
+                android:id="@+id/heroText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="HERO"
+                android:layout_weight="0.25"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
             android:layout_gravity="center">
 
             <ImageButton
@@ -66,7 +90,7 @@
                 android:id="@+id/imageButton3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.25"
                 android:layout_gravity="center"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
@@ -81,7 +105,7 @@
                 android:id="@+id/imageButton4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.25"
                 android:layout_gravity="center"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
@@ -96,7 +120,31 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.25"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/cowboyText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="COWBOY"
+                android:layout_weight="0.25"/>
+
+            <TextView
+                android:id="@+id/cactusText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="CACTUS"
+                android:layout_weight="0.25"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
             android:layout_gravity="center">
 
             <ImageButton
@@ -104,7 +152,7 @@
                 android:id="@+id/imageButton5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.25"
                 android:layout_gravity="center"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
@@ -119,7 +167,7 @@
                 android:id="@+id/settingsOption"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.25"
                 android:layout_gravity="center"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
@@ -128,6 +176,30 @@
                 android:background="@null"
                 app:srcCompat="@drawable/m6"
                 />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/pirateText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="PIRATE"
+                android:layout_weight="0.25"/>
+
+            <TextView
+                android:id="@+id/settingsText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="SETTINGS"
+                android:layout_weight="0.25"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -144,6 +216,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
+            android:layout_weight="1.5"
             android:textSize="25dp"
             android:text="@string/playText"
             android:onClick="onClick"
