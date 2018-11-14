@@ -1,11 +1,13 @@
 package com.example.morte.bennyapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.ImageFormat;
 import android.graphics.Typeface;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +21,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.io.File;
+
 public class BennyMain extends AppCompatActivity {
+    public static final String PREFS_NAME = "PrefsFile";
     public static int whatText;
-    public static int previousEffect;
     public Integer Language;
     String Nurse;
     String Hero;
@@ -35,6 +39,7 @@ public class BennyMain extends AppCompatActivity {
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
     private static final int MY_PERMISSION_REQUEST = 1;  //Skal bruges til at tilgå external storage
+    private static final int REQUEST_WRITE_STORAGE = 112;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,25 +51,22 @@ public class BennyMain extends AppCompatActivity {
         playModeText.setTypeface(custom_font);
 
 
+        try {
+            Language= 1;
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            Integer languageIdentifyer = bundle.getInt("Language");
+            Language = languageIdentifyer;
+
+            Toast.makeText(this, "Tal er " + Language, Toast.LENGTH_SHORT).show();
+
+        }
+        catch (NullPointerException e){
+            Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
+        }
 
 
-try {
-    Language= 1;
-    Intent intent = getIntent();
-    Bundle bundle = intent.getExtras();
-    Integer languageIdentifyer = bundle.getInt("Language");
-    Language = languageIdentifyer;
-
-
-    Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
-
-}
-catch (NullPointerException e){
-    Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
-}
-
-
-SetStrings(Language);
+        SetStrings(Language);
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = 1F; //https://developer.android.com/reference/android/view/WindowManager.LayoutParams#screenBrightness 1 er max value
@@ -78,7 +80,7 @@ SetStrings(Language);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
                     RECORD_AUDIO);
         }
-        // Tilgå External Storage
+        // Læse External Storage
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
@@ -91,6 +93,16 @@ SetStrings(Language);
             }
 
         }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+            }
+            else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+            }
+        }
+
         else{
             // Tænker bare det er her vi initialiserer vores arrays af lyd.  doStuff();
 
@@ -98,30 +110,31 @@ SetStrings(Language);
 
     }
 
-public void SetStrings(Integer lang){
-    if (lang== 1){
-         Nurse = "Nurse";
-         Hero = "Hero";
-         Cowboy = "Cowboy";
-         Cactus = "Cactus";
-         Pirate = "Pirate";
-         Settings = "Settings";
-         LetsPlay = "Let us play ";
-         SelectMode = "Select Mode";
+    public void SetStrings(Integer lang){
+        if (lang== 1){
+             Nurse = "Nurse";
+             Hero = "Hero";
+             Cowboy = "Cowboy";
+             Cactus = "Cactus";
+             Pirate = "Pirate";
+             Settings = "Settings";
+             LetsPlay = "Let us play ";
+             SelectMode = "Select Mode";
+
+        }
+        if ( lang==2){
+            Nurse = "Sygeplejerske";
+            Hero = "Helt";
+            Cowboy = "Kodreng";
+            Cactus = "Kaktus";
+            Pirate = "Pirat";
+            Settings = "Indstillinger";
+            LetsPlay = "Lad os lege";
+            SelectMode = "Vælg mode";
+        }
+
 
     }
-    if ( lang==2){
-        Nurse = "Sygeplejerske";
-        Hero = "Helt";
-        Cowboy = "Kodreng";
-        Cactus = "Kaktus";
-        Pirate = "Pirat";
-        Settings = "Indstillinger";
-        LetsPlay = "Lad os lege";
-        SelectMode = "Vælg mode";
-
-    }
-}
     public void viewMessage(View view) {
         ImageButton clickedButton = (ImageButton) view;
         Button playB = (Button) findViewById(R.id.playButton);
@@ -159,7 +172,6 @@ public void SetStrings(Integer lang){
 
     public void onClick(View v) {
         if (whatText == 1) {
-            //Insert name of the class to be redirected to.
 
             Bundle bundle = new Bundle();
             Integer language = Language;
@@ -167,9 +179,6 @@ public void SetStrings(Integer lang){
             Intent i = new Intent(this, BennyEyes.class);
             i.putExtras(bundle);
             startActivity(i);
-
-            //Intent i = new Intent(this, .class);
-            //startActivity(i);
 
         } else if (whatText == 2) {
             Intent i = new Intent(this, LoggingData.class);
@@ -208,6 +217,10 @@ public void SetStrings(Integer lang){
 
                         // doStuff();
                     }
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+                    }
                 } else  {
                     Toast.makeText(this, "You have to give access", Toast.LENGTH_SHORT).show();
                     finish();
@@ -218,18 +231,5 @@ public void SetStrings(Integer lang){
 
     }
 
-    public void permissionForExcelExport (String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
 
-                // If user has denied access, then it asks again
-                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-            }
-        }
-        else {
-            Toast.makeText(this, permission + " is already granted.", Toast.LENGTH_SHORT).show();
-        }
-    }
-}
+ }
