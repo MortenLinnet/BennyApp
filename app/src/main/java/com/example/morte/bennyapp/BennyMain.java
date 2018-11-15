@@ -2,12 +2,14 @@ package com.example.morte.bennyapp;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.ImageFormat;
 import android.graphics.Typeface;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,9 +26,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.io.File;
+
 public class BennyMain extends AppCompatActivity {
+    public static final String PREFS_NAME = "PrefsFile";
     public static int whatText;
-    public static int previousEffect;
     public Integer Language;
     String Nurse;
     String Hero;
@@ -50,6 +54,7 @@ public class BennyMain extends AppCompatActivity {
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
     private static final int MY_PERMISSION_REQUEST = 1;  //Skal bruges til at tilgå external storage
+    private static final int REQUEST_WRITE_STORAGE = 112;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,7 @@ public class BennyMain extends AppCompatActivity {
 
             }
 
+        SetStrings(Language);
             public void onSwipeRight() {
                 NextButtonanimationer(CurrentImageview, NextImageview);
                 id++;
@@ -143,7 +149,18 @@ public class BennyMain extends AppCompatActivity {
 
             }
 
-        } else {
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+            }
+            else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+            }
+        }
+
+        else{
             // Tænker bare det er her vi initialiserer vores arrays af lyd.  doStuff();
 
         }
@@ -418,10 +435,9 @@ public class BennyMain extends AppCompatActivity {
             i.putExtras(bundle);
             startActivity(i);
 
-            //Intent i = new Intent(this, .class);
-            //startActivity(i);
-
         } else if (whatText == 2) {
+            Intent i = new Intent(this, LoggingData.class);
+            startActivity(i);
 
         } else if (whatText == 3) {
 
@@ -454,7 +470,11 @@ public class BennyMain extends AppCompatActivity {
 
                         // doStuff();
                     }
-                } else {
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+                    }
+                } else  {
                     Toast.makeText(this, "You have to give access", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -493,3 +513,6 @@ public class BennyMain extends AppCompatActivity {
 
     }
 }
+
+
+ }
