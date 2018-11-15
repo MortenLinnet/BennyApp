@@ -1,5 +1,6 @@
 package com.example.morte.bennyapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,25 @@ public class Settings extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == 1){
+        if (resultCode == Activity.RESULT_OK){
+            Intent intent = getIntent();
+            Bundle extras = intent.getExtras();
+            int BuildingValue = extras.getInt("buildingvalue");
+            int Collectingvalue = extras.getInt("collectingvalue");
+            Toast.makeText(this, "It all went well" + BuildingValue +" " + Collectingvalue, Toast.LENGTH_SHORT).show();
+
+
+        }
+        if (resultCode == Activity.RESULT_CANCELED){
+            Toast.makeText(this, "Something went horribly horribly wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    }
 
     public void GobackUSA(View view) {
         Bundle bundle = new Bundle();
@@ -44,6 +64,14 @@ public class Settings extends AppCompatActivity {
         Intent i = new Intent(this, SizeOfEyes.class); startActivity(i);
 
     }
+
+    public void ToDiffLevel(View view) {
+        Intent i = new Intent(this, LevelOfDifficulty.class); startActivityForResult(i, 1);
+
+
+    }
+
+
 }
 
 

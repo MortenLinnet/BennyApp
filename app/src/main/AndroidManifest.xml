@@ -27,9 +27,14 @@
             android:name=".BennyEyes"
             android:screenOrientation="landscape" />
         <activity android:name=".Settings" />
+        <activity android:name=".LoggingData" />
         <activity
             android:name=".SizeOfEyes"
             android:screenOrientation="landscape" />
-        <activity android:name=".LoggingData" />
+        <activity android:name=".LevelOfDifficulty" />
+        <activity android:name=".OldDesign" />
+        <activity android:name=".PopUpActivity"
+            android:theme="@style/AppTheme.PopMe"
+            ></activity>
     </application>
 </manifest>

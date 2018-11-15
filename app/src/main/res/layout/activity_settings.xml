@@ -13,18 +13,18 @@
         android:layout_height="151dp"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="68dp"
+        android:layout_marginStart="72dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:adjustViewBounds="true"
         android:background="@null"
-        android:padding="0dp"
         android:onClick="GobackDK"
+        android:padding="0dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.63"
+        app:layout_constraintVertical_bias="0.175"
         app:srcCompat="@drawable/dk" />
 
     <ImageButton
@@ -39,14 +39,15 @@
         android:layout_weight="1"
         android:adjustViewBounds="true"
         android:background="@null"
-        android:padding="0dp"
         android:onClick="GobackUSA"
+        android:padding="0dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.613"
         app:layout_constraintStart_toEndOf="@+id/DanmarkButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.61"
+        app:layout_constraintVertical_bias="0.217"
         app:srcCompat="@drawable/us" />
 
     <Button
@@ -57,12 +58,43 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Size of Eyes"
         android:onClick="GoToSizeOFEyes"
+        android:text="Size of Eyes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.548"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/LevelOfDifficultness"
+        android:layout_width="164dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Button"
+        android:onClick="ToDiffLevel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SizeofeyesButton" />
+
+    <Button
+        android:id="@+id/mortenlinnetfaktores"
+        android:layout_width="123dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="MortenLinnetfaktoren"
+        android:text="MortenLinnetFaktoren"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.944" />
+        app:layout_constraintVertical_bias="0.052" />
 </android.support.constraint.ConstraintLayout>

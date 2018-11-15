@@ -112,6 +112,11 @@ public class BennyEyes extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     Integer Language;
 
+    int HardTaskProperbility = 40; //Under/lig 40 = 40%
+    int EasyTaskProperbility = 40; //Over 40-100 == 60%
+
+    int HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime;
+    double temp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +161,8 @@ mSensor = new DetectNoise();
 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
-
+HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime = 0;
+temp =0;
 ReadyForFeedback = false;
 InitBennyOjneArray();
 
@@ -207,7 +213,7 @@ InitBennyOjneArray();
         Random r = new Random();
         int n = r.nextInt(100);
 
-        if (n <= 40) //HardTask;
+        if (n <= HardTaskProperbility) //HardTask;
         {
             mediaPlayer = MediaPlayer.create(this, R.raw.sultenalleklodser);
             mediaPlayer.start();
@@ -220,7 +226,7 @@ InitBennyOjneArray();
 
         }
 
-        if (n > 40) //EzTask
+        if (n > EasyTaskProperbility) //EzTask
         {
            //Play Ez request.
             mediaPlayer = MediaPlayer.create(this, R.raw.sultenblaaklodser);
@@ -548,6 +554,7 @@ InitBennyOjneArray();
 
    }
 
+
     public void SetLanguage(Integer WhatLanguage){
 TextView LagnuageText = findViewById(R.id.LanguageTextView);
        if (WhatLanguage == 1){
@@ -558,6 +565,39 @@ TextView LagnuageText = findViewById(R.id.LanguageTextView);
        }
 
    }
+
+    public void OhNoMyEyes(View view) {
+
+        if (mediaPlayer.isPlaying() || OjneView.isPlaying()){
+            Toast.makeText(this, "avavav", Toast.LENGTH_SHORT).show();
+
+        }
+        else {
+            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blink;
+            Uri uriLang =Uri.parse(PathToBennyEyes);
+            OjneView.setVideoURI(uriLang);
+            OjneView.start();
+
+
+        }
+    }
+
+
+    public void HowManyTimesHvaeEyesBeenTriggered (double MicTriggerValue){
+        HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime++;
+
+temp = temp + MicTriggerValue;
+double Average = temp/HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime;
+
+String RunningAvergeFormatted = String.format("TriggerValueEr %f, og funktionen er kørt %d gange.\n Gennemsnittet er %f"
+        , MicTriggerValue, HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime, Average);
+//        Textview wauwetflottextview = findViewById(R.id.NytSejTextView);   Det er bare lige en tentativ.
+//        wauwetflottextview.setText(RunningAvergeFormatted);
+
+    }
+
 }
+
+
 
 

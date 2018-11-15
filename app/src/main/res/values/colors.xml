@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#2983C4</color>
     <color name="colorAccent">#FF4081</color>
     <color name="black_overlay">#66000000</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#ffffff</color>
+    <color name="ButtonNOTSelecctionColor">#646060</color>
+    <color name="ButtonSelecctionColor">#343333</color>
 </resources>

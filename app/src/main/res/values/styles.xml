@@ -11,4 +11,12 @@
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/m2</item>
     </style>
+    
+    <style name="AppTheme.PopMe">
+
+<item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowCloseOnTouchOutside">true</item>
+
+    </style>
+
 </resources>
