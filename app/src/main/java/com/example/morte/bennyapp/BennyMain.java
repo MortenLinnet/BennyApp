@@ -69,7 +69,7 @@ public class BennyMain extends AppCompatActivity {
         NextImageview = (ImageView) findViewById(R.id.BackImageView);
 
         fade = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
-
+///lololol
         NextImageview.setOnTouchListener(new OnSwipeListener(this) {
 
             public void onSwipeTop() {
