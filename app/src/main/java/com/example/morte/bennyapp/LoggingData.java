@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.StringTokenizer;
+
 import jxl.demo.CSV;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -72,6 +74,8 @@ public class LoggingData extends AppCompatActivity {
 
     public String subFolder = "/LogData";
     public String filename = "LogFile.csv";
+    
+    public String csv = ".csv";
     private static final String TAG = "MEDIA";
 
 
@@ -225,20 +229,41 @@ public class LoggingData extends AppCompatActivity {
         FileInputStream fis = null;
         ObjectInputStream in = null;
 
+
+
         try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filename));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    LogHashmap.put(key, Integer.valueOf(value));
+                }
+            }
+        }
+
+        /**try {
             fis = new FileInputStream(file);
             in = new ObjectInputStream(fis);
             LogHashmap  = (HashMap<String, Integer>) in.readObject();
             Toast.makeText(this, "Count of hashmaps:: " + LogHashmap.size() + " " + LogHashmap, Toast.LENGTH_SHORT).show();
 
 
-        } catch (FileNotFoundException e) {
+        }**/ catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (StreamCorruptedException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }/** catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (Exception e) {
+        }**/ catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -253,6 +278,7 @@ public class LoggingData extends AppCompatActivity {
             }
         }
         Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
     }
 
 
