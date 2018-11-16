@@ -74,14 +74,13 @@ public class BennyMain extends AppCompatActivity {
         NextImageview = (ImageView) findViewById(R.id.BackImageView);
 
         fade = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
-///lololol
+
+
         NextImageview.setOnTouchListener(new OnSwipeListener(this) {
 
-            public void onSwipeTop() {
+                                             public void onSwipeTop() {
 
-            }
-
-        SetStrings(Language);
+                                             }
             public void onSwipeRight() {
                 NextButtonanimationer(CurrentImageview, NextImageview);
                 id++;
@@ -455,7 +454,6 @@ public class BennyMain extends AppCompatActivity {
         // New activity with options to calibrate, about us and so on.
         Intent i = new Intent(this, Settings.class);
         startActivity(i);
-
     }
 
     @Override
@@ -507,12 +505,8 @@ public class BennyMain extends AppCompatActivity {
                 button2.setBackgroundColor(this.getResources().getColor(R.color.ButtonNOTSelecctionColor));
                 button3.setBackgroundColor(this.getResources().getColor(R.color.ButtonSelecctionColor));
                 break;
-
         }
 
 
     }
 }
-
-
- }

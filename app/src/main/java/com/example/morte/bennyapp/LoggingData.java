@@ -3,30 +3,13 @@ package com.example.morte.bennyapp;
 
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceActivity;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.univocity.parsers.csv.CsvParserSettings;
-import com.univocity.parsers.csv.CsvRoutines;
-
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.CsvListWriter;
-import org.supercsv.io.CsvMapWriter;
-import org.supercsv.io.ICsvBeanReader;
-import org.supercsv.io.ICsvListWriter;
-import org.supercsv.io.ICsvMapReader;
-import org.supercsv.prefs.CsvPreference;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,25 +20,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Reader;
 import java.io.StreamCorruptedException;
-import java.io.StringWriter;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Scanner;
 import java.util.StringTokenizer;
-
-import jxl.demo.CSV;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class LoggingData extends AppCompatActivity {
@@ -73,15 +45,12 @@ public class LoggingData extends AppCompatActivity {
     private Button reset;
 
     public String subFolder = "/LogData";
-    public String filename = "LogFile.csv";
-    
+    public String name = "LogFile_";
+    public String currentDate = (String) whichDate();
     public String csv = ".csv";
+    public String filename = name + currentDate + csv;
     private static final String TAG = "MEDIA";
-
-
     String eol = System.getProperty("line.separator");
-
-
 
     public HashMap<String, Integer> LogHashmap = new HashMap<String, Integer>();
 
@@ -89,6 +58,8 @@ public class LoggingData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging_data);
+
+        readFile(LogHashmap);
 
         request1textview = (TextView) findViewById(R.id.request1textview);
         request2textview = (TextView) findViewById(R.id.request2textview);
@@ -100,7 +71,8 @@ public class LoggingData extends AppCompatActivity {
         request2button = (Button) findViewById(R.id.button5);
         feedback2button = (Button) findViewById(R.id.button6);
 
-        readFile();
+        request1textview.setText(String.valueOf(LogHashmap.get("Request1")));
+        request2textview.setText(String.valueOf(LogHashmap.get("Request2")));
     }
 
     public void requestOne (View v) {
@@ -115,12 +87,12 @@ public class LoggingData extends AppCompatActivity {
 
         if (LogHashmap.containsKey(key)) {
             LogHashmap.put(key, LogHashmap.get(key)+1);
-            writeToFile();
+            writeToFile(LogHashmap);
         }
 
         else if (!LogHashmap.containsKey(key)) {
             LogHashmap.put(key, 1);
-            writeToFile();
+            writeToFile(LogHashmap);
         }
 
         if (key == "Request1") {
@@ -137,7 +109,7 @@ public class LoggingData extends AppCompatActivity {
     
 
     // Creates .ser file - Not that useful
-    public void writeToFile() {
+    public void writeToFile(HashMap<String, Integer> insertHashmap) {
         //write to file
 
         File cacheDir = null;
@@ -163,21 +135,13 @@ public class LoggingData extends AppCompatActivity {
         FileOutputStream fos = null;
         ObjectOutputStream out = null;
 
-
-
         try (Writer writer = new FileWriter(file)) {
-            for (Map.Entry<String, Integer> entry : LogHashmap.entrySet()) {
+            for (Map.Entry<String, Integer> entry : insertHashmap.entrySet()) {
                 writer.append(entry.getKey()).append(',').append(String.valueOf(entry.getValue())).append(eol);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
 
         /**try {
             fos = new FileOutputStream(file);
@@ -204,9 +168,8 @@ public class LoggingData extends AppCompatActivity {
         }**/
     }
 
-    
 
-    public void readFile() {
+    public void readFile(HashMap<String, Integer> insertHashmap) {
 
         File cacheDir = null;
         File appDirectory = null;
@@ -245,7 +208,7 @@ public class LoggingData extends AppCompatActivity {
                     String key = st.nextToken();
                     String value = st.nextToken();
 
-                    LogHashmap.put(key, Integer.valueOf(value));
+                    insertHashmap.put(key, Integer.valueOf(value));
                 }
             }
         }
@@ -279,19 +242,19 @@ public class LoggingData extends AppCompatActivity {
         }
         Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
     }
-
-
 
     public void reset (View v) {
         LogHashmap.clear();
-        writeToFile();
+        writeToFile(LogHashmap);
     }
 
-    public void newDay (View v) {
+    public String whichDate () {
+        DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");
+        Date date = new Date();
 
+        return dateFormat.format(date);
     }
-
-
     
 }
