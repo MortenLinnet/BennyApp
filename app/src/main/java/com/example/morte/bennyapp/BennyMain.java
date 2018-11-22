@@ -3,18 +3,23 @@ package com.example.morte.bennyapp;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.ImageFormat;
 import android.graphics.Typeface;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.Image;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -26,18 +31,22 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 
 public class BennyMain extends AppCompatActivity {
     public static final String PREFS_NAME = "PrefsFile";
     public static int whatText;
     public Integer Language;
-    String Nurse;
-    String Hero;
-    String Cowboy;
-    String Cactus;
+    String Benny;
+    String Clown;
     String Pirate;
     String Settings;
+
+    String TextbobbleRIGHT;
+    String TextbobbleLowLeft;
+    String TextBobbleTopRight;
     String LetsPlay;
     String SelectMode;
     ImageView CurrentImageview;
@@ -45,12 +54,16 @@ public class BennyMain extends AppCompatActivity {
     Animation enter;
     Animation leaave;
     Animation fade;
-    Button next;
-    Button prev;
+   ImageButton prev;
+    ImageButton next;
     int Animationtime = 500;
     int LocationOOfImage = 1800;
     int id;
 
+
+    TextView TextViewBobleHojre;
+    TextView TextViewBobleDownLeft;
+    TextView TextviewBobleOverstLeft;
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
     private static final int MY_PERMISSION_REQUEST = 1;  //Skal bruges til at tilgå external storage
@@ -64,53 +77,62 @@ public class BennyMain extends AppCompatActivity {
         SetLanguage();
 
         next = findViewById(R.id.nextbuttton);
-        prev = findViewById(R.id.backbutton);
+        prev = findViewById(R.id.BackButton);
         TextView playModeText = (TextView) findViewById(R.id.playButton);
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/bennyNormal.ttf");
         playModeText.setTypeface(custom_font);
+
+
+         TextViewBobleHojre = findViewById(R.id.talebobletilhojreTEXTVIEW);
+         TextViewBobleDownLeft = findViewById(R.id.taleboblenederstilvenstreTEXTVIEW);
+         TextviewBobleOverstLeft = findViewById(R.id.talebobleoversttilvenstreTEXTVIEW);
+
 
         id = 1;
         CurrentImageview = (ImageView) findViewById(R.id.FrontImageView);
         NextImageview = (ImageView) findViewById(R.id.BackImageView);
 
         fade = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
-///lololol
+
         NextImageview.setOnTouchListener(new OnSwipeListener(this) {
 
             public void onSwipeTop() {
 
             }
 
-        SetStrings(Language);
             public void onSwipeRight() {
                 NextButtonanimationer(CurrentImageview, NextImageview);
+
                 id++;
                 if (id > 3) {
                     id = 1;
                 }
-                HighLightMarkedCharecter();
+                SetStringInTextboxeses(Language);
+                talebobler();
+
+
+                Toast.makeText(BennyMain.this, "" + id, Toast.LENGTH_SHORT).show();
+                //HighLightMarkedCharecter();
             }
 
             public void onSwipeLeft() {
 
                 PrevButtonAnimmationer(CurrentImageview, NextImageview);
+
                 id--;
                 if (id < 1) {
                     id = 3;
                 }
-                HighLightMarkedCharecter();
+                SetStringInTextboxeses(Language);
+                talebobler();
+                Toast.makeText(BennyMain.this, ""+ id, Toast.LENGTH_SHORT).show();
+             //   HighLightMarkedCharecter();
             }
 
-            public void onSwipeBottom() {
-
-            }
 
             @Override
             public void onClick() {
 
-                Intent i = new Intent(BennyMain.this, PopUpActivity.class);
-                startActivity(i);
-                Toast.makeText(BennyMain.this, "Clicked", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -167,49 +189,8 @@ public class BennyMain extends AppCompatActivity {
 
     }
 
-    public void SetLanguage(){
-        Language = 1;
-
-        try {
-            Intent intent = getIntent();
-            Bundle bundle = intent.getExtras();
-            Integer languageIdentifyer = bundle.getInt("Language");
-            Language = languageIdentifyer;
 
 
-            Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
-
-        } catch (NullPointerException e) {
-            Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
-        }
-
-        SetStrings(Language);
-
-    }
-    public void SetStrings(Integer lang) {
-        if (lang == 1) {
-            Nurse = "Nurse";
-            Hero = "Hero";
-            Cowboy = "Cowboy";
-            Cactus = "Cactus";
-            Pirate = "Pirate";
-            Settings = "Settings";
-            LetsPlay = "Let us play ";
-            SelectMode = "Select Mode";
-
-        }
-        if (lang == 2) {
-            Nurse = "Sygeplejerske";
-            Hero = "Helt";
-            Cowboy = "Kodreng";
-            Cactus = "Kaktus";
-            Pirate = "Pirat";
-            Settings = "Indstillinger";
-            LetsPlay = "Lad os lege";
-            SelectMode = "Vælg mode";
-
-        }
-    }
     public void NextButtonanimationer(ImageView LeaveView, ImageView EnterView) {
         UpdateNextImages();
         //  CurrentImageview.setAlpha(100);
@@ -250,6 +231,109 @@ public class BennyMain extends AppCompatActivity {
 
     }
 
+    public void talebobler(){
+
+
+ImageView TextBobleOverstVenstre = findViewById(R.id.talebobleoversttilvenstre);
+ImageView TextBobleNederstVenstre = findViewById(R.id.taleboblenederstilvenstre);
+ImageView TextBobleHojre = findViewById(R.id.talebobletilhojre);
+
+TextviewBobleOverstLeft.setText(TextBobbleTopRight);
+TextViewBobleDownLeft.setText(TextbobbleLowLeft);
+TextViewBobleHojre.setText(TextbobbleRIGHT);
+
+
+
+        int lol= 0;
+
+
+     //Objekt animationer taleboblerne, fra et sted til et andet
+        ObjectAnimator EnterAnimationUpLeft = ObjectAnimator.ofFloat(TextBobleOverstVenstre, "translationY", 300, 0);
+        EnterAnimationUpLeft.setDuration(550);
+
+        ObjectAnimator EnterAnimationDownLeft = ObjectAnimator.ofFloat(TextBobleNederstVenstre, "translationY", 300, 0);
+        EnterAnimationDownLeft.setDuration(700);
+
+        ObjectAnimator EnterAnimationRight = ObjectAnimator.ofFloat(TextBobleHojre, "translationY", 300, 0);
+        EnterAnimationRight.setDuration(300);
+
+
+      //Objektanimation textview fra et sted til et andet
+
+        ObjectAnimator EnterAnimationUpLeftTextView = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "translationY", 400, 0); // har ændret fra 300 til 400
+        EnterAnimationRight.setDuration(550+lol);
+
+        ObjectAnimator EnterAnimationDownLeftTextView = ObjectAnimator.ofFloat(TextViewBobleDownLeft, "translationY", 300, 0);
+        EnterAnimationRight.setDuration(700+lol);
+
+        ObjectAnimator EnterAnimationRightTextView = ObjectAnimator.ofFloat(TextViewBobleHojre, "translationY", 300, 0);
+        EnterAnimationRight.setDuration(300);
+
+
+//Objektanimationer talebobler, fade fra en apha til en anden aplha
+
+        ObjectAnimator UpLeftFadeOut = ObjectAnimator.ofFloat(TextBobleOverstVenstre, "alpha",  0f, .1f);
+        UpLeftFadeOut.setDuration(100);
+        ObjectAnimator UpLeftFadeIn = ObjectAnimator.ofFloat(TextBobleOverstVenstre, "alpha", .1f, 1f);
+        UpLeftFadeIn.setDuration(450);
+
+        ObjectAnimator DownleftFadeOut = ObjectAnimator.ofFloat(TextBobleNederstVenstre, "alpha",  0f, .1f);
+        DownleftFadeOut.setDuration(150);
+        ObjectAnimator DownLeftFadeIn = ObjectAnimator.ofFloat(TextBobleNederstVenstre, "alpha", .1f, 1f);
+        DownLeftFadeIn.setDuration(550);
+
+        ObjectAnimator HojreFadeOut = ObjectAnimator.ofFloat(TextBobleHojre, "alpha",  0f, .1f);
+        HojreFadeOut.setDuration(75);
+        ObjectAnimator HojreFadeIn = ObjectAnimator.ofFloat(TextBobleHojre, "alpha", .1f, 1f);
+        HojreFadeIn.setDuration(225);
+
+
+        //Objektanimation textview, fade fra aplha til alpha
+
+        ObjectAnimator UpLeftFadeOutTextview = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "alpha",  0f, .1f);
+        HojreFadeOut.setDuration(100);
+        ObjectAnimator UpLeftFadeINTextview = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "alpha", .1f, 1f);
+        HojreFadeIn.setDuration(450);
+
+
+        ObjectAnimator DownleftFadeOutTextview = ObjectAnimator.ofFloat(TextViewBobleDownLeft, "alpha",  0f, .1f);
+        HojreFadeOut.setDuration(150);
+        ObjectAnimator DownleftFadeINTextview = ObjectAnimator.ofFloat(TextViewBobleDownLeft, "alpha", .1f, 1f);
+        HojreFadeIn.setDuration(550);
+
+
+        ObjectAnimator HojreFadeOutText = ObjectAnimator.ofFloat(TextViewBobleHojre, "alpha",  0f, .1f);
+        HojreFadeOut.setDuration(75);
+        ObjectAnimator HojreFadeInTExt = ObjectAnimator.ofFloat(TextViewBobleHojre, "alpha", .1f, 1f);
+        HojreFadeIn.setDuration(225);
+
+
+
+        AnimatorSet animatorSet = new AnimatorSet();
+
+        //textbobler animationer
+        animatorSet.play(EnterAnimationRight).with(HojreFadeOut).before(HojreFadeIn);
+        animatorSet.play(EnterAnimationRightTextView).with(HojreFadeOutText).before(HojreFadeInTExt);
+
+
+
+        animatorSet.play(EnterAnimationDownLeft).with(DownleftFadeOut).before(DownLeftFadeIn);
+        animatorSet.play(EnterAnimationDownLeftTextView).with(DownleftFadeOutTextview).before(DownleftFadeINTextview);
+
+        //textview animationer
+        animatorSet.play(EnterAnimationUpLeft).with(UpLeftFadeOut).before(UpLeftFadeIn);
+        animatorSet.play(EnterAnimationUpLeftTextView).with(UpLeftFadeOutTextview).before(UpLeftFadeINTextview);
+
+
+
+        //animatorSet.playTogether(EnterAnimationRight);
+        animatorSet.start();
+
+
+
+    }
+
+
     public void next(View view) {
 
         NextButtonanimationer(CurrentImageview, NextImageview);
@@ -258,7 +342,7 @@ public class BennyMain extends AppCompatActivity {
             id = 1;
         }
         Toast.makeText(this, "Id er" + " " + id, Toast.LENGTH_SHORT).show();
-        HighLightMarkedCharecter();
+       // HighLightMarkedCharecter();
     }
 
     public void back(View view) {
@@ -270,39 +354,10 @@ public class BennyMain extends AppCompatActivity {
         }
 
         Toast.makeText(this, "Id er" + " " + id, Toast.LENGTH_SHORT).show();
-        HighLightMarkedCharecter();
+       // HighLightMarkedCharecter();
     }
 
 
-    public void currentImage() {
-
-        Button playB = (Button) findViewById(R.id.playButton);
-        TextView charectername = findViewById(R.id.CharecterTexxtview);
-        if (id > 3) {
-            id = 1;
-        }
-
-        switch (id) {
-            case 1:
-                CurrentImageview.setImageResource(R.drawable.flotfyr);
-                playB.setText(LetsPlay + " " + Nurse);
-                charectername.setText(Nurse);
-                break;
-            case 2:
-                CurrentImageview.setImageResource(R.drawable.emmet);
-                playB.setText(LetsPlay + " " + Hero);
-                charectername.setText(Hero);
-                break;
-            case 3:
-                CurrentImageview.setImageResource(R.drawable.darthvader);
-                playB.setText(LetsPlay + " " + Cowboy);
-                charectername.setText(Cowboy);
-                break;
-
-
-        }
-
-    }
 
 
     public void UpdateNextImages() {
@@ -316,22 +371,62 @@ public class BennyMain extends AppCompatActivity {
         PreviousImage();
     }
 
+    public void currentImage() {
+
+        Button playB = (Button) findViewById(R.id.playButton);
+        TextView charectername = findViewById(R.id.CharecterTexxtview);
+        if (id > 3) {
+            id = 1;
+        }
+
+        switch (id) {
+            case 1:
+                CurrentImageview.setImageResource(R.drawable.bennyojne);
+               // playB.setText(LetsPlay + " " +Pirate);
+
+
+                charectername.setText(Pirate);
+                charectername.startAnimation(AnimationUtils.loadAnimation(BennyMain.this, R.anim.fade));
+                break;
+            case 2:
+                CurrentImageview.setImageResource(R.drawable.piratojne);
+                //playB.setText(LetsPlay + " " + Clown);
+                charectername.setText(Clown);
+                charectername.startAnimation(AnimationUtils.loadAnimation(BennyMain.this, R.anim.fade));
+                break;
+            case 3:
+                CurrentImageview.setImageResource(R.drawable.klovn);
+               // playB.setText(LetsPlay + " " + Benny);
+                charectername.setText(Benny);
+                charectername.startAnimation(AnimationUtils.loadAnimation(BennyMain.this, R.anim.fade));
+                break;
+        }
+    }
 
     public void PreviousImage() {
         int prevImage = id - 1;
+        Button playB = (Button) findViewById(R.id.playButton);
+        TextView charectername = findViewById(R.id.CharecterTexxtview);
+
         if (prevImage < 1) {
             prevImage = 3;
         }
 
         switch (prevImage) {
             case 1:
-                NextImageview.setImageResource(R.drawable.flotfyr);
+                NextImageview.setImageResource(R.drawable.bennyojne);
+             //   playB.setText(LetsPlay + " " + Benny);
+                charectername.setText(Benny);
                 break;
             case 2:
-                NextImageview.setImageResource(R.drawable.emmet);
+                NextImageview.setImageResource(R.drawable.piratojne);
+               // playB.setText(LetsPlay + " " + Pirate);
+                charectername.setText(Pirate);
                 break;
             case 3:
-                NextImageview.setImageResource(R.drawable.darthvader);
+                NextImageview.setImageResource(R.drawable.klovn);
+                //playB.setText(LetsPlay + " " + Clown);
+                charectername.setText(Clown);
                 break;
 
 
@@ -348,13 +443,13 @@ public class BennyMain extends AppCompatActivity {
 
         switch (NextImage) {
             case 1:
-                NextImageview.setImageResource(R.drawable.flotfyr);
+                NextImageview.setImageResource(R.drawable.bennyojne);
                 break;
             case 2:
-                NextImageview.setImageResource(R.drawable.emmet);
+                NextImageview.setImageResource(R.drawable.piratojne);
                 break;
             case 3:
-                NextImageview.setImageResource(R.drawable.darthvader);
+                NextImageview.setImageResource(R.drawable.klovn);
                 break;
 
 
@@ -362,59 +457,33 @@ public class BennyMain extends AppCompatActivity {
 
     }
 
-    public void setimgview1(View view) {
-        id = 1;
-        currentImage();
-        HighLightMarkedCharecter();
-        NextImageview.setImageResource(R.drawable.flotfyr);
-        NextImageview.startAnimation(fade);
-    }
-
-    public void setimgview3(View view) {
-
-        id = 3;
-        currentImage();
-        HighLightMarkedCharecter();
-        NextImageview.setImageResource(R.drawable.darthvader);
-        NextImageview.startAnimation(fade);
-    }
-
-    public void setimgview2(View view) {
-        id = 2;
-        currentImage();
-        HighLightMarkedCharecter();
-        NextImageview.setImageResource(R.drawable.emmet);
-        NextImageview.startAnimation(fade);
-    }
-
-
-
     public void viewMessage(View view) {
         ImageButton clickedButton = (ImageButton) view;
+        Toast.makeText(this, "virker det her", Toast.LENGTH_SHORT).show();
         Button playB = (Button) findViewById(R.id.playButton);
         switch (clickedButton.getId()) {
             case R.id.imageButton1:
 
-                playB.setText(LetsPlay + " " + Nurse);
+                playB.setText(LetsPlay + " " + Benny);
                 whatText = 1;
                 break;
 
             case R.id.imageButton2:
 
-                playB.setText(LetsPlay + " " + Hero);
+                playB.setText(LetsPlay + " " + Clown);
                 whatText = 2;
                 break;
 
             case R.id.imageButton3:
-                playB.setText(LetsPlay + " " + Cowboy);
+                playB.setText(LetsPlay + " " + Pirate);
                 whatText = 3;
                 break;
 
-            case R.id.imageButton4:
+        /*    case R.id.imageButton4:
                 playB.setText(LetsPlay + " " + Cactus);
                 whatText = 4;
                 break;
-
+*/
             case R.id.imageButton5:
                 playB.setText(LetsPlay + " " + Pirate);
                 whatText = 5;
@@ -424,16 +493,40 @@ public class BennyMain extends AppCompatActivity {
 
     }
 
+    public void IsMicPluggedIn(Context context){
+
+
+            AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+
+            if(am.isWiredHeadsetOn()) {
+                // handle headphones plugged in
+                Bundle bundle = new Bundle();
+                Integer language = Language;
+                bundle.putInt("Language", language);
+                Intent i = new Intent(this, BennyEyes.class);
+                i.putExtras(bundle);
+                startActivity(i);
+
+            } else{
+
+                Bundle bundle = new Bundle();
+                Integer language = Language;
+                bundle.putInt("Language", language);
+                Intent i = new Intent(this, MicNotPluggedIn.class);
+                i.putExtras(bundle);
+                startActivity(i);
+
+
+            }
+        }
+
+
+
     public void onClick(View v) {
         if (id == 1) {
             //Insert name of the class to be redirected to.
+            IsMicPluggedIn(this);
 
-            Bundle bundle = new Bundle();
-            Integer language = Language;
-            bundle.putInt("Language", language);
-            Intent i = new Intent(this, BennyEyes.class);
-            i.putExtras(bundle);
-            startActivity(i);
 
         } else if (whatText == 2) {
             Intent i = new Intent(this, LoggingData.class);
@@ -449,6 +542,125 @@ public class BennyMain extends AppCompatActivity {
 
     }
 
+    public void SetLanguage(){
+        Language = 1;
+
+        try {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            Integer languageIdentifyer = bundle.getInt("Language");
+            Language = languageIdentifyer;
+
+
+            Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
+
+        } catch (NullPointerException e) {
+            Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
+        }
+
+        SetStrings(Language);
+        SetStringInTextboxeses(Language);
+
+    }
+    public void SetStrings(Integer lang) {
+        if (lang == 1) {
+            Benny = "Benny Brickeater";
+            Pirate = "Cap'n Brick";
+            Clown = "Benny Balloon";
+            Settings = "Settings";
+            LetsPlay = "Let us play ";
+            SelectMode = "Select Mode";
+
+        }
+        if (lang == 2) {
+            Benny = "Benny Brickeater";
+            Pirate = "Kaptajn Klods";
+            Clown = "Benny Ballon";
+            Settings = "Settings";
+            LetsPlay = "Lad os lege ";
+            SelectMode = "Select Mode";
+        }
+    }
+
+    public void SetStringInTextboxeses(Integer lang){
+
+      if (lang == 1) {
+
+          Toast.makeText(this, "Er jeg hernede i engelsk?", Toast.LENGTH_SHORT).show();
+          EnglishLangTextbobbles();
+
+
+      }
+      if (lang == 2){
+
+          Toast.makeText(this, "Er jeg hernede i dansk?", Toast.LENGTH_SHORT).show();
+          DanishLangTextbobbles();
+
+
+        }
+
+
+
+
+
+    }
+
+    public void DanishLangTextbobbles(){
+
+        Toast.makeText(this, "Id i Lang er  "+ id, Toast.LENGTH_SHORT).show();
+
+        if (id== 1) {
+
+            TextbobbleRIGHT = "Sulten eftrer røde klodser";
+            TextbobbleLowLeft = "Bygge mig et hus";
+            TextBobbleTopRight = "Jeg er uslten efter noget der siger miav";
+        }
+
+
+       if (id == 2) {
+           TextbobbleRIGHT = "Jeg er en farlig pirat";
+           TextbobbleLowLeft = "Giv mig guldmønter";
+           TextBobbleTopRight = "Jeg er søsyg";
+       }
+
+       else if (id == 3){
+                TextbobbleRIGHT = "Bygge mig en ballon";
+                TextbobbleLowLeft = "Min klovne sans runger";
+                TextBobbleTopRight = "Båt Båt kineser snot";
+       }
+
+        }
+
+
+
+    public void EnglishLangTextbobbles(){
+
+        if (id== 1) {
+
+            TextbobbleRIGHT = "I'm hnugry for them red bricks, yo.";
+            TextbobbleLowLeft = "I have never eaten a house before, can you build me one?";
+            TextBobbleTopRight = "I'm hungry for something that says MUUUHHH";
+
+        }
+
+        if (id== 2) {
+
+            TextbobbleRIGHT = "I'm may me the worst pirate you have ever heard about, but atleast you have heard of me";
+            TextbobbleLowLeft = "There is a bounty on my head";
+            TextBobbleTopRight = "I'm feeling a bit seasick over here";
+        }
+
+       else if (id== 3) {
+
+                TextbobbleRIGHT = "oH MY. My balloon took off, can you build me a new one?";
+                TextbobbleLowLeft = "I like to move move it, i like to move it.";
+                TextBobbleTopRight = "Honk Honk cnineese gue";
+
+
+
+        }
+
+    }
 
     public void Settings(View view) {
 
@@ -457,6 +669,8 @@ public class BennyMain extends AppCompatActivity {
         startActivity(i);
 
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -485,34 +699,63 @@ public class BennyMain extends AppCompatActivity {
     }
 
 
-    public void HighLightMarkedCharecter() {
-        Button button1 = findViewById(R.id.buttonselection1);
-        Button button2 = findViewById(R.id.buttonselection2);
-        Button button3 = findViewById(R.id.buttonselection3);
-        switch (id) {
-            case 1:
-                button1.setBackgroundColor(this.getResources().getColor(R.color.ButtonSelecctionColor));
-                button2.setBackgroundColor(this.getResources().getColor(R.color.ButtonNOTSelecctionColor));
-                button3.setBackgroundColor(this.getResources().getColor(R.color.ButtonNOTSelecctionColor));
-                break;
+    public void info(View view) {
 
-            case 2:
-                button1.setBackgroundColor(this.getResources().getColor(R.color.ButtonNOTSelecctionColor));
-                button2.setBackgroundColor(this.getResources().getColor(R.color.ButtonSelecctionColor));
-                button3.setBackgroundColor(this.getResources().getColor(R.color.ButtonNOTSelecctionColor));
-                break;
+        String StringBenny1 = null;
+        String StringBenny2 = null;
+        String StringBenny3 = null;
+        Bundle bundle = new Bundle();
+        Intent i;
 
-            case 3:
-                button1.setBackgroundColor(this.getResources().getColor(R.color.ButtonNOTSelecctionColor));
-                button2.setBackgroundColor(this.getResources().getColor(R.color.ButtonNOTSelecctionColor));
-                button3.setBackgroundColor(this.getResources().getColor(R.color.ButtonSelecctionColor));
-                break;
+        if (Language == 1) {
+
+            StringBenny1 = "BennyBrickEater is all about sorting them btricks using simpel requests, and sometimes he farts";
+            StringBenny2 = "If you are this deep inside of the code and you are not Morten Linnet, you deserve a cookie go buy yourself a cookie, and bring one for Morten ";
+            StringBenny3 = "Benny Balloon loves having fun and makeing ballooon animals together with his friends. He once had a leading role in the move IT from 2018. Highly rated on IMDB";
+        }
+
+        if (Language == 2) {
+
+            StringBenny1 = "Benny BrickEater er en sej LEGO robot der kan hjælpe din børn med at lege og lære mange spændende ting omkring dyr og simpel matematik";
+            StringBenny2 = "Kaptajn Klods er en farlig pirat der har sejlet jorden rundt i hans store piratskib 'Usynkelig III'. Han har lært alternative opdragelsesstrategier som han kan lære dit barn ";
+            StringBenny3 = "Benny Ballon er den sjove er Benny's mange splittede personligheder, gennem sjov og leg med både en stereotyp italiensk accent og kunsneriske udfrodringer hjælper han dit barn med at blive en rigtigt cirkus artist";
 
         }
+
+
+        switch (id){
+
+
+            case 1:
+
+                bundle.putString("StringBenny", StringBenny1);
+                i = new Intent(BennyMain.this, PopUpActivity.class);
+                i.putExtras(bundle);
+                startActivity(i);
+        break;
+
+            case 2:
+
+                bundle.putString("StringBenny", StringBenny2);
+                i = new Intent(BennyMain.this, PopUpActivity.class);
+                i.putExtras(bundle);
+                startActivity(i);
+         break;
+
+            case 3:
+
+                bundle.putString("StringBenny", StringBenny3);
+                i = new Intent(BennyMain.this, PopUpActivity.class);
+                i.putExtras(bundle);
+                startActivity(i);
+         break;
+        }
+
+
 
 
     }
 }
 
 
- }
+
