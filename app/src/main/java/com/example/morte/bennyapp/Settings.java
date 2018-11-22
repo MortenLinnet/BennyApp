@@ -70,7 +70,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void ActivityNilan (View v) {
-        Intent i = new Intent(this, LoggingData.class);
+        Intent i = new Intent(this, SelectLanguage.class);
         startActivity(i);
     }
 }
