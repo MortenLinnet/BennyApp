@@ -440,6 +440,9 @@ InitBennyOjneArray();
             public void onTick(long millisuntillfinish) {
                 TimeLeftInMillisSuperRequestTime = millisuntillfinish;
                 UpdateSuperRequestTextview();
+
+                // HER KUNNE MAN HAVE EN RANDOM FUNKTION DER SIGER NOGET I STIL MED 1/50 GANGE DEN TIKKER SÅ SIG EN IDLE REPLIK?
+                // ELLER NÅR DEN HAR TIKKET X ANTAL GANGE FYR EN IDLE REPLIK
             }
 
             @Override

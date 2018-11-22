@@ -10,133 +10,105 @@
     tools:layout_editor_absoluteY="25dp">
 
     <ImageView
-        android:id="@+id/FrontImageView"
-        android:layout_width="204dp"
-        android:layout_height="237dp"
+        android:id="@+id/JustYellow"
+        android:layout_width="143dp"
+        android:layout_height="78dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/BennyBackGroundImageview"
+        app:layout_constraintVertical_bias="0.175"
+        app:srcCompat="@drawable/yellowojne" />
+
+    <TextView
+        android:id="@+id/CharecterTexxtview"
+        android:layout_width="289dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:text="lolol"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="40dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.062" />
+
+    <ImageView
+        android:id="@+id/FrontImageView"
+        android:layout_width="143dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="8dp"
         android:onClick="InfoPopUp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/flotfyr" />
+        app:layout_constraintTop_toTopOf="@+id/BennyBackGroundImageview"
+        app:layout_constraintVertical_bias="0.146"
+        app:srcCompat="@drawable/yellowojne" />
 
     <ImageView
         android:id="@+id/BackImageView"
-        android:layout_width="204dp"
-        android:layout_height="237dp"
+        android:layout_width="143dp"
+        android:layout_height="78dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:onClick="InfoPopUp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/flotfyr" />
+        app:layout_constraintTop_toTopOf="@+id/BennyBackGroundImageview"
+        app:layout_constraintVertical_bias="0.175"
+        app:srcCompat="@drawable/bennyojne" />
 
-    <Button
-        android:id="@+id/backbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="265dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-android:background="#0000"
+
+    <ImageButton
+        android:id="@+id/BackButton"
         android:onClick="back"
-        android:textSize="150dp"
-        android:text="V"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/pilvenstre"
+        tools:layout_editor_absoluteX="147dp"
+        tools:layout_editor_absoluteY="58dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.026"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.675"
+        />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/nextbuttton"
         android:layout_width="wrap_content"
-        android:layout_height="270dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:onClick="next"
-        android:background="#0000"
-        android:textSize="150dp"
-        android:text=">"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.975"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497" />
-
-
-    <Button
-        android:id="@+id/buttonselection2"
-        android:layout_width="35dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="44dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="setimgview2"
-        android:text="2"
-        android:background="@color/ButtonSelecctionColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.886" />
-
-    <Button
-        android:id="@+id/buttonselection1"
-        android:layout_width="35dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="44dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="setimgview1"
-        android:text="1"
-        android:background="@color/ButtonSelecctionColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.324"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.886" />
-
-    <Button
-        android:id="@+id/buttonselection3"
-        android:layout_width="35dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="44dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="setimgview3"
-        android:text="3"
-        android:background="@color/ButtonSelecctionColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.687"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.886" />
+        app:layout_constraintVertical_bias="0.674"
+        app:srcCompat="@drawable/pilhojre" />
 
     <Button
         android:id="@+id/playButton"
-        android:layout_width="match_parent"
-        android:layout_height="69dp"
-        android:layout_marginTop="8dp"
-        android:background="@null"
+        android:layout_width="221dp"
+        android:layout_height="68dp"
+        android:alpha="0.8"
+        android:background="@drawable/bennymainstartbutton"
         android:onClick="onClick"
         android:text="@string/playText"
         android:textColor="@color/white"
@@ -145,43 +117,151 @@ android:background="#0000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.976" />
 
-    <Button
-        android:id="@+id/Settings"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
+
+    <ImageView
+        android:id="@+id/BennyBackGroundImageview"
+        android:layout_width="match_parent"
+        android:layout_height="359dp"
+        android:paddingBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/bennykrop" />
+
+    <ImageView
+        android:id="@+id/taleboblenederstilvenstre"
+        android:layout_width="155dp"
+        android:layout_height="82dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/BennyBackGroundImageview"
+        app:layout_constraintEnd_toStartOf="@+id/talebobletilhojre"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.92"
+        app:srcCompat="@drawable/taleboble1" />
+
+    <ImageView
+        android:id="@+id/talebobletilhojre"
+        android:layout_width="146dp"
+        android:layout_height="245dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/BennyBackGroundImageview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.992"
+        app:srcCompat="@drawable/taleboble2" />
+
+    <ImageView
+        android:id="@+id/talebobleoversttilvenstre"
+        android:layout_width="210dp"
+        android:layout_height="99dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="O"
-        android:onClick="Settings"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.974"
+        app:layout_constraintBottom_toTopOf="@+id/taleboblenederstilvenstre"
+        app:layout_constraintEnd_toStartOf="@+id/talebobletilhojre"
+        app:layout_constraintHorizontal_bias="0.205"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintVertical_bias="0.981"
+        app:srcCompat="@drawable/taleboble3" />
 
     <TextView
-        android:id="@+id/CharecterTexxtview"
-        android:layout_width="193dp"
-        android:layout_height="43dp"
+        android:id="@+id/talebobletilhojreTEXTVIEW"
+        android:layout_width="111dp"
+        android:layout_height="152dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text=""
-        android:textAllCaps="true"
-        android:textSize="40dp"
-        android:textAlignment="center"
+        android:text="Jeg er sulten efter nogle meget røde klodser"
+        android:textColor="@color/black_overlay"
+        app:layout_constraintBottom_toBottomOf="@+id/talebobletilhojre"
+        app:layout_constraintEnd_toEndOf="@+id/talebobletilhojre"
+        app:layout_constraintStart_toStartOf="@+id/talebobletilhojre"
+        app:layout_constraintTop_toTopOf="@+id/talebobletilhojre"
+        app:layout_constraintVertical_bias="0.463" />
+
+    <TextView
+        android:id="@+id/talebobleoversttilvenstreTEXTVIEW"
+        android:layout_width="115dp"
+        android:layout_height="69dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/black_overlay"
+        android:layout_marginTop="8dp"
+        android:text="Jeg er sulten efter noget der siger miav miav"
+        app:layout_constraintBottom_toBottomOf="@+id/talebobleoversttilvenstre"
+        app:layout_constraintEnd_toEndOf="@+id/talebobleoversttilvenstre"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="@+id/talebobleoversttilvenstre"
+        app:layout_constraintTop_toTopOf="@+id/talebobleoversttilvenstre"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/taleboblenederstilvenstreTEXTVIEW"
+        android:layout_width="115dp"
+        android:textColor="@color/black_overlay"
+        android:layout_height="52dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Kan du prove at bygge et hus til mig?"
+        app:layout_constraintBottom_toBottomOf="@+id/taleboblenederstilvenstre"
+        app:layout_constraintEnd_toEndOf="@+id/taleboblenederstilvenstre"
+        app:layout_constraintStart_toStartOf="@+id/taleboblenederstilvenstre"
+        app:layout_constraintTop_toTopOf="@+id/taleboblenederstilvenstre" />
+
+    <ImageButton
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxWidth="30dp"
+        android:maxHeight="30dp"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="3dp"
+        android:background="@android:color/transparent"
+        android:onClick="info"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.946"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.224" />
+        app:layout_constraintVertical_bias="0.029"
+        app:srcCompat="@drawable/infoknap" />
+
+    <ImageButton
+        android:id="@+id/Settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:maxHeight="30dp"
+        android:maxWidth="30dp"
+        android:onClick="Settings"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.029"
+        app:srcCompat="@drawable/settingsknap" />
+
 
 
 </android.support.constraint.ConstraintLayout>

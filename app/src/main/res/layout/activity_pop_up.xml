@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/popupdesign"
     tools:context="com.example.morte.bennyapp.PopUpActivity">
 
     <Button
@@ -20,20 +21,48 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PopUpTextView"
-        app:layout_constraintVertical_bias="0.063" />
+        app:layout_constraintVertical_bias="0.096" />
 
     <TextView
         android:id="@+id/PopUpTextView"
         android:layout_width="226dp"
         android:layout_height="150dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="108dp"
+        android:textSize="15sp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies eu justo eu dignissim. Nulla a odio volutpat, consequat eros id, egestas dolor. Sed a augue eget odio bibendum tincidunt. Aenean pharetra nisl finibus feugiat dignissim. Etiam lobortis porttitor purus, at volutpat leo pellentesque eu. Donec aliquam odio at augue rhoncus, a varius justo volutpat. Praesent ut nulla purus. Duis et neque diam. Maecenas ut turpis at nisl venenatis interdum sit amet ut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="47dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultricies eu justo eu dignissim. Nulla a odio volutpat, consequat eros id, egestas dolor. Sed a augue eget odio bibendum tincidunt. Aenean pharetra nisl finibus feugiat dignissim. Etiam lobortis porttitor purus, at volutpat leo pellentesque eu. Donec aliquam odio at augue rhoncus, a varius justo volutpat. Praesent ut nulla purus. Duis et neque diam. Maecenas ut turpis at nisl venenatis interdum sit amet ut"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/infoknap"
+        app:layout_constraintBottom_toTopOf="@+id/PopUpTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.689" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Information"
+        app:layout_constraintBottom_toTopOf="@+id/PopUpTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.214" />
 </android.support.constraint.ConstraintLayout>

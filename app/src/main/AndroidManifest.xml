@@ -17,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".BennyMain">
+        <activity
+            android:name=".BennyMain"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,10 +36,13 @@
             android:screenOrientation="landscape" />
         <activity android:name=".LevelOfDifficulty" />
         <activity android:name=".OldDesign" />
+        <activity android:name=".SelectLanguage"></activity>
         <activity
             android:name=".PopUpActivity"
             android:theme="@style/AppTheme.PopMe" />
-        <activity android:name=".SelectLanguage"></activity>
+        <activity android:name=".MicNotPluggedIn"
+            android:screenOrientation="landscape"
+            ></activity>
     </application>
 
 </manifest>
