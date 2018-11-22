@@ -94,12 +94,12 @@ public class BennyMain extends AppCompatActivity {
 
         fade = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
 
+
         NextImageview.setOnTouchListener(new OnSwipeListener(this) {
 
-            public void onSwipeTop() {
+                                             public void onSwipeTop() {
 
-            }
-
+                                             }
             public void onSwipeRight() {
                 NextButtonanimationer(CurrentImageview, NextImageview);
 
@@ -667,7 +667,6 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
         // New activity with options to calibrate, about us and so on.
         Intent i = new Intent(this, Settings.class);
         startActivity(i);
-
     }
 
 
@@ -758,4 +757,4 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 }
 
 
-
+ }
