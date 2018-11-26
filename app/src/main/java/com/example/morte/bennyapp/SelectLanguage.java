@@ -13,10 +13,10 @@ public class SelectLanguage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_language);
     }
-
+/*
     public void HighLightMarkedCharecter() {
         Button button1 = findViewById(R.id.buttonselection1);
-        Button button2 = findViewById(R.id.buttonselection2);
+       Button button2 = findViewById(R.id.buttonselection2);
         Button button3 = findViewById(R.id.buttonselection3);
         switch (id) {
             case 1:
@@ -39,5 +39,5 @@ public class SelectLanguage extends AppCompatActivity {
         }
 
 
-    }
+    }*/
 }
