@@ -222,6 +222,7 @@ public class LoggingData extends AppCompatActivity {
 
         }**/ catch (FileNotFoundException e) {
             e.printStackTrace();
+
         } catch (StreamCorruptedException e) {
             e.printStackTrace();
         }/** catch (ClassNotFoundException e) {

@@ -73,34 +73,31 @@
 
     <ImageButton
         android:id="@+id/BackButton"
-        android:onClick="back"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/pilvenstre"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="58dp"
+        android:onClick="back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintHorizontal_bias="0.165"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.675"
-        />
+        app:layout_constraintVertical_bias="0.636"
+        app:srcCompat="@drawable/pilvenstre" />
 
 
     <ImageButton
         android:id="@+id/nextbuttton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:background="@android:color/transparent"
         android:onClick="next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.975"
+        app:layout_constraintHorizontal_bias="0.829"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.674"
+        app:layout_constraintVertical_bias="0.636"
         app:srcCompat="@drawable/pilhojre" />
 
     <Button
@@ -261,6 +258,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.029"
         app:srcCompat="@drawable/settingsknap" />
+
+
+    <ImageView
+        android:id="@+id/SwipeForNextCharecter"
+        android:layout_width="match_parent"
+        android:layout_height="323dp"
+        android:layout_marginBottom="104dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 

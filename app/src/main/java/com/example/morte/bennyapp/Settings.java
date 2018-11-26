@@ -73,6 +73,12 @@ public class Settings extends AppCompatActivity {
         Intent i = new Intent(this, LoggingData.class);
         startActivity(i);
     }
+
+    public void openMortenactiivty(View view) {
+
+        Intent i = new Intent(this, Introduction.class);
+        startActivity(i);
+    }
 }
 
 

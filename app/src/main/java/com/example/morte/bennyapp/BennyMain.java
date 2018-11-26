@@ -64,6 +64,7 @@ public class BennyMain extends AppCompatActivity {
     TextView TextViewBobleHojre;
     TextView TextViewBobleDownLeft;
     TextView TextviewBobleOverstLeft;
+    ImageView SwipeView;
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
     private static final int MY_PERMISSION_REQUEST = 1;  //Skal bruges til at tilgå external storage
@@ -91,11 +92,11 @@ public class BennyMain extends AppCompatActivity {
         id = 1;
         CurrentImageview = (ImageView) findViewById(R.id.FrontImageView);
         NextImageview = (ImageView) findViewById(R.id.BackImageView);
-
+        SwipeView = findViewById(R.id.SwipeForNextCharecter);
         fade = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
 
 
-        NextImageview.setOnTouchListener(new OnSwipeListener(this) {
+        SwipeView.setOnTouchListener(new OnSwipeListener(this) {
 
                                              public void onSwipeTop() {
 
@@ -336,6 +337,8 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
     public void next(View view) {
 
+/*
+
         NextButtonanimationer(CurrentImageview, NextImageview);
         id++;
         if (id > 3) {
@@ -343,10 +346,14 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
         }
         Toast.makeText(this, "Id er" + " " + id, Toast.LENGTH_SHORT).show();
        // HighLightMarkedCharecter();
+
+  */
     }
 
     public void back(View view) {
 
+
+        /*
         PrevButtonAnimmationer(CurrentImageview, NextImageview);
         id--;
         if (id < 1) {
@@ -355,6 +362,8 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
         Toast.makeText(this, "Id er" + " " + id, Toast.LENGTH_SHORT).show();
        // HighLightMarkedCharecter();
+
+    */
     }
 
 
@@ -757,4 +766,3 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 }
 
 
- }

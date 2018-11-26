@@ -6,79 +6,102 @@
     android:layout_height="match_parent"
     tools:context="com.example.morte.bennyapp.LevelOfDifficulty">
 
-    <SeekBar
-        android:id="@+id/SbBuild"
-        android:layout_width="307dp"
-        android:layout_height="130dp"
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="288dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/SbCollect"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.678" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <SeekBar
-        android:id="@+id/SbCollect"
-        android:layout_width="307dp"
-        android:layout_height="130dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:thumb="@drawable/legobrick"
-        android:layout_marginTop="408dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <RadioButton
+            android:id="@+id/radioOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="40dp"
+            android:onClick="CheckButton"
+            android:checked="true"
+            android:text="My child likes to build and collect equallly much"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/TwBuild"
-        android:layout_width="175dp"
-        android:layout_height="43dp"
+        <RadioButton
+            android:id="@+id/radioTwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:onClick="CheckButton"
+            android:text="My child likes buidling"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="101dp" />
+
+        <RadioButton
+            android:id="@+id/radioThree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:onClick="CheckButton"
+            android:text="My child likes collecting"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radioButton2"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/SavePlayValue"
+        android:layout_width="160dp"
+        android:layout_height="74dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="192dp"
-        android:text="textview"
+        android:layout_marginTop="8dp"
+        android:alpha="0"
+        android:enabled="false"
+        android:onClick="SaveClick"
+        android:background="@drawable/bennymainstartbutton"
+        android:backgroundTint="#00FF00"
+        android:text="GoPlay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.027" />
+        app:layout_constraintTop_toBottomOf="@+id/try2" />
 
-    <TextView
-        android:id="@+id/TwCollect"
-        android:layout_width="173dp"
-        android:layout_height="50dp"
+    <Button
+        android:id="@+id/ReturnClick"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="192dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="360dp"
-        android:text="TextView"
+        android:layout_marginTop="8dp"
+        android:text="B"
+        android:onClick="Return"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintHorizontal_bias="0.026"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
-        android:id="@+id/SaveButton"
-        android:layout_width="match_parent"
-        android:layout_height="68dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Save"
-        android:onClick="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>
