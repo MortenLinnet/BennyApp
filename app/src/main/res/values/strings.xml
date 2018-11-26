@@ -14,4 +14,8 @@
     <string name="animation4">Animation4</string>
     <string name="animation5">Animation5</string>
     <string name="animation6">Animation6</string>
+    <string name="startBennyText">HELLO FRIENDS!</string>
+    <string name="startText">Get ready to play! \n First, you need to \n choose which \n language Benny \n should speak in!</string>
+
+
 </resources>

@@ -755,6 +755,3 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
     }
 }
-
-
- }
