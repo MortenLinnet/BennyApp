@@ -554,7 +554,6 @@ InitBennyOjneArray();
        RequestNotActiveCountdownTimer.start();
        SuperRequestTidCountdownTimer.start();
 
-
    }
 
 
