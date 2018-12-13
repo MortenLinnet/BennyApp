@@ -60,6 +60,8 @@ public class BennyMain extends AppCompatActivity {
     int LocationOOfImage = 1800;
     int id;
 
+    AnimatorSet animatorset;
+
 
     TextView TextViewBobleHojre;
     TextView TextViewBobleDownLeft;
@@ -70,12 +72,15 @@ public class BennyMain extends AppCompatActivity {
     private static final int MY_PERMISSION_REQUEST = 1;  //Skal bruges til at tilgå external storage
     private static final int REQUEST_WRITE_STORAGE = 112;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SetLanguage();
         setContentView(R.layout.activity_benny_main);
 
-        SetLanguage();
+
 
         next = findViewById(R.id.nextbuttton);
         prev = findViewById(R.id.BackButton);
@@ -88,6 +93,7 @@ public class BennyMain extends AppCompatActivity {
          TextViewBobleDownLeft = findViewById(R.id.taleboblenederstilvenstreTEXTVIEW);
          TextviewBobleOverstLeft = findViewById(R.id.talebobleoversttilvenstreTEXTVIEW);
 
+animatorset = new AnimatorSet();
 
         id = 1;
         CurrentImageview = (ImageView) findViewById(R.id.FrontImageView);
@@ -102,34 +108,38 @@ public class BennyMain extends AppCompatActivity {
 
                                              }
             public void onSwipeRight() {
-                NextButtonanimationer(CurrentImageview, NextImageview);
 
-                id++;
-                if (id > 3) {
-                    id = 1;
+
+                if (!animatorset.isRunning()) {
+                    NextButtonanimationer(CurrentImageview, NextImageview);
+
+                    id++;
+                    if (id > 3) {
+                        id = 1;
+                    }
+                    SetStringInTextboxeses(Language);
+                    talebobler();
+
+
+                   // Toast.makeText(BennyMain.this, "" + id, Toast.LENGTH_SHORT).show();
+                    //HighLightMarkedCharecter();
                 }
-                SetStringInTextboxeses(Language);
-                talebobler();
-
-
-                Toast.makeText(BennyMain.this, "" + id, Toast.LENGTH_SHORT).show();
-                //HighLightMarkedCharecter();
             }
-
             public void onSwipeLeft() {
+                if (!animatorset.isRunning()) {
 
-                PrevButtonAnimmationer(CurrentImageview, NextImageview);
+                    PrevButtonAnimmationer(CurrentImageview, NextImageview);
 
-                id--;
-                if (id < 1) {
-                    id = 3;
+                    id--;
+                    if (id < 1) {
+                        id = 3;
+                    }
+                    SetStringInTextboxeses(Language);
+                    talebobler();
+                  //  Toast.makeText(BennyMain.this, "" + id, Toast.LENGTH_SHORT).show();
+                    //   HighLightMarkedCharecter();
                 }
-                SetStringInTextboxeses(Language);
-                talebobler();
-                Toast.makeText(BennyMain.this, ""+ id, Toast.LENGTH_SHORT).show();
-             //   HighLightMarkedCharecter();
             }
-
 
             @Override
             public void onClick() {
@@ -140,7 +150,7 @@ public class BennyMain extends AppCompatActivity {
             @Override
             public void onLooongPress() {
 
-                Toast.makeText(BennyMain.this, "LongPress", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(BennyMain.this, "LongPress", Toast.LENGTH_SHORT).show();
 
                 super.onLooongPress();
             }
@@ -192,6 +202,12 @@ public class BennyMain extends AppCompatActivity {
 
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SetLanguage();
+    }
+
     public void NextButtonanimationer(ImageView LeaveView, ImageView EnterView) {
         UpdateNextImages();
         //  CurrentImageview.setAlpha(100);
@@ -205,9 +221,12 @@ public class BennyMain extends AppCompatActivity {
         EnterAnimation.setDuration(Animationtime);
         //EnterAnimation.start();
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(LeaveAnimation, EnterAnimation);
-        animatorSet.start();
+       // AnimatorSet animatorSet = new AnimatorSet();
+
+        animatorset.playTogether(LeaveAnimation,EnterAnimation);
+        animatorset.start();
+   //     animatorSet.playTogether(LeaveAnimation, EnterAnimation);
+     //   animatorSet.start();
 
 
     }
@@ -225,9 +244,12 @@ public class BennyMain extends AppCompatActivity {
         EnterAnimation.setDuration(Animationtime);
         //EnterAnimation.start();
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(LeaveAnimation, EnterAnimation);
-        animatorSet.start();
+     //   AnimatorSet animatorSet = new AnimatorSet();
+
+       animatorset.playTogether(LeaveAnimation,EnterAnimation);
+       animatorset.start();
+        //animatorSet.playTogether(LeaveAnimation, EnterAnimation);
+        //animatorSet.start();
 
 
     }
@@ -310,25 +332,25 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
 
 
-        AnimatorSet animatorSet = new AnimatorSet();
+     //   AnimatorSet animatorSet = new AnimatorSet();  //Bruger ikke den her men en global så jeg kan tjekke om den kører oppe i swipe, så den ikke kører flere gange på samme tid
 
         //textbobler animationer
-        animatorSet.play(EnterAnimationRight).with(HojreFadeOut).before(HojreFadeIn);
-        animatorSet.play(EnterAnimationRightTextView).with(HojreFadeOutText).before(HojreFadeInTExt);
+        animatorset.play(EnterAnimationRight).with(HojreFadeOut).before(HojreFadeIn);
+        animatorset.play(EnterAnimationRightTextView).with(HojreFadeOutText).before(HojreFadeInTExt);
 
 
 
-        animatorSet.play(EnterAnimationDownLeft).with(DownleftFadeOut).before(DownLeftFadeIn);
-        animatorSet.play(EnterAnimationDownLeftTextView).with(DownleftFadeOutTextview).before(DownleftFadeINTextview);
+        animatorset.play(EnterAnimationDownLeft).with(DownleftFadeOut).before(DownLeftFadeIn);
+        animatorset.play(EnterAnimationDownLeftTextView).with(DownleftFadeOutTextview).before(DownleftFadeINTextview);
 
         //textview animationer
-        animatorSet.play(EnterAnimationUpLeft).with(UpLeftFadeOut).before(UpLeftFadeIn);
-        animatorSet.play(EnterAnimationUpLeftTextView).with(UpLeftFadeOutTextview).before(UpLeftFadeINTextview);
+        animatorset.play(EnterAnimationUpLeft).with(UpLeftFadeOut).before(UpLeftFadeIn);
+        animatorset.play(EnterAnimationUpLeftTextView).with(UpLeftFadeOutTextview).before(UpLeftFadeINTextview);
 
 
 
         //animatorSet.playTogether(EnterAnimationRight);
-        animatorSet.start();
+        animatorset.start();
 
 
 
@@ -337,33 +359,40 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
     public void next(View view) {
 
-/*
+        if (!animatorset.isRunning()) {
+            NextButtonanimationer(CurrentImageview, NextImageview);
 
-        NextButtonanimationer(CurrentImageview, NextImageview);
-        id++;
-        if (id > 3) {
-            id = 1;
+            id++;
+            if (id > 3) {
+                id = 1;
+            }
+            SetStringInTextboxeses(Language);
+            talebobler();
+
+
+            // Toast.makeText(BennyMain.this, "" + id, Toast.LENGTH_SHORT).show();
+            //HighLightMarkedCharecter();
         }
-        Toast.makeText(this, "Id er" + " " + id, Toast.LENGTH_SHORT).show();
-       // HighLightMarkedCharecter();
-
-  */
     }
 
     public void back(View view) {
 
 
-        /*
-        PrevButtonAnimmationer(CurrentImageview, NextImageview);
-        id--;
-        if (id < 1) {
-            id = 3;
+
+        if (!animatorset.isRunning()) {
+
+            PrevButtonAnimmationer(CurrentImageview, NextImageview);
+
+            id--;
+            if (id < 1) {
+                id = 3;
+            }
+            SetStringInTextboxeses(Language);
+            talebobler();
+            //  Toast.makeText(BennyMain.this, "" + id, Toast.LENGTH_SHORT).show();
+            //   HighLightMarkedCharecter();
         }
 
-        Toast.makeText(this, "Id er" + " " + id, Toast.LENGTH_SHORT).show();
-       // HighLightMarkedCharecter();
-
-    */
     }
 
 
@@ -468,7 +497,7 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
     public void viewMessage(View view) {
         ImageButton clickedButton = (ImageButton) view;
-        Toast.makeText(this, "virker det her", Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(this, "virker det her", Toast.LENGTH_SHORT).show();
         Button playB = (Button) findViewById(R.id.playButton);
         switch (clickedButton.getId()) {
             case R.id.imageButton1:
@@ -561,10 +590,10 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
             Language = languageIdentifyer;
 
 
-            Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
 
         } catch (NullPointerException e) {
-            Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
         }
 
         SetStrings(Language);
@@ -595,14 +624,14 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
       if (lang == 1) {
 
-          Toast.makeText(this, "Er jeg hernede i engelsk?", Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(this, "Er jeg hernede i engelsk?", Toast.LENGTH_SHORT).show();
           EnglishLangTextbobbles();
 
 
       }
       if (lang == 2){
 
-          Toast.makeText(this, "Er jeg hernede i dansk?", Toast.LENGTH_SHORT).show();
+          //Toast.makeText(this, "Er jeg hernede i dansk?", Toast.LENGTH_SHORT).show();
           DanishLangTextbobbles();
 
 
@@ -616,7 +645,7 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
     public void DanishLangTextbobbles(){
 
-        Toast.makeText(this, "Id i Lang er  "+ id, Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(this, "Id i Lang er  "+ id, Toast.LENGTH_SHORT).show();
 
         if (id== 1) {
 
@@ -646,7 +675,7 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
         if (id== 1) {
 
-            TextbobbleRIGHT = "I'm hnugry for them red bricks, yo.";
+            TextbobbleRIGHT = "I'm hnugry for red bricks";
             TextbobbleLowLeft = "I have never eaten a house before, can you build me one?";
             TextBobbleTopRight = "I'm hungry for something that says MUUUHHH";
 
@@ -654,7 +683,7 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
         if (id== 2) {
 
-            TextbobbleRIGHT = "I'm may me the worst pirate you have ever heard about, but atleast you have heard of me";
+            TextbobbleRIGHT = "I may be the worst pirate you have ever heard of, but atleast you have heard of me";
             TextbobbleLowLeft = "There is a bounty on my head";
             TextBobbleTopRight = "I'm feeling a bit seasick over here";
         }
@@ -663,7 +692,7 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
                 TextbobbleRIGHT = "oH MY. My balloon took off, can you build me a new one?";
                 TextbobbleLowLeft = "I like to move move it, i like to move it.";
-                TextBobbleTopRight = "Honk Honk cnineese gue";
+                TextBobbleTopRight = "Honk Honk chineese gue";
 
 
 
@@ -697,7 +726,7 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
                     }
                 } else  {
-                    Toast.makeText(this, "You have to give access", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(this, "You have to give access", Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 return;

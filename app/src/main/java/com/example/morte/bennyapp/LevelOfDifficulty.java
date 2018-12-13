@@ -35,6 +35,14 @@ public class LevelOfDifficulty extends AppCompatActivity  {
     //private int lol;
 
 
+
+    String Playvalue;
+    String Radio1;
+    String Radio2;
+    String Radio3;
+    String SaveButtonText;
+
+
     Button SaveButton;
     RadioGroup radioGroup;
     RadioButton radioButton;
@@ -44,6 +52,7 @@ public class LevelOfDifficulty extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_of_difficulty);
 
+        language(2);
 
         SaveButton = findViewById(R.id.SavePlayValue);
 //SeekbarCollecting();
@@ -63,6 +72,48 @@ radioGroup = findViewById(R.id.radiogroup);
 
 
     }
+
+    private void language(int language) {
+        if (language == 1){
+
+            Playvalue = "Play value";
+            Radio1 = "My child likes to build and collect equally much";
+            Radio2 = "My child likes to build";
+            Radio3 = "My child likes to collect";
+             SaveButtonText = "Save";
+
+            setlangage();
+        }
+
+        if (language == 2){
+
+            Playvalue = "Hvordan skal vi lege?";
+            Radio1 = "Mit barn kan lide at bygge og finde lige højt";
+            Radio2 = "Mit barn kan bedst lide at bygge";
+            Radio3 = "Mit barn kan bedst lide at indsamle";
+            SaveButtonText = "Gem";
+
+            setlangage();
+        }
+
+
+
+    }
+
+    public void setlangage(){
+        TextView playvaluetextview =findViewById(R.id.playvaluetextview);
+        RadioButton radioButton1 = findViewById(R.id.radioOne);
+        RadioButton radioButton2 = findViewById(R.id.radioTwo);
+        RadioButton radioButton3 = findViewById(R.id.radioThree);
+SaveButton = findViewById(R.id.SavePlayValue);
+       SaveButton.setText(SaveButtonText);
+       playvaluetextview.setText(Playvalue);
+        radioButton1.setText(Radio1);
+        radioButton2.setText(Radio2);
+        radioButton3.setText(Radio3);
+
+    }
+
 
     public void CheckButton(View view) {
     int radioID = radioGroup.getCheckedRadioButtonId();

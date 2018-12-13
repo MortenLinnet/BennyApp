@@ -24,23 +24,22 @@
 
     <TextView
         android:id="@+id/CharecterTexxtview"
-        android:layout_width="289dp"
+        android:layout_width="336dp"
         android:layout_height="100dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="lolol"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="40dp"
+        android:textSize="35dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.062" />
+        app:layout_constraintVertical_bias="0.113" />
 
     <ImageView
         android:id="@+id/FrontImageView"
@@ -70,35 +69,6 @@
         app:layout_constraintVertical_bias="0.175"
         app:srcCompat="@drawable/bennyojne" />
 
-
-    <ImageButton
-        android:id="@+id/BackButton"
-        android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:background="@android:color/transparent"
-        android:onClick="back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.165"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"
-        app:srcCompat="@drawable/pilvenstre" />
-
-
-    <ImageButton
-        android:id="@+id/nextbuttton"
-        android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:background="@android:color/transparent"
-        android:onClick="next"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.829"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"
-        app:srcCompat="@drawable/pilhojre" />
 
     <Button
         android:id="@+id/playButton"
@@ -232,7 +202,6 @@
         android:scaleType="fitCenter"
         android:layout_marginLeft="3dp"
         android:background="@android:color/transparent"
-        android:onClick="info"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.946"
@@ -273,6 +242,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <ImageButton
+        android:id="@+id/nextbuttton"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:background="@android:color/transparent"
+        android:onClick="next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.829"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.636"
+        app:srcCompat="@drawable/pilhojre" />
+
+    <ImageButton
+        android:id="@+id/BackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:background="@android:color/transparent"
+        android:onClick="back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.165"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.636"
+        app:srcCompat="@drawable/pilvenstre" />
 
 
 </android.support.constraint.ConstraintLayout>

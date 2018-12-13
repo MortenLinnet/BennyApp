@@ -19,4 +19,16 @@
 
     </style>
 
+    <style name="RadioButtonStyle" parent="AppTheme">
+        <item name="colorControlNormal">#A4A4A4</item>
+        <item name="colorAccent">#58FA82</item>
+        <item name="android:textColorSecondary">#FF00FF</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingLeft">70dp</item>
+        <item name="android:paddingRight">30dp</item>
+
+    </style>
+
+
+
 </resources>

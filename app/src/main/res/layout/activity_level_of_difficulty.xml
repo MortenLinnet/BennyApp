@@ -4,61 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/playsettings"
     tools:context="com.example.morte.bennyapp.LevelOfDifficulty">
 
 
     <RadioGroup
         android:id="@+id/radiogroup"
-        android:layout_width="288dp"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="300dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="center"
+        android:background="@drawable/radiogroupbackground"
+        android:gravity="left"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6"
+        app:layout_optimizationLevel="none">
 
         <RadioButton
             android:id="@+id/radioOne"
-            android:layout_width="wrap_content"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="40dp"
-            android:onClick="CheckButton"
             android:checked="true"
+            android:onClick="CheckButton"
             android:text="My child likes to build and collect equallly much"
+            android:textColor="@color/black_overlay"
+            android:textColorLink="@color/colorAccent"
+            android:theme="@style/RadioButtonStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <RadioButton
             android:id="@+id/radioTwo"
-            android:layout_width="wrap_content"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:onClick="CheckButton"
             android:text="My child likes buidling"
+            android:textColor="@color/black_overlay"
+
+            android:theme="@style/RadioButtonStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="101dp" />
 
         <RadioButton
             android:id="@+id/radioThree"
-            android:layout_width="wrap_content"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
+
             android:onClick="CheckButton"
             android:text="My child likes collecting"
+            android:textColor="@color/black_overlay"
+            android:theme="@style/RadioButtonStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +79,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
     </RadioGroup>
+
 
     <Button
         android:id="@+id/SavePlayValue"
@@ -86,22 +100,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/try2" />
 
-    <Button
-        android:id="@+id/ReturnClick"
-        android:layout_width="35dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+
+    <TextView
+        android:id="@+id/playvaluetextview"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginBottom="548dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="B"
-        android:onClick="Return"
+        android:text="Play values"
+        android:scaleType="fitXY"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="24dp"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent"
+        android:onClick="Return"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.054"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.034"
+        app:srcCompat="@drawable/backfromsetting" />
 
 
 </android.support.constraint.ConstraintLayout>

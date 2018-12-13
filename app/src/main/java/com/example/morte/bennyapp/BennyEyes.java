@@ -10,6 +10,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,7 +71,7 @@ public class BennyEyes extends AppCompatActivity {
                 //Log.i("Noise", "==== onCreate ===");
             }
 
-            if (amp > 7){
+            if (amp > 7 && !mediaPlayer.isPlaying()){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
             else {
@@ -115,11 +116,19 @@ public class BennyEyes extends AppCompatActivity {
     int HardTaskProperbility = 40; //Under/lig 40 = 40%
     int EasyTaskProperbility = 40; //Over 40-100 == 60%
 
+
+    int IdleChanceNumber;
+
     int HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime;
     double temp;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
         setContentView(R.layout.activity_benny_eyes);
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
@@ -165,6 +174,15 @@ HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime = 0;
 temp =0;
 ReadyForFeedback = false;
 InitBennyOjneArray();
+
+IdleChanceNumber= 0;
+
+
+
+
+
+
+
 
 
     }
@@ -432,6 +450,32 @@ InitBennyOjneArray();
         DecibelTextView.setText(signalEMA+"dB");
     }
 
+
+    public void IdleLines(){
+
+
+        //Okay så den er tikker hvert sekund, jeg ved ikke om det er for meget for den stakkels mobil?
+
+        int DerMåMaksGåSåLangTidFørDerKommerEnIdleLine = 15;
+        int MinimumFørDerKOmmerEnIdleLine = 5;
+
+
+        Random r = new Random();
+        int LocalIdleChanceNumber= r.nextInt((DerMåMaksGåSåLangTidFørDerKommerEnIdleLine-MinimumFørDerKOmmerEnIdleLine)+1)+MinimumFørDerKOmmerEnIdleLine;   //  ((max - min) + 1) + min;
+
+
+        IdleChanceNumber++; //Tæller den op hvert sekund
+        if (IdleChanceNumber > LocalIdleChanceNumber){
+
+            Toast.makeText(BennyEyes.this, "IdleLine" + IdleChanceNumber, Toast.LENGTH_SHORT).show();
+            IdleChanceNumber = 0;
+        }
+
+
+    }
+
+
+
     private void SuperRequestTimerStart(){
         SuperRequestTidCountdownTimer = new CountDownTimer(TimeLeftInMillisSuperRequestTime, 1000) {
 
@@ -441,6 +485,10 @@ InitBennyOjneArray();
                 TimeLeftInMillisSuperRequestTime = millisuntillfinish;
                 UpdateSuperRequestTextview();
 
+
+
+
+            IdleLines();
                 // HER KUNNE MAN HAVE EN RANDOM FUNKTION DER SIGER NOGET I STIL MED 1/50 GANGE DEN TIKKER SÅ SIG EN IDLE REPLIK?
                 // ELLER NÅR DEN HAR TIKKET X ANTAL GANGE FYR EN IDLE REPLIK
             }
