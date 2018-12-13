@@ -107,7 +107,7 @@
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:background="@null"
-                android:onClick="LangSelect"
+                android:onClick="english"
                 app:srcCompat="@drawable/en"
                 />
 
@@ -121,7 +121,7 @@
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:background="@null"
-                android:onClick="LangSelect"
+                android:onClick="german"
                 app:srcCompat="@drawable/de"
                 />
 

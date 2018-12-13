@@ -602,7 +602,6 @@ IdleChanceNumber= 0;
        RequestNotActiveCountdownTimer.start();
        SuperRequestTidCountdownTimer.start();
 
-
    }
 
 
