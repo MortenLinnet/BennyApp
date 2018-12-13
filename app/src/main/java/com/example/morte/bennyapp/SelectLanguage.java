@@ -59,13 +59,9 @@ AnimatorSet animatorSet;
         main_Text.setTypeface(standard_font);
         animatorSet = new AnimatorSet();
 
-    }
-        startButton.setEnabled(false);
 
-    public void startApp (View v) {
-        Intent i = new Intent(this, Introduction.class);
-        startActivity(i);
-    }
+
+
         SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
         AppLanguage = pref.getString("AppLanguage", null);
 
@@ -83,6 +79,15 @@ AnimatorSet animatorSet;
 
         Toast.makeText(this, "Applang = " + AppLanguage, Toast.LENGTH_SHORT).show();
     }
+
+
+     //   startButton.setEnabled(false);
+
+    public void startApp (View v) {
+        Intent i = new Intent(this, Introduction.class);
+        startActivity(i);
+    }
+
 
     public void SwitchBetweenLang (Integer LangInt) {
         switch (LangInt) {
@@ -150,13 +155,16 @@ AnimatorSet animatorSet;
    }
 
     public void danish (View v) {
-        danishButton = (ImageButton) findViewById(R.id.danish);
-animations(R.drawable.danish);
+     //   danishButton = (ImageButton) findViewById(R.id.danish);  // Det er mig der lige har taget det med fra merge 13/12
+        animations(R.drawable.danish);                                   // samme som oven
         SwitchBetweenLang(1);
     }
 
     public void english (View v) {
         SwitchBetweenLang(2);
+
+        animations(R.drawable.british);
+        
     }
 
     public void german (View v) {
@@ -179,10 +187,7 @@ animations(R.drawable.danish);
         }
     }
 
-    public void startApp (View v) {
-        Intent i = new Intent(this, LoggingData.class);
-        startActivity(i);
-    }
+
 
     public void SetStrings(Integer lang) {
         if (lang == 1) {
