@@ -18,7 +18,7 @@ import android.widget.Toast;
 public class SelectLanguage extends AppCompatActivity {
 
     int id;
-    public static String BennyPreferences;
+    public static final String BennyPreferences = "BennyPreferences";
     boolean booleanDanishActive = false;
     boolean booleanEnglishActive = false;
     boolean booleanGermanActive = false;
@@ -26,7 +26,7 @@ public class SelectLanguage extends AppCompatActivity {
     public static String DanishActive;
     public static String EnglishActive;
     public static String GermanActive;
-    public static String AppLanguage;
+    public static Integer AppLanguage;
 
     ImageButton danishButton;
     ImageButton englishButton;
@@ -63,16 +63,16 @@ AnimatorSet animatorSet;
 
 
         SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
-        AppLanguage = pref.getString("AppLanguage", null);
+        AppLanguage = pref.getInt("AppLanguage", 0);
 
-        if (AppLanguage != null) {
-            if (AppLanguage.equals("DanishActive")) {
+        if (AppLanguage != 0) {
+            if (AppLanguage.equals(1)) {
                 SwitchBetweenLang(1);
             }
-            else if (AppLanguage.equals("EnglishActive") ) {
+            else if (AppLanguage.equals(2) ) {
                 SwitchBetweenLang(2);
             }
-            else if (AppLanguage.equals("GermanActive")) {
+            else if (AppLanguage.equals(3)) {
                 SwitchBetweenLang(3);
             }
         }
@@ -102,7 +102,7 @@ AnimatorSet animatorSet;
                 SetStrings(1);
 
                 isStartButtonChanged(true);
-                save("DanishActive");
+                save(1);
                 break;
 
             case 2:
@@ -116,7 +116,7 @@ AnimatorSet animatorSet;
                 SetStrings(2);
 
                 isStartButtonChanged(true);
-                save("EnglishActive");
+                save(2);
                 break;
 
             case 3:
@@ -130,7 +130,7 @@ AnimatorSet animatorSet;
                 SetStrings(3);
 
                 isStartButtonChanged(true);
-                save("GermanActive");
+                save(3);
                 break;
         }
     }
@@ -205,10 +205,10 @@ AnimatorSet animatorSet;
         }
     }
 
-    public void save (String input) {
+    public void save (Integer input) {
         SharedPreferences prefs = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("AppLanguage", input);
+        editor.putInt("AppLanguage", input);
         editor.apply();
         Toast.makeText(this, "Language saved: " + input, Toast.LENGTH_SHORT).show();
     }

@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.ImageFormat;
 import android.graphics.Typeface;
 import android.Manifest;
@@ -36,7 +37,6 @@ import org.w3c.dom.Text;
 import java.io.File;
 
 public class BennyMain extends AppCompatActivity {
-    public static final String PREFS_NAME = "PrefsFile";
     public static int whatText;
     public Integer Language;
     String Benny;
@@ -70,7 +70,6 @@ public class BennyMain extends AppCompatActivity {
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
     private static final int MY_PERMISSION_REQUEST = 1;  //Skal bruges til at tilgå external storage
-    private static final int REQUEST_WRITE_STORAGE = 112;
 
 
 
@@ -80,6 +79,17 @@ public class BennyMain extends AppCompatActivity {
         SetLanguage();
         setContentView(R.layout.activity_benny_main);
 
+
+
+
+        // Brug SelectLanguage.AppLanguage til at hente sproget
+        SharedPreferences pref = getSharedPreferences(SelectLanguage.BennyPreferences, Context.MODE_PRIVATE);
+        SelectLanguage.AppLanguage = pref.getInt("AppLanguage", 1);
+
+
+
+
+        SetLanguage();
 
 
         next = findViewById(R.id.nextbuttton);
