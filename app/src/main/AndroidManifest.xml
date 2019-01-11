@@ -49,6 +49,9 @@
         <activity android:name=".Linestest"
             android:screenOrientation="landscape"
             ></activity>
+        <activity android:name=".Introduction" />
+        <activity android:name=".OldIntroduction" />
+        <activity android:name=".Oldintro"></activity>
     </application>
 
 </manifest>

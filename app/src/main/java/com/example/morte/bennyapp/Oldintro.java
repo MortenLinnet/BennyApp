@@ -2,11 +2,8 @@ package com.example.morte.bennyapp;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,11 +16,9 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-public class Introduction extends AppCompatActivity {
-    public static final String BennyPreferences = "BennyPreferences";
+public class Oldintro extends AppCompatActivity {
     ImageView SwipeView;
     int CurrentPlace;
-    public static Integer AppLanguage;
 
     ImageView FourDotsView;
     AnimatorSet animatorSet;
@@ -31,10 +26,8 @@ public class Introduction extends AppCompatActivity {
     TextView textbobltext;
     ImageView talebobl;
     TextView infotext;
-    TextView introduction;
-    TextView buttontext;
+
     ImageButton NextButton;
-    TextView robertText;
 
     String TextboblinformationOne;
     String TextboblinformationTwo;
@@ -44,39 +37,27 @@ public class Introduction extends AppCompatActivity {
     String InfroTextTwo;
     String InfoTextThree;
     String InfoTextFour;
-    String Robert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStrings(1);
         setContentView(R.layout.activity_introduction);
 
-        SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
-        AppLanguage = pref.getInt("AppLanguage", 0);
-        setStrings(AppLanguage);
-
-        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/webfont.ttf");
-        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/Effra Light.ttf");
 
         infotext = findViewById(R.id.infotext);
-        infotext.setTypeface(standard_font);
         infotext.setText(InfoTextOne);
-        introduction = findViewById(R.id.IntroductionText);
-        introduction.setTypeface(bold_font);
+        TextView introduction = findViewById(R.id.IntroductionTextview);
         introduction.setText(Headline);
 
-        buttontext = findViewById(R.id.ButtonTextIntroduction);
-        buttontext.setTypeface(bold_font);
+        TextView buttontext = findViewById(R.id.ButtonTextIntroduction);
         buttontext.setText(ButtonText);
 
-        robertText = findViewById(R.id.robertText);
-        robertText.setTypeface(bold_font);
-        robertText.setText(Robert);
 
         SwipeView = findViewById(R.id.SwipeView);
         talebobl = findViewById(R.id.talebobl);
         textbobltext = findViewById(R.id.talebobltextintroduction);
-        textbobltext.setTypeface(standard_font);
+
 
         FourDotsView = findViewById(R.id.FourDotsImageView);
         haandview= findViewById(R.id.haandview);
@@ -122,15 +103,15 @@ public class Introduction extends AppCompatActivity {
 
         if (Id == 1){
 
-            TextboblinformationOne = "I'm hungry for a green brick! Can you find  one for me?";
-            TextboblinformationTwo = "Mmmhhh, that tasted delicious!";
+            TextboblinformationOne = "I would like you to find a green brick for me";
+            TextboblinformationTwo = "What a cool brick you found";
             Headline = "Introduction";
             ButtonText = "Next";
-            InfoTextOne = "Benny bot is an embodied conversational agent, who facilitates play, through speech and tasks. He provides request for both building and collecting.";
-            InfroTextTwo = "The child then picks up the bricks Benny requested for and feeds him the brick.";
-            InfoTextThree = "Benny then provides engaging humoroues feedback.";
-            InfoTextFour = "Before the play begin you need to choose which personality to play with. Each personality have different traits and requests.";
-            Robert = "Robert";
+            InfoTextOne = "Benny bot is an embodied conversational agent, who facilitates play, through speech and tasks. He provides request for both building and collecting";
+            InfroTextTwo = "The child then picks up the bricks Benny requested for and feeds him the brick";
+            InfoTextThree = "Benny then provides engaging humoroues feedback";
+            InfoTextFour = "Before the play begin you need to choose which personality to play with. Each personality have different traits and requests";
+
 
 
         }
@@ -146,7 +127,7 @@ public class Introduction extends AppCompatActivity {
             InfroTextTwo = "";
             InfoTextThree ="";
             InfoTextFour = "";
-            Robert = "Robert";
+
         }
 
     }
@@ -299,3 +280,7 @@ public class Introduction extends AppCompatActivity {
 
     }
 }
+
+
+
+

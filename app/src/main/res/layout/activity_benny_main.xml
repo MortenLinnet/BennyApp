@@ -1,274 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/gradient"
     android:orientation="vertical"
     tools:context=".BennyMain"
     tools:layout_editor_absoluteY="25dp">
 
-    <ImageView
-        android:id="@+id/JustYellow"
-        android:layout_width="143dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/BennyBackGroundImageview"
-        app:layout_constraintVertical_bias="0.175"
-        app:srcCompat="@drawable/yellowojne" />
-
-    <TextView
-        android:id="@+id/CharecterTexxtview"
-        android:layout_width="336dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="35dp"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.113" />
-
-    <ImageView
-        android:id="@+id/FrontImageView"
-        android:layout_width="143dp"
-        android:layout_height="78dp"
-        android:layout_marginTop="8dp"
-        android:onClick="InfoPopUp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/BennyBackGroundImageview"
-        app:layout_constraintVertical_bias="0.146"
-        app:srcCompat="@drawable/yellowojne" />
-
-    <ImageView
-        android:id="@+id/BackImageView"
-        android:layout_width="143dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="InfoPopUp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/BennyBackGroundImageview"
-        app:layout_constraintVertical_bias="0.175"
-        app:srcCompat="@drawable/bennyojne" />
-
-
-    <Button
-        android:id="@+id/playButton"
-        android:layout_width="221dp"
-        android:layout_height="68dp"
-        android:alpha="0.8"
-        android:background="@drawable/bennymainstartbutton"
-        android:onClick="onClick"
-        android:text="@string/playText"
-        android:textColor="@color/white"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
-
-
-    <ImageView
-        android:id="@+id/BennyBackGroundImageview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="359dp"
-        android:paddingBottom="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/bennykrop" />
-
-    <ImageView
-        android:id="@+id/taleboblenederstilvenstre"
-        android:layout_width="155dp"
-        android:layout_height="82dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/BennyBackGroundImageview"
-        app:layout_constraintEnd_toStartOf="@+id/talebobletilhojre"
-        app:layout_constraintHorizontal_bias="0.482"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.92"
-        app:srcCompat="@drawable/taleboble1" />
-
-    <ImageView
-        android:id="@+id/talebobletilhojre"
-        android:layout_width="146dp"
-        android:layout_height="245dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/BennyBackGroundImageview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.992"
-        app:srcCompat="@drawable/taleboble2" />
-
-    <ImageView
-        android:id="@+id/talebobleoversttilvenstre"
-        android:layout_width="210dp"
-        android:layout_height="99dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/taleboblenederstilvenstre"
-        app:layout_constraintEnd_toStartOf="@+id/talebobletilhojre"
-        app:layout_constraintHorizontal_bias="0.205"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.981"
-        app:srcCompat="@drawable/taleboble3" />
-
-    <TextView
-        android:id="@+id/talebobletilhojreTEXTVIEW"
-        android:layout_width="111dp"
-        android:layout_height="152dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Jeg er sulten efter nogle meget røde klodser"
-        android:textColor="@color/black_overlay"
-        app:layout_constraintBottom_toBottomOf="@+id/talebobletilhojre"
-        app:layout_constraintEnd_toEndOf="@+id/talebobletilhojre"
-        app:layout_constraintStart_toStartOf="@+id/talebobletilhojre"
-        app:layout_constraintTop_toTopOf="@+id/talebobletilhojre"
-        app:layout_constraintVertical_bias="0.463" />
-
-    <TextView
-        android:id="@+id/talebobleoversttilvenstreTEXTVIEW"
-        android:layout_width="115dp"
-        android:layout_height="69dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:textColor="@color/black_overlay"
-        android:layout_marginTop="8dp"
-        android:text="Jeg er sulten efter noget der siger miav miav"
-        app:layout_constraintBottom_toBottomOf="@+id/talebobleoversttilvenstre"
-        app:layout_constraintEnd_toEndOf="@+id/talebobleoversttilvenstre"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="@+id/talebobleoversttilvenstre"
-        app:layout_constraintTop_toTopOf="@+id/talebobleoversttilvenstre"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/taleboblenederstilvenstreTEXTVIEW"
-        android:layout_width="115dp"
-        android:textColor="@color/black_overlay"
-        android:layout_height="52dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Kan du prove at bygge et hus til mig?"
-        app:layout_constraintBottom_toBottomOf="@+id/taleboblenederstilvenstre"
-        app:layout_constraintEnd_toEndOf="@+id/taleboblenederstilvenstre"
-        app:layout_constraintStart_toStartOf="@+id/taleboblenederstilvenstre"
-        app:layout_constraintTop_toTopOf="@+id/taleboblenederstilvenstre" />
-
-    <ImageButton
-        android:id="@+id/info"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:maxWidth="30dp"
-        android:maxHeight="30dp"
-        android:scaleType="fitCenter"
-        android:layout_marginLeft="3dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.946"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029"
-        app:srcCompat="@drawable/infoknap" />
+        android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/Settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:maxHeight="30dp"
-        android:maxWidth="30dp"
-        android:onClick="Settings"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029"
-        app:srcCompat="@drawable/settingsknap" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
 
 
-    <ImageView
-        android:id="@+id/SwipeForNextCharecter"
+            <ImageButton
+                android:id="@+id/Settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:maxHeight="30dp"
+                android:maxWidth="30dp"
+                android:onClick="Settings"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/settingsknap" />
+
+            <TextView
+                android:id="@+id/ChoosePersonality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:text="Choose Personality"
+                android:textAllCaps="true"/>
+
+            <ImageButton
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:maxWidth="30dp"
+                android:maxHeight="30dp"
+                android:scaleType="fitCenter"
+                android:onClick="info"
+                app:srcCompat="@drawable/infoknap" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/CharecterTexxtview"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="lolol"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:autoSizeMaxTextSize="40sp"
+                android:autoSizeMinTextSize="20sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="323dp"
-        android:layout_marginBottom="104dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.484"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/nextbuttton"
-        android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:background="@android:color/transparent"
-        android:onClick="next"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.829"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"
-        app:srcCompat="@drawable/pilhojre" />
+        <ImageView
+            android:id="@+id/talebobleoversttilvenstre"
+            android:layout_width="155dp"
+            android:layout_height="99dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/taleboble3" />
 
-    <ImageButton
-        android:id="@+id/BackButton"
-        android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:background="@android:color/transparent"
-        android:onClick="back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.165"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"
-        app:srcCompat="@drawable/pilvenstre" />
+        <ImageView
+            android:id="@+id/taleboblenederstilvenstre"
+            android:layout_width="155dp"
+            android:layout_height="82dp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="140dp"
+            app:srcCompat="@drawable/taleboble1" />
+
+        <ImageView
+            android:id="@+id/talebobletilhojre"
+            android:layout_width="146dp"
+            android:layout_height="245dp"
+            android:layout_gravity="end"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            app:srcCompat="@drawable/taleboble2" />
+
+        <TextView
+            android:id="@+id/talebobleoversttilvenstreTEXTVIEW"
+            android:layout_width="115dp"
+            android:layout_height="69dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="40dp"
+            android:textColor="@color/black_overlay"
+            android:layout_marginTop="45dp"
+            android:text=""
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="40dp" />
+
+        <TextView
+            android:id="@+id/taleboblenederstilvenstreTEXTVIEW"
+            android:layout_width="115dp"
+            android:textColor="@color/black_overlay"
+            android:layout_height="52dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginLeft="40dp"
+            android:text=""
+            android:layout_marginStart="40dp" />
+
+        <TextView
+            android:id="@+id/talebobletilhojreTEXTVIEW"
+            android:layout_width="111dp"
+            android:layout_height="152dp"
+            android:layout_gravity="right"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="42dp"
+            android:text=""
+            android:textColor="@color/black_overlay" />
 
 
-</android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/JustYellow"
+            android:layout_width="143dp"
+            android:layout_height="78dp"
+            android:layout_marginTop="58dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/yellowojne" />
+
+        <ImageView
+            android:id="@+id/FrontImageView"
+            android:layout_width="143dp"
+            android:layout_height="78dp"
+            android:layout_marginTop="58dp"
+            android:layout_gravity="center_horizontal"
+            android:onClick="InfoPopUp"
+            app:srcCompat="@drawable/yellowojne" />
+
+        <ImageView
+            android:id="@+id/BackImageView"
+            android:layout_width="143dp"
+            android:layout_height="78dp"
+            android:layout_marginTop="58dp"
+            android:layout_gravity="center_horizontal"
+
+            android:onClick="InfoPopUp"
+            app:srcCompat="@drawable/bennyojne" />
+
+        <ImageView
+            android:id="@+id/SwipeForNextCharecter"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <ImageView
+            android:id="@+id/BennyBackGroundImageview"
+            android:layout_width="wrap_content"
+            android:layout_height="365dp"
+            android:paddingBottom="0dp"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/bennykrop" />
+
+        <ImageButton
+            android:id="@+id/nextbuttton"
+            android:layout_width="wrap_content"
+            android:layout_height="62dp"
+            android:background="@android:color/transparent"
+            android:onClick="next"
+            android:layout_gravity="end"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginEnd="12dp"
+            app:srcCompat="@drawable/pilhojre" />
+
+        <ImageButton
+            android:id="@+id/BackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="62dp"
+            android:background="@android:color/transparent"
+            android:onClick="back"
+            android:layout_gravity="start"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            app:srcCompat="@drawable/pilvenstre" />
+
+        <Button
+            android:id="@+id/playButton"
+            android:layout_width="190dp"
+            android:layout_height="50dp"
+            android:alpha="0.8"
+            android:background="@drawable/bennymainstartbutton"
+            android:onClick="onClick"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginTop="120dp"
+            android:layout_gravity="center"
+            />
+
+    </FrameLayout>
+
+</LinearLayout>
+
+
+
