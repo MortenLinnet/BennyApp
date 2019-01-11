@@ -33,7 +33,7 @@ public class SelectLanguage extends AppCompatActivity {
     ImageButton germanButton;
     ImageButton startButton;
     ImageView Bennyclothes;
-AnimatorSet animatorSet;
+    AnimatorSet animatorSet;
     TextView header_Text;
     TextView main_Text;
 
@@ -48,7 +48,6 @@ AnimatorSet animatorSet;
 
         danishButton = (ImageButton) findViewById(R.id.danish);
         englishButton = (ImageButton) findViewById(R.id.english);
-        germanButton = (ImageButton) findViewById(R.id.german);
         startButton = (ImageButton) findViewById(R.id.startButton);
         header_Text = (TextView) findViewById(R.id.headerText);
         main_Text = (TextView) findViewById(R.id.mainText);
@@ -72,9 +71,6 @@ AnimatorSet animatorSet;
             else if (AppLanguage.equals(2) ) {
                 SwitchBetweenLang(2);
             }
-            else if (AppLanguage.equals(3)) {
-                SwitchBetweenLang(3);
-            }
         }
 
         Toast.makeText(this, "Applang = " + AppLanguage, Toast.LENGTH_SHORT).show();
@@ -92,45 +88,30 @@ AnimatorSet animatorSet;
     public void SwitchBetweenLang (Integer LangInt) {
         switch (LangInt) {
             case 1:
-                booleanDanishActive = true;
+                booleanEnglishActive = true;
 
-                if (booleanEnglishActive || booleanGermanActive) {
-                    englishButton.setImageResource(R.drawable.en);
-                    germanButton.setImageResource(R.drawable.de);
+                if (booleanDanishActive) {
+                    danishButton.setImageResource(R.drawable.da);
                 }
-                danishButton.setImageResource(R.drawable.dag);
+                englishButton.setImageResource(R.drawable.eng);
                 SetStrings(1);
 
                 isStartButtonChanged(true);
                 save(1);
                 break;
 
-            case 2:
-                booleanEnglishActive = true;
 
-                if (booleanDanishActive || booleanGermanActive) {
-                    danishButton.setImageResource(R.drawable.da);
-                    germanButton.setImageResource(R.drawable.de);
+            case 2:
+                booleanDanishActive = true;
+
+                if (booleanEnglishActive) {
+                    englishButton.setImageResource(R.drawable.en);
                 }
-                englishButton.setImageResource(R.drawable.eng);
+                danishButton.setImageResource(R.drawable.dag);
                 SetStrings(2);
 
                 isStartButtonChanged(true);
                 save(2);
-                break;
-
-            case 3:
-                booleanGermanActive = true;
-
-                if (booleanDanishActive || booleanEnglishActive) {
-                    danishButton.setImageResource(R.drawable.da);
-                    englishButton.setImageResource(R.drawable.en);
-                }
-                germanButton.setImageResource(R.drawable.deg);
-                SetStrings(3);
-
-                isStartButtonChanged(true);
-                save(3);
                 break;
         }
     }
@@ -154,22 +135,20 @@ AnimatorSet animatorSet;
 
    }
 
+    public void english (View v) {
+        SwitchBetweenLang(1);
+
+        animations(R.drawable.british);
+
+    }
+
     public void danish (View v) {
      //   danishButton = (ImageButton) findViewById(R.id.danish);  // Det er mig der lige har taget det med fra merge 13/12
         animations(R.drawable.danish);                                   // samme som oven
-        SwitchBetweenLang(1);
-    }
-
-    public void english (View v) {
         SwitchBetweenLang(2);
-
-        animations(R.drawable.british);
-        
     }
 
-    public void german (View v) {
-        SwitchBetweenLang(3);
-    }
+
 
     public void isStartButtonChanged (Boolean value) {
 
@@ -191,17 +170,13 @@ AnimatorSet animatorSet;
 
     public void SetStrings(Integer lang) {
         if (lang == 1) {
-            header_Text.setText("HEJ VENNER!");
-            main_Text.setText("Du har valgt dansk!");
-        }
-
-        if (lang == 2) {
             header_Text.setText("HI FRIENDS!");
             main_Text.setText("You have chosen English!");
         }
-        if (lang == 3) {
-            header_Text.setText("HALLO FREUNDE!");
-            main_Text.setText("Sie haben Deutsch gewählt!");
+
+        if (lang == 2) {
+            header_Text.setText("HEJ VENNER!");
+            main_Text.setText("Du har valgt dansk!");
         }
     }
 

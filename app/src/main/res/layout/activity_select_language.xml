@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutID"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bsckgroundstartscreen"
@@ -13,13 +14,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5.5">
+        android:layout_weight="5.5"
+        android:paddingTop="40dp">
 
         <ImageView
             android:id="@+id/BennyClothes"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="5.5"
             android:src="@drawable/bennynaked" />
     </LinearLayout>
 
@@ -33,9 +35,9 @@
             android:id="@+id/headerText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1.5"
             android:layout_gravity="center"
-            android:padding="0dp"
+            android:paddingTop="30dp"
             android:textSize="25sp"
             android:text="@string/startBennyText"
             android:textAlignment="center"
@@ -84,20 +86,6 @@
                 />
 
             <ImageButton
-                android:id="@+id/danish"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:padding="0dp"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:background="@null"
-                android:onClick="danish"
-                app:srcCompat="@drawable/da"
-                />
-
-            <ImageButton
                 android:id="@+id/english"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -112,7 +100,7 @@
                 />
 
             <ImageButton
-                android:id="@+id/german"
+                android:id="@+id/danish"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -121,8 +109,8 @@
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:background="@null"
-                android:onClick="german"
-                app:srcCompat="@drawable/de"
+                android:onClick="danish"
+                app:srcCompat="@drawable/da"
                 />
 
             <ImageButton

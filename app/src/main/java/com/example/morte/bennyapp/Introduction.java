@@ -2,8 +2,11 @@ package com.example.morte.bennyapp;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,17 +20,21 @@ import android.widget.Toast;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 public class Introduction extends AppCompatActivity {
-ImageView SwipeView;
-int CurrentPlace;
+    public static final String BennyPreferences = "BennyPreferences";
+    ImageView SwipeView;
+    int CurrentPlace;
+    public static Integer AppLanguage;
 
-ImageView FourDotsView;
-AnimatorSet animatorSet;
-ImageView haandview;
+    ImageView FourDotsView;
+    AnimatorSet animatorSet;
+    ImageView haandview;
     TextView textbobltext;
     ImageView talebobl;
     TextView infotext;
-
+    TextView introduction;
+    TextView buttontext;
     ImageButton NextButton;
+    TextView robertText;
 
     String TextboblinformationOne;
     String TextboblinformationTwo;
@@ -37,35 +44,47 @@ ImageView haandview;
     String InfroTextTwo;
     String InfoTextThree;
     String InfoTextFour;
+    String Robert;
 
-@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      setStrings(1);
         setContentView(R.layout.activity_introduction);
 
+        SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
+        AppLanguage = pref.getInt("AppLanguage", 0);
+        setStrings(AppLanguage);
 
-infotext = findViewById(R.id.infotext);
-infotext.setText(InfoTextOne);
-        TextView introduction = findViewById(R.id.IntroductionTextview);
+        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/webfont.ttf");
+        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/Effra Light.ttf");
+
+        infotext = findViewById(R.id.infotext);
+        infotext.setTypeface(standard_font);
+        infotext.setText(InfoTextOne);
+        introduction = findViewById(R.id.IntroductionText);
+        introduction.setTypeface(bold_font);
         introduction.setText(Headline);
 
-        TextView buttontext = findViewById(R.id.ButtonTextIntroduction);
+        buttontext = findViewById(R.id.ButtonTextIntroduction);
+        buttontext.setTypeface(bold_font);
         buttontext.setText(ButtonText);
 
+        robertText = findViewById(R.id.robertText);
+        robertText.setTypeface(bold_font);
+        robertText.setText(Robert);
 
         SwipeView = findViewById(R.id.SwipeView);
         talebobl = findViewById(R.id.talebobl);
         textbobltext = findViewById(R.id.talebobltextintroduction);
-
+        textbobltext.setTypeface(standard_font);
 
         FourDotsView = findViewById(R.id.FourDotsImageView);
         haandview= findViewById(R.id.haandview);
         NextButton = findViewById(R.id.nextbuttonintroduction);
-    NextButton.setEnabled(false);
+        NextButton.setEnabled(false);
         CurrentPlace = 1;
-HighLightButtons();
-animatorSet = new AnimatorSet();
+        HighLightButtons();
+        animatorSet = new AnimatorSet();
 
 
         SwipeView.setOnTouchListener(new OnSwipeListener(this){
@@ -77,7 +96,7 @@ animatorSet = new AnimatorSet();
                                                  CurrentPlace--;
                                              }
                                              HighLightButtons();
-                                          //   Toast.makeText(Introduction.this, "nr er"+ CurrentPlace, Toast.LENGTH_SHORT).show();
+                                             //   Toast.makeText(Introduction.this, "nr er"+ CurrentPlace, Toast.LENGTH_SHORT).show();
 
                                              super.onSwipeRight();
                                          }
@@ -89,48 +108,48 @@ animatorSet = new AnimatorSet();
                                                  CurrentPlace++;
                                              }
                                              HighLightButtons();
-                                         //    Toast.makeText(Introduction.this, "nr er"+ CurrentPlace, Toast.LENGTH_SHORT).show();
+                                             //    Toast.makeText(Introduction.this, "nr er"+ CurrentPlace, Toast.LENGTH_SHORT).show();
 
 
                                              super.onSwipeLeft();
                                          }
-          }
+                                     }
         );
     }
 
 
-public void setStrings (int Id){
+    public void setStrings (int Id){
 
-    if (Id == 1){
+        if (Id == 1){
 
-        TextboblinformationOne = "I would like you to find a green brick for me";
-        TextboblinformationTwo = "What a cool brick you found";
-        Headline = "Introduction";
-        ButtonText = "Next";
-         InfoTextOne = "Benny bot is an embodied conversational agent, who facilitates play, through speech and tasks. He provides request for both building and collecting";
-         InfroTextTwo = "The child then picks up the bricks Benny requested for and feeds him the brick";
-         InfoTextThree = "Benny then provides engaging humoroues feedback";
-         InfoTextFour = "Before the play begin you need to choose which personality to play with. Each personality have different traits and requests";
+            TextboblinformationOne = "I'm hungry for a green brick! Can you find  one for me?";
+            TextboblinformationTwo = "Mmmhhh, that tasted delicious!";
+            Headline = "Introduction";
+            ButtonText = "Next";
+            InfoTextOne = "Benny bot is an embodied conversational agent, who facilitates play, through speech and tasks. He provides request for both building and collecting.";
+            InfroTextTwo = "The child then picks up the bricks Benny requested for and feeds him the brick.";
+            InfoTextThree = "Benny then provides engaging humoroues feedback.";
+            InfoTextFour = "Before the play begin you need to choose which personality to play with. Each personality have different traits and requests.";
+            Robert = "Robert";
 
 
+        }
+
+        if (Id == 2){
+
+
+            TextboblinformationOne = "Hej hej mit navn er Benny og jeg er klar til at spise nogle klodser";
+            TextboblinformationTwo = "O-M-G den var bare lækkert";
+            Headline = "Introduktion";
+            ButtonText = "Næste";
+            InfoTextOne = "";
+            InfroTextTwo = "";
+            InfoTextThree ="";
+            InfoTextFour = "";
+            Robert = "Robert";
+        }
 
     }
-
-    if (Id == 2){
-
-
-        TextboblinformationOne = "Hej hej mit navn er Benny og jeg er klar til at spise nogle klodser";
-        TextboblinformationTwo = "O-M-G den var bare lækkert";
-        Headline = "Introduktion";
-        ButtonText = "Næste";
-         InfoTextOne = "";
-         InfroTextTwo = "";
-         InfoTextThree ="";
-         InfoTextFour = "";
-
-    }
-
-}
 
     public void HighLightButtons(){
 
@@ -143,7 +162,7 @@ public void setStrings (int Id){
             }
             catch (NullPointerException lol){
 
-              //  Toast.makeText(this, "NullPointer", Toast.LENGTH_SHORT).show();   //Arrrrrrgh
+                //  Toast.makeText(this, "NullPointer", Toast.LENGTH_SHORT).show();   //Arrrrrrgh
             }
             textbobltext.setText(TextboblinformationOne);
             infotext.setText(InfoTextOne);
@@ -155,7 +174,7 @@ public void setStrings (int Id){
         if (CurrentPlace == 2){
             FourDotsView.setImageResource(R.drawable.intro2knap);
             talebobl.setImageResource(0);
-           // haandview.setImageResource(R.drawable.haandintroduction);
+            // haandview.setImageResource(R.drawable.haandintroduction);
             lol(R.drawable.haandintroduction, haandview);
             textbobltext.setText("");
             infotext.setText(InfroTextTwo);
@@ -197,7 +216,7 @@ public void setStrings (int Id){
 
 
         view.setImageResource(src);
-       // ObjectAnimator Fadeout = ObjectAnimator.ofFloat(talebobl, "alpha",  0f, .8f);
+        // ObjectAnimator Fadeout = ObjectAnimator.ofFloat(talebobl, "alpha",  0f, .8f);
         //Fadeout.setDuration(1200);
         ObjectAnimator FadeIn = ObjectAnimator.ofFloat(view, "alpha", .4f, 1f);
         FadeIn.setDuration(200);
@@ -211,46 +230,46 @@ public void setStrings (int Id){
     }
 
 
-public void EnhanceGoPlayButton(){
+    public void EnhanceGoPlayButton(){
 
-NextButton.setImageResource(R.drawable.greennextbutton);
-
-
-    if (!NextButton.isEnabled()) {
-        NextButton.setEnabled(true);
-
-        //ObjectAnimator GoplayButtonFadeOut = ObjectAnimator.ofFloat(NextButton, "alpha", .3f, .6f);
-        //GoplayButtonFadeOut.setDuration(100);
-        ObjectAnimator GoplaybuttonFadeIn = ObjectAnimator.ofFloat(NextButton, "alpha", .8f, 1f);
-        GoplaybuttonFadeIn.setDuration(350);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        //animatorSet.play(GoplayButtonFadeOut).before(GoplaybuttonFadeIn);
-
-        animatorSet.play(GoplaybuttonFadeIn);
-
-        animatorSet.start();
-    }
-    }
+        NextButton.setImageResource(R.drawable.greennextbutton);
 
 
-public void RemoveButton (){
+        if (!NextButton.isEnabled()) {
+            NextButton.setEnabled(true);
 
-NextButton.setImageResource(R.drawable.gennemsigtigtnextknapintroduction);
-    if (NextButton.isEnabled()) {
-        NextButton.setEnabled(false);
-        ObjectAnimator GoplayButtonFadeOut = ObjectAnimator.ofFloat(NextButton, "alpha", .6f, 1f);
-        GoplayButtonFadeOut.setDuration(550);
+            //ObjectAnimator GoplayButtonFadeOut = ObjectAnimator.ofFloat(NextButton, "alpha", .3f, .6f);
+            //GoplayButtonFadeOut.setDuration(100);
+            ObjectAnimator GoplaybuttonFadeIn = ObjectAnimator.ofFloat(NextButton, "alpha", .8f, 1f);
+            GoplaybuttonFadeIn.setDuration(350);
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(GoplayButtonFadeOut);
+            AnimatorSet animatorSet = new AnimatorSet();
+            //animatorSet.play(GoplayButtonFadeOut).before(GoplaybuttonFadeIn);
 
-        animatorSet.start();
+            animatorSet.play(GoplaybuttonFadeIn);
 
+            animatorSet.start();
+        }
     }
 
 
-}
+    public void RemoveButton (){
+
+        NextButton.setImageResource(R.drawable.gennemsigtigtnextknapintroduction);
+        if (NextButton.isEnabled()) {
+            NextButton.setEnabled(false);
+            ObjectAnimator GoplayButtonFadeOut = ObjectAnimator.ofFloat(NextButton, "alpha", .6f, 1f);
+            GoplayButtonFadeOut.setDuration(550);
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.play(GoplayButtonFadeOut);
+
+            animatorSet.start();
+
+        }
+
+
+    }
 
     public void MovingOnUpMovingOndDown(View view) {
 
@@ -280,7 +299,3 @@ NextButton.setImageResource(R.drawable.gennemsigtigtnextknapintroduction);
 
     }
 }
-
-
-
-

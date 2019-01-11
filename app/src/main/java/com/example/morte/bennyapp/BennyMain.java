@@ -37,25 +37,29 @@ import org.w3c.dom.Text;
 import java.io.File;
 
 public class BennyMain extends AppCompatActivity {
+    public static final String BennyPreferences = "BennyPreferences";
     public static int whatText;
     public Integer Language;
     String Benny;
     String Clown;
     String Pirate;
     String Settings;
+    public static Integer AppLanguage;
 
     String TextbobbleRIGHT;
     String TextbobbleLowLeft;
     String TextBobbleTopRight;
     String LetsPlay;
     String SelectMode;
+    String ChoosePHeader;
     ImageView CurrentImageview;
     ImageView NextImageview;
     Animation enter;
     Animation leaave;
     Animation fade;
-   ImageButton prev;
+    ImageButton prev;
     ImageButton next;
+    TextView heading;
     int Animationtime = 500;
     int LocationOOfImage = 1800;
     int id;
@@ -66,6 +70,8 @@ public class BennyMain extends AppCompatActivity {
     TextView TextViewBobleHojre;
     TextView TextViewBobleDownLeft;
     TextView TextviewBobleOverstLeft;
+    TextView playModeText;
+    TextView ChoosePersonality;
     ImageView SwipeView;
 
     int RECORD_AUDIO = 0; //Skal bruges til tilladelse om at optagee lyd
@@ -76,34 +82,42 @@ public class BennyMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SetLanguage();
         setContentView(R.layout.activity_benny_main);
 
+        SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
+        AppLanguage = pref.getInt("AppLanguage", 0);
+
+        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/webfont.ttf");
+        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/Effra Light.ttf");
 
 
 
-        // Brug SelectLanguage.AppLanguage til at hente sproget
-        SharedPreferences pref = getSharedPreferences(SelectLanguage.BennyPreferences, Context.MODE_PRIVATE);
-        SelectLanguage.AppLanguage = pref.getInt("AppLanguage", 1);
 
-
-
-
-        SetLanguage();
+        SetLanguage(AppLanguage);
 
 
         next = findViewById(R.id.nextbuttton);
         prev = findViewById(R.id.BackButton);
-        TextView playModeText = (TextView) findViewById(R.id.playButton);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/bennyNormal.ttf");
-        playModeText.setTypeface(custom_font);
+        heading = findViewById(R.id.CharecterTexxtview);
+        playModeText = (TextView) findViewById(R.id.playButton);
+        playModeText.setTypeface(bold_font);
+        heading.setTypeface(bold_font);
 
 
-         TextViewBobleHojre = findViewById(R.id.talebobletilhojreTEXTVIEW);
-         TextViewBobleDownLeft = findViewById(R.id.taleboblenederstilvenstreTEXTVIEW);
-         TextviewBobleOverstLeft = findViewById(R.id.talebobleoversttilvenstreTEXTVIEW);
+        ChoosePersonality = findViewById(R.id.ChoosePersonality);
+        TextViewBobleHojre = findViewById(R.id.talebobletilhojreTEXTVIEW);
+        TextViewBobleDownLeft = findViewById(R.id.taleboblenederstilvenstreTEXTVIEW);
+        TextviewBobleOverstLeft = findViewById(R.id.talebobleoversttilvenstreTEXTVIEW);
 
-animatorset = new AnimatorSet();
+        ChoosePersonality.setTypeface(bold_font);
+        TextViewBobleHojre.setTypeface(standard_font);
+        TextViewBobleDownLeft.setTypeface(standard_font);
+        TextviewBobleOverstLeft.setTypeface(standard_font);
+
+        ChoosePersonality.setText(ChoosePHeader);
+        playModeText.setText(SelectMode);
+
+        animatorset = new AnimatorSet();
 
         id = 1;
         CurrentImageview = (ImageView) findViewById(R.id.FrontImageView);
@@ -215,7 +229,7 @@ animatorset = new AnimatorSet();
     @Override
     protected void onResume() {
         super.onResume();
-        SetLanguage();
+        SetLanguage(AppLanguage);
     }
 
     public void NextButtonanimationer(ImageView LeaveView, ImageView EnterView) {
@@ -267,20 +281,19 @@ animatorset = new AnimatorSet();
     public void talebobler(){
 
 
-ImageView TextBobleOverstVenstre = findViewById(R.id.talebobleoversttilvenstre);
-ImageView TextBobleNederstVenstre = findViewById(R.id.taleboblenederstilvenstre);
-ImageView TextBobleHojre = findViewById(R.id.talebobletilhojre);
+        ImageView TextBobleOverstVenstre = findViewById(R.id.talebobleoversttilvenstre);
+        ImageView TextBobleNederstVenstre = findViewById(R.id.taleboblenederstilvenstre);
+        ImageView TextBobleHojre = findViewById(R.id.talebobletilhojre);
 
-TextviewBobleOverstLeft.setText(TextBobbleTopRight);
-TextViewBobleDownLeft.setText(TextbobbleLowLeft);
-TextViewBobleHojre.setText(TextbobbleRIGHT);
-
+        TextviewBobleOverstLeft.setText(TextBobbleTopRight);
+        TextViewBobleDownLeft.setText(TextbobbleLowLeft);
+        TextViewBobleHojre.setText(TextbobbleRIGHT);
 
 
         int lol= 0;
 
 
-     //Objekt animationer taleboblerne, fra et sted til et andet
+        //Objekt animationer taleboblerne, fra et sted til et andet
         ObjectAnimator EnterAnimationUpLeft = ObjectAnimator.ofFloat(TextBobleOverstVenstre, "translationY", 300, 0);
         EnterAnimationUpLeft.setDuration(550);
 
@@ -590,14 +603,15 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
 
     }
 
-    public void SetLanguage(){
-        Language = 1;
+    public void SetLanguage(int lang){
+
+        Language = lang;
 
         try {
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
-            Integer languageIdentifyer = bundle.getInt("Language");
-            Language = languageIdentifyer;
+            //Integer languageIdentifyer = bundle.getInt("Language");
+            //Language = languageIdentifyer;
 
 
           //  Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
@@ -610,7 +624,11 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
         SetStringInTextboxeses(Language);
 
     }
+
+
     public void SetStrings(Integer lang) {
+
+        Toast.makeText(this, "lang  er:" + lang, Toast.LENGTH_SHORT).show();
         if (lang == 1) {
             Benny = "Benny Brickeater";
             Pirate = "Cap'n Brick";
@@ -618,6 +636,8 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
             Settings = "Settings";
             LetsPlay = "Let us play ";
             SelectMode = "Select Mode";
+            ChoosePHeader = "Choose personality";
+
 
         }
         if (lang == 2) {
@@ -626,7 +646,8 @@ TextViewBobleHojre.setText(TextbobbleRIGHT);
             Clown = "Benny Ballon";
             Settings = "Settings";
             LetsPlay = "Lad os lege ";
-            SelectMode = "Select Mode";
+            SelectMode = "Vælg karakter";
+            ChoosePHeader = "Vælg personlighed";
         }
     }
 

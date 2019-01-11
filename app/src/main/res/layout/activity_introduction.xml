@@ -1,207 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/introbaggrundintroduction"
-    tools:context="com.example.morte.bennyapp.Introduction">
-
-    <ImageView
-        android:id="@+id/WhiteBlob"
-        android:layout_width="423dp"
-        android:layout_height="543dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.522"
-        app:srcCompat="@drawable/introductionhvidbobl" />
-
-    <ImageView
-        android:id="@+id/mainfocusview"
-        android:layout_width="251dp"
-        android:layout_height="257dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.819"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.415"
-        app:srcCompat="@drawable/bennybodyintroduction" />
-
-    <ImageView
-        android:id="@+id/SwipeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.633"
-        />
-
-    <ImageView
-        android:id="@+id/FourDotsImageView"
-        android:layout_width="337dp"
-        android:layout_height="151dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintBottom_toBottomOf="@+id/SwipeView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainfocusview"
-        app:srcCompat="@drawable/intro1knap" />
+    tools:context="com.example.morte.bennyapp.Introduction"
+    android:orientation="vertical">
 
 
 
     <TextView
-        android:id="@+id/infotext"
-        android:layout_width="214dp"
+        android:id="@+id/IntroductionText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:textSize="25sp"
+        android:autoSizeMinTextSize="15sp"
+        android:autoSizeMaxTextSize="25sp"
+        android:textAlignment="center"
         android:layout_marginTop="20dp"
+        android:textAllCaps="true"
+        android:text=""
+        android:textColor="@android:color/background_dark"/>
+
+    <ImageView
+        android:id="@+id/WhiteBlob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignTop="@id/IntroductionText"
+        android:layout_above="@id/nextbuttonintroduction"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/introductionhvidbobl" />
+
+
+
+    <TextView
+        android:id="@+id/robertText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_alignLeft="@id/WhiteBlob"
+        android:layout_alignTop="@id/WhiteBlob"
+        android:layout_alignRight="@id/WhiteBlob"
+        android:layout_alignStart="@id/WhiteBlob"
+        android:layout_alignEnd="@id/WhiteBlob"
         android:textColor="@android:color/background_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainfocusview"
-        app:layout_constraintVertical_bias="0.095" />
+        android:text=""
+        android:textAllCaps="true"
+        android:textSize="20sp"
+        android:textAlignment="center" />
 
 
     <ImageView
         android:id="@+id/leftarrow"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="30dp"
         android:onClick="LeftArrowClick"
         android:alpha="0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@id/WhiteBlob"
+        android:layout_alignStart="@+id/WhiteBlob"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         app:srcCompat="@drawable/arrowleftintroduction" />
-
 
     <ImageView
         android:id="@+id/rightarrow"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="30dp"
         android:onClick="RightArrowClick"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.816"
-        app:layout_constraintStart_toEndOf="@+id/leftarrow"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@id/WhiteBlob"
+        android:layout_alignEnd="@id/WhiteBlob"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
         app:srcCompat="@drawable/arrowrightintroduction" />
+
+
+    <ImageView
+        android:id="@+id/FourDotsImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignBottom="@id/WhiteBlob"
+        android:layout_alignLeft="@id/WhiteBlob"
+        android:layout_alignStart="@+id/WhiteBlob"
+        android:layout_alignRight="@id/WhiteBlob"
+        android:layout_alignEnd="@id/WhiteBlob"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/intro1knap" />
+
+    <ImageView
+        android:id="@+id/emptyView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_above="@id/FourDotsImageView"
+        android:layout_marginBottom="100dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/infotext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/WhiteBlob"
+        android:layout_alignStart="@id/WhiteBlob"
+        android:layout_alignRight="@id/WhiteBlob"
+        android:layout_alignEnd="@id/WhiteBlob"
+        android:layout_alignTop="@id/emptyView"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:text=""
+        android:textAlignment="center"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:layout_alignBottom="@id/FourDotsImageView"
+        android:textColor="@android:color/background_dark" />
+
+    <ImageView
+        android:id="@+id/mainfocusview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/emptyView"
+        android:layout_alignStart="@id/emptyView"
+        android:layout_alignRight="@id/rightarrow"
+        android:layout_alignEnd="@id/rightarrow"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="100dp"
+        android:layout_alignBottom="@id/emptyView"
+        android:layout_alignTop="@id/robertText"
+        app:srcCompat="@drawable/bennybodyintroduction" />
+
+
 
     <ImageView
         android:id="@+id/haandview"
         android:layout_width="108dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="8dp"
+        android:layout_toLeftOf="@id/mainfocusview"
+        android:layout_toStartOf="@id/mainfocusview"
+        android:layout_alignBottom="@id/leftarrow"
+        android:layout_alignLeft="@id/WhiteBlob"
+        android:layout_alignStart="@id/WhiteBlob"
+        android:layout_alignTop="@id/talebobl"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.243"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.281"
-        app:srcCompat="@null" />
+        android:layout_marginStart="20dp"
+        app:srcCompat="@null"/>
 
     <ImageView
         android:id="@+id/talebobl"
-        android:layout_width="143dp"
-        android:layout_height="92dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="130dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.309"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.19"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_alignLeft="@id/WhiteBlob"
+        android:layout_alignStart="@id/WhiteBlob"
+        android:layout_alignRight="@id/emptyView"
+        android:layout_alignEnd="@id/emptyView"
+        android:layout_alignTop="@id/robertText"
+        android:layout_alignBottom="@id/leftarrow"
         app:srcCompat="@drawable/graatalebobl" />
 
     <TextView
         android:id="@+id/talebobltextintroduction"
-        android:layout_width="122dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text=""
-        android:textColor="@android:color/background_dark"
-        app:layout_constraintBottom_toBottomOf="@+id/talebobl"
-        app:layout_constraintEnd_toEndOf="@+id/talebobl"
-        app:layout_constraintStart_toStartOf="@+id/talebobl"
-        app:layout_constraintTop_toTopOf="@+id/talebobl" />
-
-    <TextView
-        android:id="@+id/IntroductionTextview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:layout_centerVertical="true"
         android:text=""
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/WhiteBlob"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textColor="@android:color/background_dark"
+        android:layout_alignTop="@id/talebobl"
+        android:layout_alignBottom="@id/talebobl"
+        android:layout_alignLeft="@id/talebobl"
+        android:layout_alignStart="@id/talebobl"
+        android:layout_alignRight="@id/talebobl"
+        android:layout_alignEnd="@id/talebobl"/>
+
+
+    <ImageView
+        android:id="@+id/SwipeView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:layout_alignTop="@id/WhiteBlob"
+        android:layout_alignBottom="@id/WhiteBlob" />
+
 
     <ImageButton
-        android:id="@+id/nextbuttonintroduction"
-        android:layout_width="228dp"
-        android:layout_height="62dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        android:clickable="false"
-        android:onClick="MovingOnUpMovingOndDown"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/WhiteBlob"
-        app:srcCompat="@drawable/gennemsigtigtnextknapintroduction" />
+            android:id="@+id/nextbuttonintroduction"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginEnd="80dp"
+        android:layout_centerHorizontal="true"
+            android:clickable="false"
+            android:layout_alignParentBottom="true"
+            android:onClick="MovingOnUpMovingOndDown"
+            app:srcCompat="@drawable/gennemsigtigtnextknapintroduction" />
 
     <TextView
         android:id="@+id/ButtonTextIntroduction"
-        android:layout_width="123dp"
-        android:layout_height="59dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textSize="35sp"
-        app:layout_constraintBottom_toBottomOf="@+id/nextbuttonintroduction"
-        app:layout_constraintEnd_toEndOf="@+id/nextbuttonintroduction"
-        app:layout_constraintStart_toStartOf="@+id/nextbuttonintroduction"
-        app:layout_constraintTop_toTopOf="@+id/nextbuttonintroduction" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_alignLeft="@id/nextbuttonintroduction"
+        android:layout_alignStart="@id/nextbuttonintroduction"
+        android:layout_alignRight="@id/nextbuttonintroduction"
+        android:layout_alignEnd="@id/nextbuttonintroduction"
+        android:layout_alignTop="@id/nextbuttonintroduction"
+        android:layout_alignBottom="@id/nextbuttonintroduction"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:textSize="25sp"/>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

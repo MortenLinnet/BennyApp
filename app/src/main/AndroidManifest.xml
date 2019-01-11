@@ -28,10 +28,7 @@
         </activity>
         <activity
             android:name=".BennyEyes"
-            android:screenOrientation="landscape"
-
-
-            />
+            android:screenOrientation="landscape" />
         <activity android:name=".Settings" />
         <activity android:name=".LoggingData" />
         <activity
@@ -39,16 +36,18 @@
             android:screenOrientation="landscape" />
         <activity android:name=".LevelOfDifficulty" />
         <activity android:name=".OldDesign" />
-        <activity android:name=".BennyMain"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name=".BennyMain"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PopUpActivity"
             android:theme="@style/AppTheme.PopMe" />
         <activity
             android:name=".MicNotPluggedIn"
             android:screenOrientation="landscape" />
-        <activity android:name=".Introduction"></activity>
+        <activity android:name=".Introduction" />
+        <activity android:name=".OldIntroduction" />
+        <activity android:name=".Oldintro"></activity>
     </application>
 
 </manifest>

@@ -22,13 +22,14 @@ public class SizeOfEyes extends AppCompatActivity {
     private ImageView Eye_view;
     private static Integer SeekBarValue;
     private int lol;
+    public static final String BennyPreferences = "BennyPreferences";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_size_of_eyes);
 
-        SharedPreferences prefs = getSharedPreferences(BennyMain.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(SelectLanguage.BennyPreferences, MODE_PRIVATE);
         Integer eyeValue = prefs.getInt("SeekBarValue", 0);
         SeekBarValue = eyeValue;
 
@@ -85,7 +86,7 @@ public class SizeOfEyes extends AppCompatActivity {
     }
 
     public void saveSharedPreference () {
-        SharedPreferences.Editor editor = getSharedPreferences(BennyMain.PREFS_NAME, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(SelectLanguage.BennyPreferences, MODE_PRIVATE).edit();
         editor.putInt("SeekBarValue", SeekBarValue);
         editor.apply();
     }
