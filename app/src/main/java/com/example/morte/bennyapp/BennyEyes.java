@@ -1,26 +1,38 @@
 package com.example.morte.bennyapp;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.JetPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Level;
@@ -71,9 +83,19 @@ public class BennyEyes extends AppCompatActivity {
                 //Log.i("Noise", "==== onCreate ===");
             }
 
-            if (amp > 7 && !mediaPlayer.isPlaying()){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+            if (amp > 7 && !mediaPlayer.isPlaying() && !IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
+
+            if (amp > 7 && !mediaPlayer.isPlaying() && IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+            IdleModeIsActive = false;
+                Toast.makeText(BennyEyes.this, "Vi har været i idlemode og nu begynder vi forfra", Toast.LENGTH_SHORT).show();
+           IdleModeCountdowntimer.cancel();
+           AmounfOfIdleRounds=0;
+            StartRequestRound();
+            }
+
+
             else {
 
             }
@@ -85,14 +107,14 @@ public class BennyEyes extends AppCompatActivity {
 
 
     // Super request (Det omkring liggende)
-    private static long SuperRequestTid = 20000;
+    private static long SuperRequestTid = 30000;
     private TextView SuperRequestTimeTextView;
     private CountDownTimer SuperRequestTidCountdownTimer;
     private boolean SuperRequestTidIsRunning;
     private long TimeLeftInMillisSuperRequestTime = SuperRequestTid;
 
     // Request
-    private static long RequestNotActiveTime = 25000;
+    private static long RequestNotActiveTime = 22000;
     private TextView RequestNotActiveTextView;
     private CountDownTimer RequestNotActiveCountdownTimer;
     private boolean RequestNotActiveeIsRunning;
@@ -105,12 +127,21 @@ public class BennyEyes extends AppCompatActivity {
     private boolean FeedBackCoolDownIsRunning;
     private long TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
 
+ // IdleMode
+    private static long IdleModeTime = 7000;
+    private CountDownTimer IdleModeCountdowntimer;
+
+
+
+
+
+
 
     private VideoView OjneView;
     String[] BennyHappyOjneArray;
     String[] BennyNoFeelingOjneArray;
     String[] BennyNotPleasedOjneArray;
-    MediaPlayer mediaPlayer;
+  //  MediaPlayer mediaPlayer;        Tog den med fra import music fra gammel kode
     Integer Language;
 
     int HardTaskProperbility = 40; //Under/lig 40 = 40%
@@ -119,23 +150,53 @@ public class BennyEyes extends AppCompatActivity {
 
     int IdleChanceNumber;
 
+    int TypeofFeedback;
+
     int HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime;
     double temp;
 
+    Boolean IdleModeIsActive;
+    int AmounfOfIdleRounds;
 
+
+    //Alt der har med loading af musik filerne at gøre
+    ArrayList<String> RobertIdle;
+    ArrayList<String> RobertCollectRequest;
+    ArrayList<String> RobertKiggeNed;
+    ArrayList<String> RobertBuildRequest;
+    ArrayList<String> RobertPretendRequest;
+    ArrayList<String> RobertHappyFeedback;
+    ArrayList<String> RobertNeutralFeedback;
+    ArrayList<String> RobertBaffledFeedback;
+    ArrayList<String> RobertIntroduction;
+
+
+
+    ArrayAdapter<String> adapter;
+    ArrayAdapter<String> adapter2;
+    MediaPlayer mediaPlayer;
+    MediaPlayer NyMp;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mediaPlayer = new MediaPlayer();
+       NyMp = new MediaPlayer();
+        InitializeAllMusicArrays();
+        TypeofFeedback = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
         setContentView(R.layout.activity_benny_eyes);
+
+
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = 1F; //https://developer.android.com/reference/android/view/WindowManager.LayoutParams#screenBrightness 1 er max value
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        IdleModeIsActive = false;
 
         try {
             Language= 0;
@@ -143,7 +204,7 @@ public class BennyEyes extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             Integer lol = bundle.getInt("Language");
             Language = lol;
-            Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
             }
         catch (NullPointerException e){
             Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
@@ -159,12 +220,15 @@ FeedbackCDTextView = findViewById(R.id.FeedbackTView);                   //Timer
 DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
 OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
 
+
+PresentBenny();
+/*
 SuperRequestTimerStart();                                                //Timer
 RequestNotActiveTimerStart();                                            //Timer
 FeedbackTimerTimerStart();                                               //Timer
 
 StartRequestRound();
-
+*/
  // Used to record Sound
 mSensor = new DetectNoise();
 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -178,13 +242,191 @@ InitBennyOjneArray();
 IdleChanceNumber= 0;
 
 
+    }
+
+    public void PresentBenny(){
+
+        findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
+        String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.idle;
+        Uri uriLang =Uri.parse(PathToBennyEyes);
+        OjneView.setVideoURI(uriLang);
+        OjneView.start();
+        PlayMusicFile(RobertIntroduction);
+
+
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+
+                SuperRequestTimerStart();                                                //Timer
+                RequestNotActiveTimerStart();                                            //Timer
+                FeedbackTimerTimerStart();                                               //Timer
+
+
+                StartRequestRound();
+
+            mediaPlayer.reset();
+            }
+        });
+
+
+    }
 
 
 
 
 
 
+    public void InitializeAllMusicArrays (){
 
+
+        RobertIdle = new ArrayList<>();
+        RobertCollectRequest = new ArrayList<>();
+        RobertKiggeNed = new ArrayList<>();
+        RobertBuildRequest = new ArrayList<>();
+        RobertPretendRequest = new ArrayList<>();
+        RobertHappyFeedback = new ArrayList<>();
+        RobertNeutralFeedback = new ArrayList<>();
+        RobertBaffledFeedback = new ArrayList<>();
+        RobertIntroduction = new ArrayList<>();
+
+        getMusic();
+    //    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
+    //    adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList2);
+
+      //  PlayMusicFile(RobertBuildRequest);
+
+
+
+    }
+
+    public void PlayMusicFile (ArrayList arrayList){
+
+if (BrickDetected == true){
+    Toast.makeText(this, "er vi her oerhovvedet", Toast.LENGTH_SHORT).show();
+NyMp.release();
+}
+        while (mediaPlayer.isPlaying()){
+
+        }
+
+        Random r = new Random();
+//        int SizeOfArray = arrayList.size();
+//        int nyrandom = r.nextInt((SizeOfArray - 0)+1)+0;
+        int nyrandom = r.nextInt(arrayList.size());
+
+
+        String lol = (String) arrayList.get(nyrandom);                // Okay (String) er ikke mig men android studio der har lavet
+
+        Uri myUri = Uri.parse(lol); // initialize Uri here
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(getApplicationContext(),myUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
+        }
+        try {
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
+
+        }
+        mediaPlayer.start();
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
+              // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
+                mediaPlayer.reset();
+            }
+        });
+
+    }
+
+    public void getMusic(){
+
+        ContentResolver contentResolver = getContentResolver();
+        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor songCurser = contentResolver.query(songUri,null  ,null,null,null);
+        if (songCurser != null && songCurser.moveToFirst()){
+            int SongPathData = songCurser.getColumnIndex(MediaStore.Audio.Media.DATA);
+            int songtitel = songCurser.getColumnIndex(MediaStore.Audio.Media.TITLE);
+
+            do {
+                String currentTitle = songCurser.getString(songtitel);
+                String DataPath = songCurser.getString(SongPathData);
+
+                // arrayList.add(currentTitle + "\n" + currentartist);
+                char FirstCharInSongFile = currentTitle.charAt(0);
+                char SecoundCharInSongFile = currentTitle.charAt(1);
+
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'I' ){
+
+                    RobertIdle.add(DataPath);
+
+                }
+               else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'C' ){
+
+                    RobertCollectRequest.add(DataPath);
+                  //  Toast.makeText(this, "Match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
+
+                }
+               else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'K' ){
+
+                    RobertKiggeNed.add(DataPath);
+
+                }
+
+                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'B' ){
+
+                    RobertBuildRequest.add(DataPath);
+
+                }
+
+               else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'P' ){
+
+                    RobertPretendRequest.add(DataPath);
+
+                }
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'R' ){
+
+                    RobertHappyFeedback.add(DataPath);
+
+                }
+                /*
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Y' ){
+
+                    RobertNeutralFeedback.add(DataPath);
+
+                }
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Z' ){
+
+                    RobertBaffledFeedback.add(DataPath);
+
+                }
+                */
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'O' ){
+
+                    RobertIntroduction.add(DataPath);
+
+                }
+                else {
+                //    Toast.makeText(this, "No match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+
+                } while (songCurser.moveToNext());
+        }
+        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -205,6 +447,7 @@ IdleChanceNumber= 0;
         FeedbackCoolDownCountdowntimer.cancel();
         RequestNotActiveCountdownTimer.cancel();
         SuperRequestTidCountdownTimer.cancel();
+        mediaPlayer.stop();
      //   Toast.makeText(this, "", Toast.LENGTH_SHORT).cancel();
         // Log.i("Noise", "==== onStop ===");
         //Stop noise monitoring
@@ -215,17 +458,61 @@ IdleChanceNumber= 0;
     public void FeedbackWhenMicrohoneIsTriggered() {
         findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
         if (ReadyForFeedback == true){
-            PlayBennyHappyOjne();
+            WhatTypeOfEyes();
             ReadyForFeedback = false;
             FeedbackCoolDownCountdowntimer.start();
             RequestNotActiveCountdownTimer.cancel();
             RequestNotActiveCountdownTimer.start();
-            PlayFeedBack(1);
+            PlayFeedBack();
         }
       //  if (ReadyForFeedback == false)
   //          Toast.makeText(this, "I else", Toast.LENGTH_SHORT).show();
        // FeedbackCoolDownCountdowntimer.start();
     }
+
+    public void WhatTypeOfEyes() {
+
+    Random r = new Random();
+    int n = r.nextInt(3);   // Så jeg går udfra den ikke tager maks med
+    int k = r.nextInt(2);
+
+    if (TypeofFeedback == 1) {
+
+
+        Log.d("Nem opgave, Alle øjne", "Nem opgave alle ojne: ");
+        switch (n) {
+            case 0:
+                PlayBennyHappyOjne();
+                break;
+            case 1:
+                PlayBennyNotPleasedOjne();
+                break;
+            case 2:
+                PlayBennyNotPleasedOjne();   // Ja den skal ænderes så snart jeg får fyldt det sidste array
+                break;
+            case 3:
+                Toast.makeText(this, "Søg på WhatTypeOFEyes og reprogram" + "'", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+    if (TypeofFeedback == 2) {
+        Log.d("Svær opgave, 2 slags øj", "Svær opgave 2 slags øjne: ");
+        switch (k) {
+            case 0:
+                PlayBennyHappyOjne();
+                break;
+            case 1:
+                PlayBennyNotPleasedOjne();   // Og ja det skal ikke være det array
+                break;
+            case 2:
+                Toast.makeText(this, "Søg på WhatTypeOFEyes og reprogram" + "'", Toast.LENGTH_SHORT).show();
+                break;
+
+
+        }
+
+    }
+}
 
     public void LevelOfRequestDifficulty() {
         Random r = new Random();
@@ -233,7 +520,41 @@ IdleChanceNumber= 0;
 
         if (n <= HardTaskProperbility) //HardTask;
         {
-            mediaPlayer = MediaPlayer.create(this, R.raw.sultenalleklodser);
+            Log.d("Ny Request", "Det er en svær request ");
+            try {
+
+
+                PlayMusicFile(RobertBuildRequest);
+            }
+            catch (Surface.OutOfResourcesException lol) {
+                Toast.makeText(this, "Outofressources 1", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+                Toast.makeText(this, "Outofmemory 1", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+                Toast.makeText(this, "Outof index 1", Toast.LENGTH_SHORT).show();
+            }
+            catch (IllegalStateException lol){
+                Toast.makeText(this, "illegal state 1", Toast.LENGTH_SHORT).show();
+            }
+
+
+            TypeofFeedback= 2;
+        /*    try{
+                PlayMusicFile(RobertBuildRequest);
+            }
+            catch (NullPointerException lol){
+
+                Toast.makeText(this, "Nullfanget", Toast.LENGTH_SHORT).show();
+
+            }
+
+          //  PlayMusicFile(RobertBuildRequest);
+           /* mediaPlayer = MediaPlayer.create(this, R.raw.sultenalleklodser);
+
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -241,48 +562,98 @@ IdleChanceNumber= 0;
                     mediaPlayer.reset();
                 }
             });
-
+*/
         }
 
         if (n > EasyTaskProperbility) //EzTask
         {
-           //Play Ez request.
-            mediaPlayer = MediaPlayer.create(this, R.raw.sultenblaaklodser);
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.reset();
-                }
-            });
+            Log.d("Ny request", "Det er en nem opgave ");
+            try {
+            PlayMusicFile(RobertCollectRequest);
+        }
+            catch (Surface.OutOfResourcesException lol) {
+            Toast.makeText(this, "Outofressources 2", Toast.LENGTH_SHORT).show();
+
+        }
+            catch (OutOfMemoryError lol){
+            Toast.makeText(this, "Outofmemory 2", Toast.LENGTH_SHORT).show();
+        }
+
+            catch (IndexOutOfBoundsException lol){
+            Toast.makeText(this, "Outof index 2", Toast.LENGTH_SHORT).show();
+        }
+
+            catch (IllegalStateException lol){
+                Toast.makeText(this, "illegal state 2", Toast.LENGTH_SHORT).show();
+            }
+
+
+
+            TypeofFeedback = 1;
 
         }
 
 
     }
 
-    public void PlayFeedBack (int i){
+    public void PlayFeedBack (){
         // modtag sværhedsgraden af request iform af int
         Random r = new Random();
         int n = r.nextInt(100);
 
-        if (i == 1){                        //Nem Opgave
+        if (TypeofFeedback == 1){                        //Nem Opgave
+
+            Log.d("Hvilken Feedback", "Alle slags feedback til nem opgave ");
 
         if (n <= 33) //HappyFeedBack
             {
-                mediaPlayer = MediaPlayer.create(this, R.raw.jadenergod);
-                mediaPlayer.start();
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        mediaPlayer.reset();
-                    }
-                });
+
+
+         try{
+               PlayMusicFile(RobertHappyFeedback);
+            }
+            catch (Surface.OutOfResourcesException lol) {
+                Toast.makeText(this, "Outofressources 3", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+                Toast.makeText(this, "Outofmemory 3", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+                Toast.makeText(this, "Outof index 3", Toast.LENGTH_SHORT).show();
+            }
+
+         catch (IllegalStateException lol){
+             Toast.makeText(this, "illegal state 3", Toast.LENGTH_SHORT).show();
+         }
+
             }
 
         if (n >=34 && n<=63) //NotSoHapppyFeedback
             {
-                mediaPlayer = MediaPlayer.create(this, R.raw.lakkerrt);
+
+             try{
+                PlayMusicFile(RobertHappyFeedback);
+
+            }
+            catch (Surface.OutOfResourcesException lol) {
+                Toast.makeText(this, "Outofressources 4", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+                Toast.makeText(this, "Outofmemory 4", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+                Toast.makeText(this, "Outof index 4", Toast.LENGTH_SHORT).show();
+            }
+
+             catch (IllegalStateException lol){
+                 Toast.makeText(this, "illegal state 4", Toast.LENGTH_SHORT).show();
+             }
+
+            /*mediaPlayer = MediaPlayer.create(this, R.raw.lakkerrt);
                 mediaPlayer.start();
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
@@ -292,33 +663,89 @@ IdleChanceNumber= 0;
 
                     }
                 });
+            */
             }
 
          if (n >=64) //AngryFeedback
             {
-                mediaPlayer = MediaPlayer.create(this, R.raw.smagtesjovt);
-                mediaPlayer.start();
+                try{
+                PlayMusicFile(RobertHappyFeedback);   // ALT ER HAPPYFEEDBACK LIGE NU FORDI DE IKKE ER BLEVET INDELT!
 
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        mediaPlayer.reset();
-                    }
-                });
+
+            }
+            catch (Surface.OutOfResourcesException lol) {
+                Toast.makeText(this, "Outofressources 5", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+                Toast.makeText(this, "Outofmemory 5", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+                Toast.makeText(this, "Outof index 5", Toast.LENGTH_SHORT).show();
+            }
+
+                catch (IllegalStateException lol){
+                    Toast.makeText(this, "illegal state 5", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
 
 
     }
-    if (i==2){                          //Svær opgave
+    if (TypeofFeedback==2){                          //Svær opgave
+
+        Log.d("Hvilken slags feedback", "Det er en svær opgav så kun 2 slags feedback");
 
         if (n <= 50) //HappyFeedBack
         {
-            //Play Happy Feedback
+
+        try{
+            PlayMusicFile(RobertHappyFeedback);
+        }
+            catch (Surface.OutOfResourcesException lol) {
+            Toast.makeText(this, "Outofressources 6", Toast.LENGTH_SHORT).show();
+
+        }
+            catch (OutOfMemoryError lol){
+            Toast.makeText(this, "Outofmemory 6", Toast.LENGTH_SHORT).show();
         }
 
-        if (n<=51) //NotSoHapppyFeedback
+            catch (IndexOutOfBoundsException lol){
+            Toast.makeText(this, "Outof index 6", Toast.LENGTH_SHORT).show();
+        }
+            catch (IllegalStateException lol){
+            Toast.makeText(this, "illegal state 6", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+        }
+
+        if (n >= 51) //NotSoHapppyFeedback
         {
-            //Play Not so happy feedback
+            try{
+            PlayMusicFile(RobertHappyFeedback);
+
+
+        }
+            catch (Surface.OutOfResourcesException lol) {
+            Toast.makeText(this, "Outofressources 7", Toast.LENGTH_SHORT).show();
+
+        }
+            catch (OutOfMemoryError lol){
+            Toast.makeText(this, "Outofmemory 7", Toast.LENGTH_SHORT).show();
+        }
+
+            catch (IndexOutOfBoundsException lol){
+            Toast.makeText(this, "Outof index 7", Toast.LENGTH_SHORT).show();
+        }
+            catch (IllegalStateException lol){
+            Toast.makeText(this, "illegal state 7", Toast.LENGTH_SHORT).show();
+            }
+
         }
 
     }
@@ -330,24 +757,19 @@ IdleChanceNumber= 0;
 
 
                 //Insert Happy Eyes
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf1,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf2,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf3,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf4,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf5,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort1,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort2,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort3,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort4,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort5,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang1,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang2,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang3,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang4,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang5,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.briller,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.cool,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.crazy,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.glad,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.hjerteeyejs,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.idle,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.kiggerned,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.lider,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.megetglad,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.tilfred,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.sur,
+
+
 
 
         };
@@ -361,6 +783,10 @@ IdleChanceNumber= 0;
         BennyNotPleasedOjneArray = new String[]{
 
                 //Insert Not pleased eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.skeptisk,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.sur,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.syg,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.forvviret,
 
 
         };
@@ -390,8 +816,10 @@ IdleChanceNumber= 0;
     }
 
     public void PlayBennyNotPleasedOjne(){
-
-         String PathToBennyEyes = BennyNotPleasedOjneArray[0];
+        Random r = new Random();
+        int ArrayLength = BennyNotPleasedOjneArray.length;
+        int nyrandom = r.nextInt(ArrayLength - 0)+0;    //Der er noget galt her. Den går udover det tilltdte   har slettet et +1 og nogle parenteser
+        String PathToBennyEyes = BennyNotPleasedOjneArray[nyrandom];
          Uri uriLang =Uri.parse(PathToBennyEyes);
          OjneView.setVideoURI(uriLang);
          OjneView.start();
@@ -450,6 +878,38 @@ IdleChanceNumber= 0;
         DecibelTextView.setText(signalEMA+"dB");
     }
 
+    public void PlayIdleLine(){
+
+        Toast.makeText(BennyEyes.this, "Vi er i idlemode", Toast.LENGTH_SHORT).show();
+        //This is where vi afspiller the lines han siger when he is i idlemode
+
+
+    }
+
+    private void IdleModCountodwntimerstart(){
+        IdleModeCountdowntimer = new CountDownTimer(IdleModeTime, 1000) {
+
+            @Override
+            public void onTick(long millisuntillfinish3) {
+
+
+
+            }
+
+            @Override
+            public void onFinish() {
+
+               PlayIdleLine();
+
+                IdleModeCountdowntimer.cancel();
+
+                IdleModCountodwntimerstart();
+
+            }
+        }.start();
+
+
+    }
 
     public void IdleLines(){
 
@@ -457,7 +917,7 @@ IdleChanceNumber= 0;
         //Okay så den er tikker hvert sekund, jeg ved ikke om det er for meget for den stakkels mobil?
 
         int DerMåMaksGåSåLangTidFørDerKommerEnIdleLine = 15;
-        int MinimumFørDerKOmmerEnIdleLine = 5;
+        int MinimumFørDerKOmmerEnIdleLine = 8;
 
 
         Random r = new Random();
@@ -467,14 +927,121 @@ IdleChanceNumber= 0;
         IdleChanceNumber++; //Tæller den op hvert sekund
         if (IdleChanceNumber > LocalIdleChanceNumber){
 
-            Toast.makeText(BennyEyes.this, "IdleLine" + IdleChanceNumber, Toast.LENGTH_SHORT).show();
+
+            try{
+                PlayMusicFile(RobertIdle);
+
+            }
+            catch (Surface.OutOfResourcesException lol) {
+                Toast.makeText(this, "Outofressources IDLE", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+                Toast.makeText(this, "Outofmemory IDLE", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+                Toast.makeText(this, "Outof index IDLE", Toast.LENGTH_SHORT).show();
+            }
+            catch (IllegalStateException lol){
+                Toast.makeText(this, "illegal state IDLE", Toast.LENGTH_SHORT).show();
+            }
+
+
             IdleChanceNumber = 0;
         }
 
 
     }
 
+    private void IdleLinesInReqquestNotActive(){
+/*
+        if (!mediaPlayer.isPlaying()) {
+mediaPlayer.reset();
+            try{
+            PlayMusicFile(RobertIdle);
+            while (mediaPlayer.isPlaying()){
+                IdleModeIsActive = true;
+            }
+            IdleModeIsActive = false;
+           // int lol = mediaPlayer.getDuration();
 
+            //FeedbackCooldown = FeedbackCooldown + lol+ 500;
+
+
+             //   Toast.makeText(this, "Tid er" + " " + lol, Toast.LENGTH_SHORT).show();
+
+
+
+
+            }
+        catch (Surface.OutOfResourcesException lol) {
+            Toast.makeText(BennyEyes.this, "Exception idle 1", Toast.LENGTH_SHORT).show();
+        }
+        catch (OutOfMemoryError lol){
+            Toast.makeText(BennyEyes.this, "Exception idle 2", Toast.LENGTH_SHORT).show();
+
+        }
+        catch (IndexOutOfBoundsException lol){
+            Toast.makeText(BennyEyes.this, "Exception idle 3", Toast.LENGTH_SHORT).show();
+
+        }
+        catch (IllegalStateException lol) {
+            Toast.makeText(BennyEyes.this, "Exception idle 4", Toast.LENGTH_SHORT).show();
+
+        }
+
+        }
+
+        else {
+
+        }
+
+        */
+        final MediaPlayer NyMp = new MediaPlayer();
+
+
+BrickDetected = true;
+
+        Random r = new Random();
+//        int SizeOfArray = arrayList.size();
+//        int nyrandom = r.nextInt((SizeOfArray - 0)+1)+0;
+        int nyrandom = r.nextInt(RobertIdle.size());
+
+
+        String lol = (String) RobertIdle.get(nyrandom);                // Okay (String) er ikke mig men android studio der har lavet
+
+        Uri myUri = Uri.parse(lol); // initialize Uri here
+
+        NyMp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            NyMp.setDataSource(getApplicationContext(),myUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
+        }
+        try {
+            NyMp.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
+
+        }
+        NyMp.start();
+
+        NyMp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
+                // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
+                NyMp.release();
+                BrickDetected = false;
+            }
+        });
+
+
+    }
 
     private void SuperRequestTimerStart(){
         SuperRequestTidCountdownTimer = new CountDownTimer(TimeLeftInMillisSuperRequestTime, 1000) {
@@ -488,7 +1055,7 @@ IdleChanceNumber= 0;
 
 
 
-            IdleLines();
+         //   IdleLines();
                 // HER KUNNE MAN HAVE EN RANDOM FUNKTION DER SIGER NOGET I STIL MED 1/50 GANGE DEN TIKKER SÅ SIG EN IDLE REPLIK?
                 // ELLER NÅR DEN HAR TIKKET X ANTAL GANGE FYR EN IDLE REPLIK
             }
@@ -500,15 +1067,17 @@ IdleChanceNumber= 0;
                    StartRequestRound();
                }
                else {
-                   while (mediaPlayer.isPlaying()){    //Sørger for at den ikke giver ny request mens der er feedback
+                   while (mediaPlayer.isPlaying() || OjneView.isPlaying()){    //Sørger for at den ikke giver ny request mens der er feedback
 
 
                    }
+mediaPlayer.reset();
+                   Toast.makeText(BennyEyes.this, "issueses", Toast.LENGTH_SHORT).show();
 
-                   Toast.makeText(BennyEyes.this, "Issuses", Toast.LENGTH_SHORT).show();
                    StartRequestRound();
 
                }
+               AmounfOfIdleRounds =0 ;
                 SuperRequestTidIsRunning = false;
             }
         }.start();
@@ -522,12 +1091,26 @@ IdleChanceNumber= 0;
             public void onTick(long millisuntillfinish2) {
                 TimeLeftInMillisRequestNotActive = millisuntillfinish2;
                 UpdateRequestNotActiveTextView();
+
+            if (millisuntillfinish2 < 12000 && millisuntillfinish2 > 11000 && TimeLeftInMillisSuperRequestTime > 4000){
+                Log.d("Over 9000", "Vi giver en idle line" + millisuntillfinish2);
+                IdleLinesInReqquestNotActive();
             }
 
+/*            if (millisuntillfinish2 < 6000 && millisuntillfinish2 > 5000){
+                Log.d("Over 9000", "Vi giver en idle line" + millisuntillfinish2);
+                IdleLinesInReqquestNotActive();
+            }
+
+*/
+            }
             @Override
             public void onFinish() {
                 RequestNotActiveeIsRunning = false;
                 StartRequestRound();
+
+                AmounfOfIdleRounds++;
+
             }
         }.start();
         RequestNotActiveeIsRunning = true;
@@ -545,7 +1128,7 @@ IdleChanceNumber= 0;
             @Override
             public void onFinish() {
                 FeedBackCoolDownIsRunning = false;
-
+                AmounfOfIdleRounds =0;
 
             }
         }.start();
@@ -593,17 +1176,29 @@ IdleChanceNumber= 0;
     }
 
     public void StartRequestRound(){
-       Toast.makeText(this, "New Round", Toast.LENGTH_SHORT).show();
-       FeedbackCoolDownCountdowntimer.cancel();
-       RequestNotActiveCountdownTimer.cancel();
-       SuperRequestTidCountdownTimer.cancel();
-       LevelOfRequestDifficulty();
-       FeedbackCoolDownCountdowntimer.start();
-       RequestNotActiveCountdownTimer.start();
-       SuperRequestTidCountdownTimer.start();
+        Toast.makeText(this, "vi er i ny request", Toast.LENGTH_SHORT).show();
 
+        if (AmounfOfIdleRounds >= 3){
+            IdleModeIsActive = true;
+            IdleModCountodwntimerstart();
+        }
+
+        else if (AmounfOfIdleRounds < 3) {
+
+
+            while (mediaPlayer.isPlaying()){
+
+            }
+         //   Toast.makeText(this, "New Round", Toast.LENGTH_SHORT).show();
+            FeedbackCoolDownCountdowntimer.cancel();
+            RequestNotActiveCountdownTimer.cancel();
+            SuperRequestTidCountdownTimer.cancel();
+            LevelOfRequestDifficulty();
+            FeedbackCoolDownCountdowntimer.start();
+            RequestNotActiveCountdownTimer.start();
+            SuperRequestTidCountdownTimer.start();
+        }
    }
-
 
     public void SetLanguage(Integer WhatLanguage){
 TextView LagnuageText = findViewById(R.id.LanguageTextView);
@@ -618,12 +1213,12 @@ TextView LagnuageText = findViewById(R.id.LanguageTextView);
 
     public void OhNoMyEyes(View view) {
 
-        if (mediaPlayer.isPlaying() || OjneView.isPlaying()){
+        if ( OjneView.isPlaying()){
             Toast.makeText(this, "avavav", Toast.LENGTH_SHORT).show();
 
         }
         else {
-            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blink;
+            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
             Uri uriLang =Uri.parse(PathToBennyEyes);
             OjneView.setVideoURI(uriLang);
             OjneView.start();
@@ -631,7 +1226,6 @@ TextView LagnuageText = findViewById(R.id.LanguageTextView);
 
         }
     }
-
 
     public void HowManyTimesHvaeEyesBeenTriggered (double MicTriggerValue){
         HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime++;

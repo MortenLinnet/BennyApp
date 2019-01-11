@@ -162,9 +162,8 @@ AnimatorSet animatorSet;
 
     public void english (View v) {
         SwitchBetweenLang(2);
-
         animations(R.drawable.british);
-        
+
     }
 
     public void german (View v) {

@@ -44,7 +44,7 @@ CountDownTimer SaKanViStoppeSkidtet;
 
             public void onTick(long millisUntilFinished) {
                 IsMicPluggedIn(MicNotPluggedIn.this);
-                Toast.makeText(MicNotPluggedIn.this, "tjekker", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(MicNotPluggedIn.this, "tjekker", Toast.LENGTH_SHORT).show();
 
             }
 
