@@ -3,7 +3,7 @@ Robert the Robot is an interactive LEGO play companion for children aged 3 to 6.
 
 ![alt text](https://github.com/nicklaslind/benny/blob/master/Resources/herojpg.jpg?raw=true)
 
-# Who is Benny Brickeater?
+# Who is Robert the Robot?
 
 (Update when project is handed over to LEGO)
 
