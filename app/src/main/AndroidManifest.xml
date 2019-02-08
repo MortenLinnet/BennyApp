@@ -28,7 +28,13 @@
         </activity>
         <activity
             android:name=".BennyEyes"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="sensorLandscape" />
+        <activity
+            android:name=".ClownEyes"
+            android:screenOrientation="sensorLandscape" />
+        <activity
+            android:name=".PirateEyes"
+            android:screenOrientation="sensorLandscape" />
         <activity android:name=".Settings" />
         <activity android:name=".LoggingData" />
         <activity
@@ -47,7 +53,7 @@
             android:screenOrientation="landscape" />
         <activity android:name=".Introduction" />
         <activity android:name=".Linestest"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             ></activity>
         <activity android:name=".Introduction" />
         <activity android:name=".OldIntroduction" />

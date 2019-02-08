@@ -138,9 +138,6 @@ public class SelectLanguage extends AppCompatActivity {
     public void english (View v) {
         SwitchBetweenLang(1);
 
-    public void english (View v) {
-        SwitchBetweenLang(2);
-
         animations(R.drawable.british);
 
     }

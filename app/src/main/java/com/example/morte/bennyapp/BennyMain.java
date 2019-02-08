@@ -586,10 +586,24 @@ int debugtime= 1;
     public void onClick(View v) {
         if (id == 1) {
             //Insert name of the class to be redirected to.
-            IsMicPluggedIn(this);
+          //  IsMicPluggedIn(this);
+            Intent i = new Intent(this, BennyEyes.class); startActivityForResult(i, 1);
 
+        }
+        if (id == 2) {
+            //Insert name of the class to be redirected to.
+            //  IsMicPluggedIn(this);
+            Intent i = new Intent(this, PirateEyes.class); startActivityForResult(i, 1);
 
-        } else if (whatText == 2) {
+        }
+        if (id == 3) {
+            //Insert name of the class to be redirected to.
+            //  IsMicPluggedIn(this);
+            Intent i = new Intent(this, ClownEyes.class); startActivityForResult(i, 1);
+
+        }
+
+        else if (whatText == 2) {
             Intent i = new Intent(this, LoggingData.class);
             startActivity(i);
 

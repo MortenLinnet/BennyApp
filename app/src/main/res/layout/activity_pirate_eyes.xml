@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.morte.bennyapp.BennyEyes">
+    tools:context="com.example.morte.bennyapp.PirateEyes">
 
     <ImageView
         android:id="@+id/BackgroundEyes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/neutralrobert"
+        android:src="@drawable/neutralpirat"
         app:layout_constraintBottom_toBottomOf="@+id/BennyOjne"
         app:layout_constraintEnd_toEndOf="@+id/BennyOjne"
         app:layout_constraintStart_toStartOf="parent"
