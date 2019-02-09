@@ -8,14 +8,13 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.Fade;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SelectLanguage extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity {
 
     int id;
     public static final String BennyPreferences = "BennyPreferences";
@@ -23,9 +22,6 @@ public class SelectLanguage extends AppCompatActivity {
     boolean booleanEnglishActive = false;
     boolean booleanGermanActive = false;
     boolean startButtonChanged = false;
-    public static String DanishActive;
-    public static String EnglishActive;
-    public static String GermanActive;
     public static Integer AppLanguage;
 
     ImageButton danishButton;
@@ -41,7 +37,7 @@ public class SelectLanguage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_language);
+        setContentView(R.layout.activity_start_activity);
         Bennyclothes = findViewById(R.id.BennyClothes);
         startButton = findViewById(R.id.startButton);
         startButton.setEnabled(false);
@@ -67,9 +63,11 @@ public class SelectLanguage extends AppCompatActivity {
         if (AppLanguage != 0) {
             if (AppLanguage.equals(1)) {
                 SwitchBetweenLang(1);
+                animations(R.drawable.british);
             }
             else if (AppLanguage.equals(2) ) {
                 SwitchBetweenLang(2);
+                animations(R.drawable.danish);
             }
         }
 
@@ -137,7 +135,6 @@ public class SelectLanguage extends AppCompatActivity {
 
     public void english (View v) {
         SwitchBetweenLang(1);
-
         animations(R.drawable.british);
 
     }

@@ -13,7 +13,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.Image;
+import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -40,29 +42,29 @@ public class BennyMain extends AppCompatActivity {
     public static final String BennyPreferences = "BennyPreferences";
     public static int whatText;
     public Integer Language;
+    public static Integer AppLanguage;
+    int Animationtime = 500;
+    int LocationOOfImage = 1800;
+    int id;
     String Benny;
     String Clown;
     String Pirate;
     String Settings;
-    public static Integer AppLanguage;
-
     String TextbobbleRIGHT;
     String TextbobbleLowLeft;
     String TextBobbleTopRight;
     String LetsPlay;
     String SelectMode;
     String ChoosePHeader;
-    ImageView CurrentImageview;
-    ImageView NextImageview;
     Animation enter;
     Animation leaave;
     Animation fade;
     ImageButton prev;
     ImageButton next;
     TextView heading;
-    int Animationtime = 500;
-    int LocationOOfImage = 1800;
-    int id;
+    ImageView CurrentImageview;
+    ImageView NextImageview;
+
 
     AnimatorSet animatorset;
 
@@ -79,21 +81,21 @@ public class BennyMain extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_benny_main);
 
         SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
         AppLanguage = pref.getInt("AppLanguage", 0);
+        SetLanguage(AppLanguage);
+
+        setContentView(R.layout.activity_benny_main);
+
 
         Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/webfont.ttf");
         Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/Effra Light.ttf");
 
-
-
-
-        SetLanguage(AppLanguage);
 
 
         next = findViewById(R.id.nextbuttton);
@@ -268,7 +270,7 @@ public class BennyMain extends AppCompatActivity {
         EnterAnimation.setDuration(Animationtime);
         //EnterAnimation.start();
 
-     //   AnimatorSet animatorSet = new AnimatorSet();
+        // AnimatorSet animatorSet = new AnimatorSet();
 
        animatorset.playTogether(LeaveAnimation,EnterAnimation);
        animatorset.start();
@@ -304,7 +306,7 @@ public class BennyMain extends AppCompatActivity {
         EnterAnimationRight.setDuration(300);
 
 
-      //Objektanimation textview fra et sted til et andet
+        //Objektanimation textview fra et sted til et andet
 
         ObjectAnimator EnterAnimationUpLeftTextView = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "translationY", 400, 0); // har ændret fra 300 til 400
         EnterAnimationRight.setDuration(550+lol);
@@ -316,7 +318,7 @@ public class BennyMain extends AppCompatActivity {
         EnterAnimationRight.setDuration(300);
 
 
-//Objektanimationer talebobler, fade fra en apha til en anden aplha
+        //Objektanimationer talebobler, fade fra en apha til en anden aplha
 
         ObjectAnimator UpLeftFadeOut = ObjectAnimator.ofFloat(TextBobleOverstVenstre, "alpha",  0f, .1f);
         UpLeftFadeOut.setDuration(100);
@@ -374,9 +376,6 @@ public class BennyMain extends AppCompatActivity {
 
         //animatorSet.playTogether(EnterAnimationRight);
         animatorset.start();
-
-
-
     }
 
 
@@ -401,7 +400,6 @@ public class BennyMain extends AppCompatActivity {
     public void back(View view) {
 
 
-
         if (!animatorset.isRunning()) {
 
             PrevButtonAnimmationer(CurrentImageview, NextImageview);
@@ -415,7 +413,6 @@ public class BennyMain extends AppCompatActivity {
             //  Toast.makeText(BennyMain.this, "" + id, Toast.LENGTH_SHORT).show();
             //   HighLightMarkedCharecter();
         }
-
     }
 
 
@@ -424,7 +421,6 @@ public class BennyMain extends AppCompatActivity {
     public void UpdateNextImages() {
         currentImage();
         NextImage();
-
     }
 
     public void UpdatePrevImage() {
@@ -706,7 +702,7 @@ public class BennyMain extends AppCompatActivity {
 
         if (id== 1) {
 
-            TextbobbleRIGHT = "I'm hnugry for red bricks";
+            TextbobbleRIGHT = "I'm hungry for red bricks";
             TextbobbleLowLeft = "I have never eaten a house before, can you build me one?";
             TextBobbleTopRight = "I'm hungry for something that says MUUUHHH";
 

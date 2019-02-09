@@ -3,12 +3,15 @@ package com.example.morte.bennyapp;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +36,7 @@ public class BennyEyes extends AppCompatActivity {
 
     /* constants */
     private static final int POLL_INTERVAL = 300;
+    public static final String BennyPreferences = "BennyPreferences";
 
     /* running state*/
     private boolean mRunning = false;
@@ -52,35 +56,35 @@ public class BennyEyes extends AppCompatActivity {
 
     private Runnable mSleepTask = new Runnable() {
         public void run() {
-            //Log.i("Noise", "runnable mSleepTask");
-            mSensor.start();
-             }
-             };
+    //Log.i("Noise", "runnable mSleepTask");
+    mSensor.start();
+     }
+     };
 
     // Create runnable thread to Monitor Voice
     private Runnable mPollTask = new Runnable() {
 
         public void run() {
-            double amp = mSensor.getAmplitude();
-            //Log.i("Noise", "runnable mPollTask");
+    double amp = mSensor.getAmplitude();
+    //Log.i("Noise", "runnable mPollTask");
 
-            updateDisplay("Listening for bricks....", amp);
+    updateDisplay("Listening for bricks....", amp);
 
-            if ((amp > mThreshold)) {
-                //callForHelp(amp);
-                //Log.i("Noise", "==== onCreate ===");
-            }
+    if ((amp > mThreshold)) {
+        //callForHelp(amp);
+        //Log.i("Noise", "==== onCreate ===");
+    }
 
-            if (amp > 7 && !mediaPlayer.isPlaying()){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
-                FeedbackWhenMicrohoneIsTriggered();
-            }
-            else {
+    if (amp > 7 && !mediaPlayer.isPlaying()){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+        FeedbackWhenMicrohoneIsTriggered();
+    }
+    else {
 
-            }
-            // Runnable(mPollTask) will again execute after POLL_INTERVAL
-            mHandler.postDelayed(mPollTask, POLL_INTERVAL);
-             }
-             };
+    }
+    // Runnable(mPollTask) will again execute after POLL_INTERVAL
+    mHandler.postDelayed(mPollTask, POLL_INTERVAL);
+     }
+     };
 
 
 
@@ -125,10 +129,12 @@ public class BennyEyes extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
+
         setContentView(R.layout.activity_benny_eyes);
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
@@ -147,46 +153,41 @@ public class BennyEyes extends AppCompatActivity {
             }
         catch (NullPointerException e){
             Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
-            }
+        }
 
-SetLanguage(Language);
-
-
-
-SuperRequestTimeTextView = findViewById(R.id.SuperRequestTView);         //Timer
-RequestNotActiveTextView = findViewById(R.id.RequestNotActiveTView);     //Timer
-FeedbackCDTextView = findViewById(R.id.FeedbackTView);                   //Timer
-DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
-OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
-
-SuperRequestTimerStart();                                                //Timer
-RequestNotActiveTimerStart();                                            //Timer
-FeedbackTimerTimerStart();                                               //Timer
-
-StartRequestRound();
-
- // Used to record Sound
-mSensor = new DetectNoise();
-PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
-
-HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime = 0;
-temp =0;
-ReadyForFeedback = false;
-InitBennyOjneArray();
-
-IdleChanceNumber= 0;
+        SetLanguage(Language);
 
 
 
+        SuperRequestTimeTextView = findViewById(R.id.SuperRequestTView);         //Timer
+        RequestNotActiveTextView = findViewById(R.id.RequestNotActiveTView);     //Timer
+        FeedbackCDTextView = findViewById(R.id.FeedbackTView);                   //Timer
+        DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
+        OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
 
+        SuperRequestTimerStart();                                                //Timer
+        RequestNotActiveTimerStart();                                            //Timer
+        FeedbackTimerTimerStart();                                               //Timer
 
+        StartRequestRound();
 
+         // Used to record Sound
+        mSensor = new DetectNoise();
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
+        HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime = 0;
+        temp =0;
+        ReadyForFeedback = false;
+        InitBennyOjneArray();
 
+        IdleChanceNumber= 0;
 
+        //LoggingData logData = new LoggingData();
+        //logData.readFile(logData.LogHashmap);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onResume() {
         super.onResume();
@@ -197,6 +198,9 @@ IdleChanceNumber= 0;
             mRunning = true;
             start();
         }
+
+        //LoggingData logData = new LoggingData();
+        //logData.readFile(logData.LogHashmap);
     }
 
     @Override
@@ -377,6 +381,8 @@ IdleChanceNumber= 0;
          Uri uriLang =Uri.parse(PathToBennyEyes);
          OjneView.setVideoURI(uriLang);
          OjneView.start();
+
+
 
     }
 
