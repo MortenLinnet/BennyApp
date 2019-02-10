@@ -79,6 +79,15 @@ public class Settings extends AppCompatActivity {
         Intent i = new Intent(this, Introduction.class);
         startActivity(i);
     }
+
+    public void linestest(View view) {
+        Intent i = new Intent(this, Linestest.class);
+        startActivity(i);
+    }
+
+    public void Return(View view) {
+        finish();
+    }
 }
 
 

@@ -291,7 +291,7 @@ public class BennyMain extends AppCompatActivity {
         TextViewBobleDownLeft.setText(TextbobbleLowLeft);
         TextViewBobleHojre.setText(TextbobbleRIGHT);
 
-
+int debugtime= 1;
         int lol= 0;
 
 
@@ -300,7 +300,7 @@ public class BennyMain extends AppCompatActivity {
         EnterAnimationUpLeft.setDuration(550);
 
         ObjectAnimator EnterAnimationDownLeft = ObjectAnimator.ofFloat(TextBobleNederstVenstre, "translationY", 300, 0);
-        EnterAnimationDownLeft.setDuration(700);
+        EnterAnimationDownLeft.setDuration(700*debugtime);
 
         ObjectAnimator EnterAnimationRight = ObjectAnimator.ofFloat(TextBobleHojre, "translationY", 300, 0);
         EnterAnimationRight.setDuration(300);
@@ -308,14 +308,14 @@ public class BennyMain extends AppCompatActivity {
 
         //Objektanimation textview fra et sted til et andet
 
-        ObjectAnimator EnterAnimationUpLeftTextView = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "translationY", 400, 0); // har ændret fra 300 til 400
-        EnterAnimationRight.setDuration(550+lol);
+        ObjectAnimator EnterAnimationUpLeftTextView = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "translationY", 300, 0); // har ændret fra 300 til 400
+        EnterAnimationUpLeftTextView.setDuration(550+lol);
 
-        ObjectAnimator EnterAnimationDownLeftTextView = ObjectAnimator.ofFloat(TextViewBobleDownLeft, "translationY", 300, 0);
-        EnterAnimationRight.setDuration(700+lol);
+        ObjectAnimator EnterAnimationDownLeftTextView = ObjectAnimator.ofFloat(TextViewBobleDownLeft, "translationY", 300, 0); //300 til 1000
+        EnterAnimationDownLeftTextView.setDuration(700*debugtime);
 
         ObjectAnimator EnterAnimationRightTextView = ObjectAnimator.ofFloat(TextViewBobleHojre, "translationY", 300, 0);
-        EnterAnimationRight.setDuration(300);
+        EnterAnimationRightTextView.setDuration(300);
 
 
         //Objektanimationer talebobler, fade fra en apha til en anden aplha
@@ -326,9 +326,9 @@ public class BennyMain extends AppCompatActivity {
         UpLeftFadeIn.setDuration(450);
 
         ObjectAnimator DownleftFadeOut = ObjectAnimator.ofFloat(TextBobleNederstVenstre, "alpha",  0f, .1f);
-        DownleftFadeOut.setDuration(150);
+        DownleftFadeOut.setDuration(150*debugtime);
         ObjectAnimator DownLeftFadeIn = ObjectAnimator.ofFloat(TextBobleNederstVenstre, "alpha", .1f, 1f);
-        DownLeftFadeIn.setDuration(550);
+        DownLeftFadeIn.setDuration(550*debugtime);
 
         ObjectAnimator HojreFadeOut = ObjectAnimator.ofFloat(TextBobleHojre, "alpha",  0f, .1f);
         HojreFadeOut.setDuration(75);
@@ -339,21 +339,21 @@ public class BennyMain extends AppCompatActivity {
         //Objektanimation textview, fade fra aplha til alpha
 
         ObjectAnimator UpLeftFadeOutTextview = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "alpha",  0f, .1f);
-        HojreFadeOut.setDuration(100);
+        UpLeftFadeOutTextview.setDuration(100);
         ObjectAnimator UpLeftFadeINTextview = ObjectAnimator.ofFloat(TextviewBobleOverstLeft, "alpha", .1f, 1f);
-        HojreFadeIn.setDuration(450);
+        UpLeftFadeINTextview.setDuration(450);
 
 
         ObjectAnimator DownleftFadeOutTextview = ObjectAnimator.ofFloat(TextViewBobleDownLeft, "alpha",  0f, .1f);
-        HojreFadeOut.setDuration(150);
+        DownleftFadeOutTextview.setDuration(150*debugtime);
         ObjectAnimator DownleftFadeINTextview = ObjectAnimator.ofFloat(TextViewBobleDownLeft, "alpha", .1f, 1f);
-        HojreFadeIn.setDuration(550);
+        DownleftFadeINTextview.setDuration(550*debugtime);
 
 
         ObjectAnimator HojreFadeOutText = ObjectAnimator.ofFloat(TextViewBobleHojre, "alpha",  0f, .1f);
-        HojreFadeOut.setDuration(75);
+        HojreFadeOutText.setDuration(75);
         ObjectAnimator HojreFadeInTExt = ObjectAnimator.ofFloat(TextViewBobleHojre, "alpha", .1f, 1f);
-        HojreFadeIn.setDuration(225);
+        HojreFadeInTExt.setDuration(225);
 
 
 
@@ -582,10 +582,24 @@ public class BennyMain extends AppCompatActivity {
     public void onClick(View v) {
         if (id == 1) {
             //Insert name of the class to be redirected to.
-            IsMicPluggedIn(this);
+          //  IsMicPluggedIn(this);
+            Intent i = new Intent(this, BennyEyes.class); startActivityForResult(i, 1);
 
+        }
+        if (id == 2) {
+            //Insert name of the class to be redirected to.
+            //  IsMicPluggedIn(this);
+            Intent i = new Intent(this, PirateEyes.class); startActivityForResult(i, 1);
 
-        } else if (whatText == 2) {
+        }
+        if (id == 3) {
+            //Insert name of the class to be redirected to.
+            //  IsMicPluggedIn(this);
+            Intent i = new Intent(this, ClownEyes.class); startActivityForResult(i, 1);
+
+        }
+
+        else if (whatText == 2) {
             Intent i = new Intent(this, LoggingData.class);
             startActivity(i);
 

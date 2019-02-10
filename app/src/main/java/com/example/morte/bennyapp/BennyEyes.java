@@ -1,10 +1,14 @@
 package com.example.morte.bennyapp;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.JetPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -12,18 +16,26 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.RequiresApi;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Level;
@@ -33,6 +45,8 @@ public class BennyEyes extends AppCompatActivity {
    public boolean BrickDetected;                             //ARGHGHGHGHGHGGHGHGHGHGH
    public boolean ReadyForFeedback;
    public boolean IsMediaPlayerOccupied;
+   public boolean ItsAPretendRound;
+   public int HaveBeenInPresentMode;
 
     /* constants */
     private static final int POLL_INTERVAL = 300;
@@ -75,10 +89,10 @@ public class BennyEyes extends AppCompatActivity {
         //Log.i("Noise", "==== onCreate ===");
     }
 
-    if (amp > 7 && !mediaPlayer.isPlaying()){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
-        FeedbackWhenMicrohoneIsTriggered();
-    }
-    else {
+            if (amp > 7 && !mediaPlayer.isPlaying()){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+                FeedbackWhenMicrohoneIsTriggered();
+            }
+            else {
 
     }
     // Runnable(mPollTask) will again execute after POLL_INTERVAL
@@ -89,32 +103,41 @@ public class BennyEyes extends AppCompatActivity {
 
 
     // Super request (Det omkring liggende)
-    private static long SuperRequestTid = 20000;
+    private static long SuperRequestTid = 30000;
     private TextView SuperRequestTimeTextView;
     private CountDownTimer SuperRequestTidCountdownTimer;
     private boolean SuperRequestTidIsRunning;
     private long TimeLeftInMillisSuperRequestTime = SuperRequestTid;
 
     // Request
-    private static long RequestNotActiveTime = 25000;
+    private static long RequestNotActiveTime = 22000;
     private TextView RequestNotActiveTextView;
     private CountDownTimer RequestNotActiveCountdownTimer;
     private boolean RequestNotActiveeIsRunning;
     private long TimeLeftInMillisRequestNotActive = RequestNotActiveTime;
 
 // Feedback
-    private static long FeedbackCooldown = 7000;
+    private static long FeedbackCooldown = 6000;
     private TextView FeedbackCDTextView;
     private CountDownTimer FeedbackCoolDownCountdowntimer;
     private boolean FeedBackCoolDownIsRunning;
     private long TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
+
+ // IdleMode
+    private static long IdleModeTime = 7000;
+    private CountDownTimer IdleModeCountdowntimer;
+
+
+
+
+
 
 
     private VideoView OjneView;
     String[] BennyHappyOjneArray;
     String[] BennyNoFeelingOjneArray;
     String[] BennyNotPleasedOjneArray;
-    MediaPlayer mediaPlayer;
+  //  MediaPlayer mediaPlayer;        Tog den med fra import music fra gammel kode
     Integer Language;
 
     int HardTaskProperbility = 40; //Under/lig 40 = 40%
@@ -123,25 +146,49 @@ public class BennyEyes extends AppCompatActivity {
 
     int IdleChanceNumber;
 
+    int TypeofFeedback;
+
     int HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime;
     double temp;
 
+    Boolean IdleModeIsActive;
+    int AmounfOfIdleRounds;
+    Boolean Longpressed;
+    int CohreneceBetweenEyesAndVoice;
+
+    //Alt der har med loading af musik filerne at gøre
+    ArrayList<String> RobertIdle;
+    ArrayList<String> RobertCollectRequest;
+    ArrayList<String> RobertKiggeNed;
+    ArrayList<String> RobertBuildRequest;
+    ArrayList<String> RobertPretendRequest;
+    ArrayList<String> RobertHappyFeedback;
+    ArrayList<String> RobertNeutralFeedback;
+    ArrayList<String> RobertBaffledFeedback;
+    ArrayList<String> RobertIntroduction;
 
 
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mediaPlayer = new MediaPlayer();
+       NyMp = new MediaPlayer();
+        InitializeAllMusicArrays();
+        TypeofFeedback = 0;
+        CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
 
         setContentView(R.layout.activity_benny_eyes);
+
+
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = 1F; //https://developer.android.com/reference/android/view/WindowManager.LayoutParams#screenBrightness 1 er max value
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        IdleModeIsActive = false;
 
         try {
             Language= 0;
@@ -149,11 +196,11 @@ public class BennyEyes extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             Integer lol = bundle.getInt("Language");
             Language = lol;
-            Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
             }
         catch (NullPointerException e){
             Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
-        }
+            }
 
         SetLanguage(Language);
 
@@ -165,29 +212,34 @@ public class BennyEyes extends AppCompatActivity {
         DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
         OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
 
-        SuperRequestTimerStart();                                                //Timer
-        RequestNotActiveTimerStart();                                            //Timer
-        FeedbackTimerTimerStart();                                               //Timer
+SuperRequestTimerStart();                                                //Timer
+RequestNotActiveTimerStart();                                            //Timer
+FeedbackTimerTimerStart();                                               //Timer
 
-        StartRequestRound();
+StartRequestRound();
 
-         // Used to record Sound
-        mSensor = new DetectNoise();
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
+ // Used to record Sound
+mSensor = new DetectNoise();
+PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
         HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime = 0;
         temp =0;
         ReadyForFeedback = false;
         InitBennyOjneArray();
 
-        IdleChanceNumber= 0;
+IdleChanceNumber= 0;
 
-        //LoggingData logData = new LoggingData();
-        //logData.readFile(logData.LogHashmap);
+
+
+
+
+
+
+
+
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onResume() {
         super.onResume();
@@ -204,125 +256,289 @@ public class BennyEyes extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+
+        if (mediaPlayer != null){
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        }
+        if (NyMp != null) {
+            NyMp.stop();
+            NyMp.release();
+        }
+        super.onPause();
+    }
+
+
+    @Override
     public void onStop() {
-        super.onStop();
-        FeedbackCoolDownCountdowntimer.cancel();
-        RequestNotActiveCountdownTimer.cancel();
-        SuperRequestTidCountdownTimer.cancel();
-     //   Toast.makeText(this, "", Toast.LENGTH_SHORT).cancel();
+
+
+        //   FeedbackCoolDownCountdowntimer.cancel();
+        if (RequestNotActiveCountdownTimer != null) {
+            RequestNotActiveCountdownTimer.cancel();
+
+        }
+        if (SuperRequestTidCountdownTimer != null) {
+            SuperRequestTidCountdownTimer.cancel();
+        }
+
+        //  SuperRequestTidCountdownTimer.cancel();
+        //mediaPlayer.stop();
+        //mediaPlayer.release();
+        StopPlayer();
+        //NyMp.stop();
+        //NyMp.release();
+        //   Toast.makeText(this, "", Toast.LENGTH_SHORT).cancel();
         // Log.i("Noise", "==== onStop ===");
         //Stop noise monitoring
         stop();
+        super.onStop();
 
+    }
+    private void StopPlayer(){
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     public void FeedbackWhenMicrohoneIsTriggered() {
         findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
         if (ReadyForFeedback == true){
-            PlayBennyHappyOjne();
+            WhatTypeOfEyes();
             ReadyForFeedback = false;
             FeedbackCoolDownCountdowntimer.start();
             RequestNotActiveCountdownTimer.cancel();
             RequestNotActiveCountdownTimer.start();
-            PlayFeedBack(1);
+            PlayFeedBack();
         }
       //  if (ReadyForFeedback == false)
   //          Toast.makeText(this, "I else", Toast.LENGTH_SHORT).show();
        // FeedbackCoolDownCountdowntimer.start();
     }
 
+    public void WhatTypeOfEyes() {
+
+    Random r = new Random();
+    int n = r.nextInt(2);   // Så jeg går udfra den ikke tager maks med
+    int k = r.nextInt(2);
+
+    if (TypeofFeedback == 1) {
+
+
+        Log.d("Nem opgave, Alle øjne", "Nem opgave alle ojne: ");
+        switch (n) {
+            case 0:
+                PlayBennyHappyOjne();
+                CohreneceBetweenEyesAndVoice = 1;
+                break;
+            case 1:
+                PlayBennyNotPleasedOjne();
+
+                CohreneceBetweenEyesAndVoice = 2;
+                break;
+            case 2:
+           //     Toast.makeText(this, "Søg på WhatTypeOFEyes og reprogram" + "'", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+    }
+    if (TypeofFeedback == 2) {
+        Log.d("Svær opgave, 2 slags øj", "Svær opgave 2 slags øjne: ");
+        switch (k) {
+            case 0:
+                PlayBennyHappyOjne();
+                CohreneceBetweenEyesAndVoice = 1;
+                break;
+            case 1:
+                PlayBennyHappyOjne();
+                CohreneceBetweenEyesAndVoice = 1;
+                break;
+            case 2:
+          //      Toast.makeText(this, "Søg på WhatTypeOFEyes og reprogram" + "'", Toast.LENGTH_SHORT).show();
+                break;
+
+
+        }
+
+    }
+}
+
     public void LevelOfRequestDifficulty() {
         Random r = new Random();
-        int n = r.nextInt(100);
+        int n = r.nextInt(140);
 
         if (n <= HardTaskProperbility) //HardTask;
         {
-            mediaPlayer = MediaPlayer.create(this, R.raw.sultenalleklodser);
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.reset();
-                }
-            });
+            Log.d("Ny Request", "Det er en svær request ");
+            try {
+
+
+                PlayMusicFile(RobertBuildRequest);
+            }
+            catch (Surface.OutOfResourcesException lol) {
+         //       Toast.makeText(this, "Outofressources 1", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+           //     Toast.makeText(this, "Outofmemory 1", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+             //   Toast.makeText(this, "Outof index 1", Toast.LENGTH_SHORT).show();
+            }
+            catch (IllegalStateException lol){
+               // Toast.makeText(this, "illegal state 1", Toast.LENGTH_SHORT).show();
+            }
+
+
+            TypeofFeedback= 2;
 
         }
 
-        if (n > EasyTaskProperbility) //EzTask
+        if (n > EasyTaskProperbility && n <=100) //EzTask
         {
-           //Play Ez request.
-            mediaPlayer = MediaPlayer.create(this, R.raw.sultenblaaklodser);
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.reset();
-                }
-            });
+            Log.d("Ny request", "Det er en nem opgave ");
+            try {
+            PlayMusicFile(RobertCollectRequest);
+        }
+            catch (Surface.OutOfResourcesException lol) {
+      //      Toast.makeText(this, "Outofressources 2", Toast.LENGTH_SHORT).show();
 
         }
+            catch (OutOfMemoryError lol){
+        //    Toast.makeText(this, "Outofmemory 2", Toast.LENGTH_SHORT).show();
+        }
 
+            catch (IndexOutOfBoundsException lol){
+          //  Toast.makeText(this, "Outof index 2", Toast.LENGTH_SHORT).show();
+        }
+
+            catch (IllegalStateException lol){
+            //    Toast.makeText(this, "illegal state 2", Toast.LENGTH_SHORT).show();
+            }
+
+            TypeofFeedback = 1;
+
+        }
+        if (n > 100) // PretendRequest;
+        {
+
+            Log.d("Ny Request", "Det er en pretend request ");
+            try {
+
+
+                PlayMusicFile(RobertPretendRequest);
+                ItsAPretendRound = true;
+            }
+            catch (Surface.OutOfResourcesException lol) {
+              //  Toast.makeText(this, "Outofressources 1", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+                //Toast.makeText(this, "Outofmemory 1", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+         //       Toast.makeText(this, "Outof index 1", Toast.LENGTH_SHORT).show();
+            }
+            catch (IllegalStateException lol){
+           //     Toast.makeText(this, "illegal state 1", Toast.LENGTH_SHORT).show();
+            }
+
+
+            TypeofFeedback= 2;
+
+        }
 
     }
 
-    public void PlayFeedBack (int i){
+    public void PlayFeedBack (){
         // modtag sværhedsgraden af request iform af int
         Random r = new Random();
-        int n = r.nextInt(100);
+        int n = r.nextInt(63);
 
-        if (i == 1){                        //Nem Opgave
+        if (TypeofFeedback == 1){                        //Nem Opgave
 
-        if (n <= 33) //HappyFeedBack
+            Log.d("Hvilken Feedback", "Alle slags feedback til nem opgave ");
+
+        if (CohreneceBetweenEyesAndVoice ==1 ) //HappyFeedBack
             {
-                mediaPlayer = MediaPlayer.create(this, R.raw.jadenergod);
-                mediaPlayer.start();
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        mediaPlayer.reset();
-                    }
-                });
+
+
+         try{
+               PlayMusicFile(RobertHappyFeedback);
+            }
+            catch (Surface.OutOfResourcesException lol) {
+        //        Toast.makeText(this, "Outofressources 3", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+          //      Toast.makeText(this, "Outofmemory 3", Toast.LENGTH_SHORT).show();
             }
 
-        if (n >=34 && n<=63) //NotSoHapppyFeedback
-            {
-                mediaPlayer = MediaPlayer.create(this, R.raw.lakkerrt);
-                mediaPlayer.start();
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        mediaPlayer.reset();
-
-
-                    }
-                });
+            catch (IndexOutOfBoundsException lol){
+            //    Toast.makeText(this, "Outof index 3", Toast.LENGTH_SHORT).show();
             }
 
-         if (n >=64) //AngryFeedback
-            {
-                mediaPlayer = MediaPlayer.create(this, R.raw.smagtesjovt);
-                mediaPlayer.start();
+         catch (IllegalStateException lol){
+           //  Toast.makeText(this, "illegal state 3", Toast.LENGTH_SHORT).show();
+         }
 
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        mediaPlayer.reset();
-                    }
-                });
             }
 
+        if (CohreneceBetweenEyesAndVoice == 2) //NotSoHapppyFeedback
+            {
+
+             try{
+                PlayMusicFile(RobertBaffledFeedback);
+
+            }
+            catch (Surface.OutOfResourcesException lol) {
+        //        Toast.makeText(this, "Outofressources 4", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+     //           Toast.makeText(this, "Outofmemory 4", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+       //         Toast.makeText(this, "Outof index 4", Toast.LENGTH_SHORT).show();
+            }
+
+             catch (IllegalStateException lol){
+         //        Toast.makeText(this, "illegal state 4", Toast.LENGTH_SHORT).show();
+             }
+
+            }
 
     }
-    if (i==2){                          //Svær opgave
+    if (TypeofFeedback==2){                          //Svær opgave
 
-        if (n <= 50) //HappyFeedBack
+        Log.d("Hvilken slags feedback", "Det er en svær opgav så kun 2 slags feedback");
+
+        if (CohreneceBetweenEyesAndVoice == 1) //HappyFeedBack
         {
-            //Play Happy Feedback
+
+        try{
+            PlayMusicFile(RobertHappyFeedback);
+        }
+            catch (Surface.OutOfResourcesException lol) {
+     //       Toast.makeText(this, "Outofressources 6", Toast.LENGTH_SHORT).show();
+
+        }
+            catch (OutOfMemoryError lol){
+       //     Toast.makeText(this, "Outofmemory 6", Toast.LENGTH_SHORT).show();
         }
 
-        if (n<=51) //NotSoHapppyFeedback
-        {
-            //Play Not so happy feedback
+            catch (IndexOutOfBoundsException lol){
+         //   Toast.makeText(this, "Outof index 6", Toast.LENGTH_SHORT).show();
+        }
+            catch (IllegalStateException lol){
+           // Toast.makeText(this, "illegal state 6", Toast.LENGTH_SHORT).show();
+        }
+
         }
 
     }
@@ -334,24 +550,19 @@ public class BennyEyes extends AppCompatActivity {
 
 
                 //Insert Happy Eyes
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf1,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf2,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf3,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf4,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.bennyleaf5,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort1,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort2,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort3,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort4,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnekort5,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang1,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang2,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang3,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang4,
-                "android.resource://com.example.morte.bennyapp/" + R.raw.ojnelang5,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.briller,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.cool,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.crazy,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.glad,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.hjerteojne,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.idle,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.kiggerned,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.megetglad,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.tilfreds,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.overrasket,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.blinker,
+
+
 
 
         };
@@ -359,12 +570,24 @@ public class BennyEyes extends AppCompatActivity {
         BennyNoFeelingOjneArray = new String[]{
 
                 //Insert No feeling eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.idle,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.kiggerned,
+
 
         };
 
         BennyNotPleasedOjneArray = new String[]{
 
                 //Insert Not pleased eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.skeptisk,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.sur,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.syg,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.forvirret,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.overrasket,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.lider,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.crazy,
+
 
 
         };
@@ -396,8 +619,10 @@ public class BennyEyes extends AppCompatActivity {
     }
 
     public void PlayBennyNotPleasedOjne(){
-
-         String PathToBennyEyes = BennyNotPleasedOjneArray[0];
+        Random r = new Random();
+        int ArrayLength = BennyNotPleasedOjneArray.length;
+        int nyrandom = r.nextInt(ArrayLength - 0)+0;    //Der er noget galt her. Den går udover det tilltdte   har slettet et +1 og nogle parenteser
+        String PathToBennyEyes = BennyNotPleasedOjneArray[nyrandom];
          Uri uriLang =Uri.parse(PathToBennyEyes);
          OjneView.setVideoURI(uriLang);
          OjneView.start();
@@ -456,6 +681,38 @@ public class BennyEyes extends AppCompatActivity {
         DecibelTextView.setText(signalEMA+"dB");
     }
 
+    public void PlayIdleLine(){
+
+     //   Toast.makeText(BennyEyes.this, "Vi er i idlemode", Toast.LENGTH_SHORT).show();
+        //This is where vi afspiller the lines han siger when he is i idlemode
+
+
+    }
+
+    private void IdleModCountodwntimerstart(){
+        IdleModeCountdowntimer = new CountDownTimer(IdleModeTime, 1000) {
+
+            @Override
+            public void onTick(long millisuntillfinish3) {
+
+
+
+            }
+
+            @Override
+            public void onFinish() {
+
+               PlayIdleLine();
+
+                IdleModeCountdowntimer.cancel();
+
+                IdleModCountodwntimerstart();
+
+            }
+        }.start();
+
+
+    }
 
     public void IdleLines(){
 
@@ -463,7 +720,7 @@ public class BennyEyes extends AppCompatActivity {
         //Okay så den er tikker hvert sekund, jeg ved ikke om det er for meget for den stakkels mobil?
 
         int DerMåMaksGåSåLangTidFørDerKommerEnIdleLine = 15;
-        int MinimumFørDerKOmmerEnIdleLine = 5;
+        int MinimumFørDerKOmmerEnIdleLine = 8;
 
 
         Random r = new Random();
@@ -473,14 +730,79 @@ public class BennyEyes extends AppCompatActivity {
         IdleChanceNumber++; //Tæller den op hvert sekund
         if (IdleChanceNumber > LocalIdleChanceNumber){
 
-            Toast.makeText(BennyEyes.this, "IdleLine" + IdleChanceNumber, Toast.LENGTH_SHORT).show();
+
+            try{
+                PlayMusicFile(RobertIdle);
+
+            }
+            catch (Surface.OutOfResourcesException lol) {
+       //         Toast.makeText(this, "Outofressources IDLE", Toast.LENGTH_SHORT).show();
+
+            }
+            catch (OutOfMemoryError lol){
+                //       Toast.makeText(this, "Outofmemory IDLE", Toast.LENGTH_SHORT).show();
+            }
+
+            catch (IndexOutOfBoundsException lol){
+                //   Toast.makeText(this, "Outof index IDLE", Toast.LENGTH_SHORT).show();
+            }
+            catch (IllegalStateException lol){
+                //Toast.makeText(this, "illegal state IDLE", Toast.LENGTH_SHORT).show();
+            }
+
+
             IdleChanceNumber = 0;
         }
 
 
     }
 
+    private void IdleLinesInReqquestNotActive(){
 
+        final MediaPlayer NyMp = new MediaPlayer();
+
+
+        BrickDetected = true;
+
+        Random r = new Random();
+//        int SizeOfArray = arrayList.size();
+//        int nyrandom = r.nextInt((SizeOfArray - 0)+1)+0;
+        int nyrandom = r.nextInt(RobertIdle.size());
+
+
+        String lol = (String) RobertIdle.get(nyrandom);                // Okay (String) er ikke mig men android studio der har lavet
+
+        Uri myUri = Uri.parse(lol); // initialize Uri here
+
+        NyMp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            NyMp.setDataSource(getApplicationContext(),myUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+//            Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
+        }
+        try {
+            NyMp.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+            //          Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
+
+        }
+        NyMp.start();
+
+        NyMp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+//                Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
+                // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
+                NyMp.release();
+                BrickDetected = false;
+            }
+        });
+
+
+    }
 
     private void SuperRequestTimerStart(){
         SuperRequestTidCountdownTimer = new CountDownTimer(TimeLeftInMillisSuperRequestTime, 1000) {
@@ -490,11 +812,18 @@ public class BennyEyes extends AppCompatActivity {
             public void onTick(long millisuntillfinish) {
                 TimeLeftInMillisSuperRequestTime = millisuntillfinish;
                 UpdateSuperRequestTextview();
+/*
+if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime < 22500){
 
+    if (ItsAPretendRound){
+        Toast.makeText(BennyEyes.this, "Det er en pretend runde og vi runder tidligt af", Toast.LENGTH_SHORT).show();
+        StartRequestRound();
+        ItsAPretendRound = false;
+    }
+}
+*/
 
-
-
-            IdleLines();
+         //   IdleLines();
                 // HER KUNNE MAN HAVE EN RANDOM FUNKTION DER SIGER NOGET I STIL MED 1/50 GANGE DEN TIKKER SÅ SIG EN IDLE REPLIK?
                 // ELLER NÅR DEN HAR TIKKET X ANTAL GANGE FYR EN IDLE REPLIK
             }
@@ -506,15 +835,17 @@ public class BennyEyes extends AppCompatActivity {
                    StartRequestRound();
                }
                else {
-                   while (mediaPlayer.isPlaying()){    //Sørger for at den ikke giver ny request mens der er feedback
+                   while (mediaPlayer.isPlaying() || OjneView.isPlaying()){    //Sørger for at den ikke giver ny request mens der er feedback
 
 
                    }
+mediaPlayer.reset();
+                 //  Toast.makeText(BennyEyes.this, "issueses", Toast.LENGTH_SHORT).show();
 
-                   Toast.makeText(BennyEyes.this, "Issuses", Toast.LENGTH_SHORT).show();
                    StartRequestRound();
 
                }
+               AmounfOfIdleRounds =0 ;
                 SuperRequestTidIsRunning = false;
             }
         }.start();
@@ -528,12 +859,32 @@ public class BennyEyes extends AppCompatActivity {
             public void onTick(long millisuntillfinish2) {
                 TimeLeftInMillisRequestNotActive = millisuntillfinish2;
                 UpdateRequestNotActiveTextView();
+
+            if (millisuntillfinish2 < 12000 && millisuntillfinish2 > 11000 && TimeLeftInMillisSuperRequestTime > 4000) {
+                if (ItsAPretendRound) {
+                 //   Toast.makeText(BennyEyes.this, "Det er en pretend runde og vi runder tidligt af", Toast.LENGTH_SHORT).show();
+                    StartRequestRound();
+                    ItsAPretendRound = false;
+                }
+                if (!ItsAPretendRound) {
+                    Log.d("Over 9000", "Vi giver en idle line" + millisuntillfinish2);
+                    IdleLinesInReqquestNotActive();
+                }
+            }
+/*            if (millisuntillfinish2 < 6000 && millisuntillfinish2 > 5000){
+                Log.d("Over 9000", "Vi giver en idle line" + millisuntillfinish2);
+                IdleLinesInReqquestNotActive();
             }
 
+*/
+            }
             @Override
             public void onFinish() {
                 RequestNotActiveeIsRunning = false;
                 StartRequestRound();
+
+                AmounfOfIdleRounds++;
+
             }
         }.start();
         RequestNotActiveeIsRunning = true;
@@ -551,7 +902,7 @@ public class BennyEyes extends AppCompatActivity {
             @Override
             public void onFinish() {
                 FeedBackCoolDownIsRunning = false;
-
+                AmounfOfIdleRounds =0;
 
             }
         }.start();
@@ -599,17 +950,29 @@ public class BennyEyes extends AppCompatActivity {
     }
 
     public void StartRequestRound(){
-       Toast.makeText(this, "New Round", Toast.LENGTH_SHORT).show();
-       FeedbackCoolDownCountdowntimer.cancel();
-       RequestNotActiveCountdownTimer.cancel();
-       SuperRequestTidCountdownTimer.cancel();
-       LevelOfRequestDifficulty();
-       FeedbackCoolDownCountdowntimer.start();
-       RequestNotActiveCountdownTimer.start();
-       SuperRequestTidCountdownTimer.start();
+     //   Toast.makeText(this, "vi er i ny request", Toast.LENGTH_SHORT).show();
 
+        if (AmounfOfIdleRounds >= 3){
+            IdleModeIsActive = true;
+            IdleModCountodwntimerstart();
+        }
+
+        else if (AmounfOfIdleRounds < 3) {
+
+
+            while (mediaPlayer.isPlaying()){
+
+            }
+         //   Toast.makeText(this, "New Round", Toast.LENGTH_SHORT).show();
+            FeedbackCoolDownCountdowntimer.cancel();
+            RequestNotActiveCountdownTimer.cancel();
+            SuperRequestTidCountdownTimer.cancel();
+            LevelOfRequestDifficulty();
+            FeedbackCoolDownCountdowntimer.start();
+            RequestNotActiveCountdownTimer.start();
+            SuperRequestTidCountdownTimer.start();
+        }
    }
-
 
     public void SetLanguage(Integer WhatLanguage){
 TextView LagnuageText = findViewById(R.id.LanguageTextView);
@@ -624,12 +987,12 @@ TextView LagnuageText = findViewById(R.id.LanguageTextView);
 
     public void OhNoMyEyes(View view) {
 
-        if (mediaPlayer.isPlaying() || OjneView.isPlaying()){
-            Toast.makeText(this, "avavav", Toast.LENGTH_SHORT).show();
+        if ( OjneView.isPlaying()){
+         //   Toast.makeText(this, "avavav", Toast.LENGTH_SHORT).show();
 
         }
         else {
-            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blink;
+            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
             Uri uriLang =Uri.parse(PathToBennyEyes);
             OjneView.setVideoURI(uriLang);
             OjneView.start();
@@ -637,7 +1000,6 @@ TextView LagnuageText = findViewById(R.id.LanguageTextView);
 
         }
     }
-
 
     public void HowManyTimesHvaeEyesBeenTriggered (double MicTriggerValue){
         HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime++;
