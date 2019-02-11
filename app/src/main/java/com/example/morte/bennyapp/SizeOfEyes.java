@@ -1,15 +1,10 @@
 package com.example.morte.bennyapp;
 
 import android.content.SharedPreferences;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Constraints;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -29,7 +24,7 @@ public class SizeOfEyes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_size_of_eyes);
 
-        SharedPreferences prefs = getSharedPreferences(SelectLanguage.BennyPreferences, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(StartActivity.BennyPreferences, MODE_PRIVATE);
         Integer eyeValue = prefs.getInt("SeekBarValue", 0);
         SeekBarValue = eyeValue;
 
@@ -86,7 +81,7 @@ public class SizeOfEyes extends AppCompatActivity {
     }
 
     public void saveSharedPreference () {
-        SharedPreferences.Editor editor = getSharedPreferences(SelectLanguage.BennyPreferences, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(StartActivity.BennyPreferences, MODE_PRIVATE).edit();
         editor.putInt("SeekBarValue", SeekBarValue);
         editor.apply();
     }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bsckgroundstartscreen"
     android:orientation="vertical"
-    tools:context=".SelectLanguage"
+    tools:context=".StartActivity"
     tools:layout_editor_absoluteY="25dp">
 
     <LinearLayout

@@ -4,15 +4,18 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.JetPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.annotation.RequiresApi;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -47,6 +50,7 @@ public class BennyEyes extends AppCompatActivity {
 
     /* constants */
     private static final int POLL_INTERVAL = 300;
+    public static final String BennyPreferences = "BennyPreferences";
 
     /* running state*/
     private boolean mRunning = false;
@@ -66,45 +70,35 @@ public class BennyEyes extends AppCompatActivity {
 
     private Runnable mSleepTask = new Runnable() {
         public void run() {
-            //Log.i("Noise", "runnable mSleepTask");
-            mSensor.start();
-             }
-             };
+    //Log.i("Noise", "runnable mSleepTask");
+    mSensor.start();
+     }
+     };
 
     // Create runnable thread to Monitor Voice
     private Runnable mPollTask = new Runnable() {
 
         public void run() {
-            double amp = mSensor.getAmplitude();
-            //Log.i("Noise", "runnable mPollTask");
+    double amp = mSensor.getAmplitude();
+    //Log.i("Noise", "runnable mPollTask");
 
-            updateDisplay("Listening for bricks....", amp);
+    updateDisplay("Listening for bricks....", amp);
 
-            if ((amp > mThreshold)) {
-                //callForHelp(amp);
-                //Log.i("Noise", "==== onCreate ===");
-            }
+    if ((amp > mThreshold)) {
+        //callForHelp(amp);
+        //Log.i("Noise", "==== onCreate ===");
+    }
 
-            if (amp > 7 && !mediaPlayer.isPlaying() && !IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+            if (amp > 7 && !mediaPlayer.isPlaying()){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
-
-            if (amp > 7 && !mediaPlayer.isPlaying() && IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
-            IdleModeIsActive = false;
-            //    Toast.makeText(BennyEyes.this, "Vi har været i idlemode og nu begynder vi forfra", Toast.LENGTH_SHORT).show();
-           IdleModeCountdowntimer.cancel();
-           AmounfOfIdleRounds=0;
-            StartRequestRound();
-            }
-
-
             else {
 
-            }
-            // Runnable(mPollTask) will again execute after POLL_INTERVAL
-            mHandler.postDelayed(mPollTask, POLL_INTERVAL);
-             }
-             };
+    }
+    // Runnable(mPollTask) will again execute after POLL_INTERVAL
+    mHandler.postDelayed(mPollTask, POLL_INTERVAL);
+     }
+     };
 
 
 
@@ -174,13 +168,6 @@ public class BennyEyes extends AppCompatActivity {
     ArrayList<String> RobertIntroduction;
 
 
-
-    ArrayAdapter<String> adapter;
-    ArrayAdapter<String> adapter2;
-    MediaPlayer mediaPlayer;
-    MediaPlayer NyMp;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,6 +178,7 @@ public class BennyEyes extends AppCompatActivity {
         TypeofFeedback = 0;
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
+
         setContentView(R.layout.activity_benny_eyes);
 
 
@@ -211,277 +199,45 @@ public class BennyEyes extends AppCompatActivity {
           //  Toast.makeText(this, "Tal er" + Language, Toast.LENGTH_SHORT).show();
             }
         catch (NullPointerException e){
-            //      Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nullpointer catched", Toast.LENGTH_SHORT).show();
             }
 
-SetLanguage(Language);
+        SetLanguage(Language);
 
 
 
-SuperRequestTimeTextView = findViewById(R.id.SuperRequestTView);         //Timer
-RequestNotActiveTextView = findViewById(R.id.RequestNotActiveTView);     //Timer
-FeedbackCDTextView = findViewById(R.id.FeedbackTView);                   //Timer
-DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
-OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
+        SuperRequestTimeTextView = findViewById(R.id.SuperRequestTView);         //Timer
+        RequestNotActiveTextView = findViewById(R.id.RequestNotActiveTView);     //Timer
+        FeedbackCDTextView = findViewById(R.id.FeedbackTView);                   //Timer
+        DecibelTextView =(TextView)findViewById(R.id.NoiseTextView);             //Lyd
+        OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
 
-
-//PresentBenny();
-/*
 SuperRequestTimerStart();                                                //Timer
 RequestNotActiveTimerStart();                                            //Timer
 FeedbackTimerTimerStart();                                               //Timer
 
 StartRequestRound();
-*/
+
  // Used to record Sound
 mSensor = new DetectNoise();
 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "NoiseAlert");
 
-HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime = 0;
-temp =0;
-ReadyForFeedback = false;
-InitBennyOjneArray();
+        HowManyTimesHaveIBeenCalledThatManyImSickOfBeingCalledAllTheTime = 0;
+        temp =0;
+        ReadyForFeedback = false;
+        InitBennyOjneArray();
 
 IdleChanceNumber= 0;
-ItsAPretendRound = false;
-Longpressed = false;
-HaveBeenInPresentMode = 0;
-findViewById(R.id.Blinkable).setOnTouchListener(new OnSwipeListener(this){
 
-    @Override
-    public void onLooongPress() {
 
-if (!Longpressed) {
-    //       Toast.makeText(BennyEyes.this, "LongPress", Toast.LENGTH_SHORT).show();
-    Longpressed = true;
-    super.onLooongPress();
-    PresentBenny();
-}
-    }
 
 
-    public void onClick() {
 
 
-        if ( OjneView.isPlaying()){
-         //   Toast.makeText(BennyEyes.this, "avavav", Toast.LENGTH_SHORT).show();
 
-        }
-        else {
-            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
-            Uri uriLang =Uri.parse(PathToBennyEyes);
-            OjneView.setVideoURI(uriLang);
-            OjneView.start();
 
 
-        }
-        }
-
-
-
-
-
-});
-    }
-
-    public void PresentBenny(){
-
-        findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
-        String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.idle;
-        Uri uriLang =Uri.parse(PathToBennyEyes);
-        OjneView.setVideoURI(uriLang);
-        OjneView.start();
-        PlayMusicFile(RobertIntroduction);
-
-
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-
-                SuperRequestTimerStart();                                                //Timer
-                RequestNotActiveTimerStart();                                            //Timer
-                FeedbackTimerTimerStart();                                               //Timer
-
-
-                StartRequestRound();
-
-            mediaPlayer.reset();
-            }
-        });
-
-
-    }
-
-
-
-
-
-
-    public void InitializeAllMusicArrays (){
-
-
-        RobertIdle = new ArrayList<>();
-        RobertCollectRequest = new ArrayList<>();
-        RobertKiggeNed = new ArrayList<>();
-        RobertBuildRequest = new ArrayList<>();
-        RobertPretendRequest = new ArrayList<>();
-        RobertHappyFeedback = new ArrayList<>();
-        RobertNeutralFeedback = new ArrayList<>();
-        RobertBaffledFeedback = new ArrayList<>();
-        RobertIntroduction = new ArrayList<>();
-
-        getMusic();
-    //    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
-    //    adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList2);
-
-      //  PlayMusicFile(RobertBuildRequest);
-
-
-
-    }
-
-    public void PlayMusicFile (ArrayList arrayList){
-
-/*if (BrickDetected == true){
-    NyMp.stop();
-    NyMp.release();
-    NyMp = null;
-    Toast.makeText(this, "er vi her oerhovvedet", Toast.LENGTH_SHORT).show();
-}
-*/
-/*if (NyMp !=null){
-
-    NyMp.stop();
-    NyMp.release();
-    NyMp = null;
-    Toast.makeText(this, "er vi her oerhovvedet", Toast.LENGTH_SHORT).show();
-
-
-}
-*/
-        while (mediaPlayer.isPlaying()){
-
-        }
-
-        Random r = new Random();
-//        int SizeOfArray = arrayList.size();
-//        int nyrandom = r.nextInt((SizeOfArray - 0)+1)+0;
-        int nyrandom = r.nextInt(arrayList.size());
-
-
-        String lol = (String) arrayList.get(nyrandom);                // Okay (String) er ikke mig men android studio der har lavet
-
-        Uri myUri = Uri.parse(lol); // initialize Uri here
-
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(getApplicationContext(),myUri);
-        } catch (IOException e) {
-            e.printStackTrace();
-     //       Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
-        }
-        try {
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
- //           Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
-
-        }
-        mediaPlayer.start();
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-            //    Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
-              // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
-                mediaPlayer.reset();
-            }
-        });
-
-    }
-
-    public void getMusic(){
-
-        ContentResolver contentResolver = getContentResolver();
-        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor songCurser = contentResolver.query(songUri,null  ,null,null,null);
-        if (songCurser != null && songCurser.moveToFirst()){
-            int SongPathData = songCurser.getColumnIndex(MediaStore.Audio.Media.DATA);
-            int songtitel = songCurser.getColumnIndex(MediaStore.Audio.Media.TITLE);
-
-            do {
-                String currentTitle = songCurser.getString(songtitel);
-                String DataPath = songCurser.getString(SongPathData);
-
-                // arrayList.add(currentTitle + "\n" + currentartist);
-                char FirstCharInSongFile = currentTitle.charAt(0);
-                char SecoundCharInSongFile = currentTitle.charAt(1);
-
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'I' ){
-
-                    RobertIdle.add(DataPath);
-
-                }
-               else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'C' ){
-
-                    RobertCollectRequest.add(DataPath);
-                  //  Toast.makeText(this, "Match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
-
-                }
-               else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'K' ){
-
-                    RobertKiggeNed.add(DataPath);
-
-                }
-
-                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'B' ){
-
-                    RobertBuildRequest.add(DataPath);
-
-                }
-
-               else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'P' ){
-
-                    RobertPretendRequest.add(DataPath);
-
-                }
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Y' ){
-
-                    RobertHappyFeedback.add(DataPath);
-
-                }
-                /*
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Y' ){
-
-                    RobertNeutralFeedback.add(DataPath);
-
-                }
-                */
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'X' ){
-
-                    RobertBaffledFeedback.add(DataPath);
-
-                }
-
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'O' ){
-
-                    RobertIntroduction.add(DataPath);
-
-                }
-                else {
-                //    Toast.makeText(this, "No match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
-
-
-                }
-
-
-
-                } while (songCurser.moveToNext());
-        }
-     //   Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -494,6 +250,9 @@ if (!Longpressed) {
             mRunning = true;
             start();
         }
+
+        //LoggingData logData = new LoggingData();
+        //logData.readFile(logData.LogHashmap);
     }
 
     @Override
@@ -845,6 +604,8 @@ if (!Longpressed) {
          Uri uriLang =Uri.parse(PathToBennyEyes);
          OjneView.setVideoURI(uriLang);
          OjneView.start();
+
+
 
     }
 
