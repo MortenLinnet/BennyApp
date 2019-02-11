@@ -52,12 +52,13 @@
             android:name=".MicNotPluggedIn"
             android:screenOrientation="landscape" />
         <activity android:name=".Introduction" />
-        <activity android:name=".Linestest"
-            android:screenOrientation="sensorLandscape"
-            ></activity>
+        <activity
+            android:name=".Linestest"
+            android:screenOrientation="sensorLandscape" />
         <activity android:name=".Introduction" />
         <activity android:name=".OldIntroduction" />
-        <activity android:name=".Oldintro"></activity>
+        <activity android:name=".Oldintro" />
+        <activity android:name=".ChangeMicSensitivity"></activity>
     </application>
 
 </manifest>

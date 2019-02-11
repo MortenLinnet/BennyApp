@@ -19,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -108,6 +109,9 @@ public class BennyMain extends AppCompatActivity {
         TextViewBobleHojre = findViewById(R.id.talebobletilhojreTEXTVIEW);
         TextViewBobleDownLeft = findViewById(R.id.taleboblenederstilvenstreTEXTVIEW);
         TextviewBobleOverstLeft = findViewById(R.id.talebobleoversttilvenstreTEXTVIEW);
+
+
+
 
         ChoosePersonality.setTypeface(bold_font);
         TextViewBobleHojre.setTypeface(standard_font);
@@ -221,6 +225,7 @@ public class BennyMain extends AppCompatActivity {
             // Tænker bare det er her vi initialiserer vores arrays af lyd.  doStuff();
 
         }
+        StartSetText();
 
     }
 
@@ -230,6 +235,16 @@ public class BennyMain extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         SetLanguage(AppLanguage);
+    }
+
+    public void StartSetText(){
+
+
+        SetStringInTextboxeses(Language);
+        TextviewBobleOverstLeft.setText(TextBobbleTopRight);
+        TextViewBobleDownLeft.setText(TextbobbleLowLeft);
+        TextViewBobleHojre.setText(TextbobbleRIGHT);
+
     }
 
     public void NextButtonanimationer(ImageView LeaveView, ImageView EnterView) {

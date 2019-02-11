@@ -1253,6 +1253,11 @@ String RunningAvergeFormatted = String.format("TriggerValueEr %f, og funktionen 
 
     }
 
+    public void OpenMicSensitivity(View view) {
+
+        Intent i = new Intent(this, ChangeMicSensitivity.class);
+        startActivityForResult(i, 1);
+    }
 }
 
 

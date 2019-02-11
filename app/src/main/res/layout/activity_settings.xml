@@ -66,6 +66,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:layout_weight="1"
+            android:onClick="OpenMicSensitivity"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/aboutbutton" />

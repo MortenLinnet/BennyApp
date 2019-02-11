@@ -88,6 +88,13 @@ public class Settings extends AppCompatActivity {
     public void Return(View view) {
         finish();
     }
+
+    public void OpenMicSensitivity(View view) {
+        Intent i = new Intent(this, ChangeMicSensitivity.class);
+        startActivity(i);
+
+
+    }
 }
 
 
