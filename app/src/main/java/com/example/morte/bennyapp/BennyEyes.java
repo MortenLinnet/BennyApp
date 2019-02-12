@@ -11,12 +11,13 @@ import android.media.AudioManager;
 import android.media.JetPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.support.annotation.RequiresApi;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,12 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
+import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,10 +112,13 @@ public class BennyEyes extends AppCompatActivity {
                 //Log.i("Noise", "==== onCreate ===");
             }
 
+            if (amp > 7) {
+                save("Bricks Detected");
+            }
+
             if (amp > 7  && mediaPlayer == null && !IdleModeIsActive && TimeLeftInMillisSuperRequestTime > 4000){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
-            else {
 
             if (amp > 7 && mediaPlayer == null && IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 IdleModeIsActive = false;
@@ -212,16 +222,8 @@ public class BennyEyes extends AppCompatActivity {
     int TempHappyFeedback;
     int TempIdle;
 
-    //Hvilket nummer i replik arrays det der næst senest er brugt
-    int Temp2BuildRequestOfOld;
-    int Temp2CollectRequestOfOld;
-    int Temp2PretendRequestOfOld;
-    int Temp2KiggeNedOfOld;
-    int Temp2BaffeldFeedbackOfOld;
-    int Temp2HappyFeedbackOfOld;
-    int Temp2IdleOfOld;
-
-
+    ImageButton HoldtoReleasButton;
+    Long down, up;
     int[] TempBuildRequestArray = new int[2];
     int[] TempCollectRequestArray = new int[2];
     int[] TempPretendRequestArray = new int[2];
@@ -232,19 +234,17 @@ public class BennyEyes extends AppCompatActivity {
 
 
 
-    //Hvilket nummer af ojne i arrays der senest er blevet brugt
-    int TempBaffeledOjne;
-    int TempHappyOjne;
     int TempKiggeNedOjne; // Som så ikke bliver brugt pt
-
-    ImageButton HoldtoReleasButton;
-    Long down, up;
+    int TempHappyOjne;
+    int TempBaffeledOjne;
+    //Hvilket nummer af ojne i arrays der senest er blevet brugt
 
     ImageButton nextPersonalityButton;
     ImageButton PrevioisPersonalityButton;
 
     ImageButton HoldtoChangeCharecter;
     Long downcharecter, upcharecter;
+
 
     int IsThisFirstTime;
 
@@ -254,14 +254,15 @@ public class BennyEyes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        readFile(LogHashmap, LogInstance);
+
         //     mediaPlayer = new MediaPlayer();
         //   NyMp = new MediaPlayer();
         InitializeAllMusicArrays();
-        readFile(LogHashmap, LogInstance);
         TypeofFeedback = 0;
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
-        setContentView(R.layout.activity_benny_eyes);
+        setContentView(R.layout.activity_clown_eyes);
         IsStopped = false;
 
 
@@ -295,14 +296,14 @@ public class BennyEyes extends AppCompatActivity {
         OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
 
 
-//PresentBenny();
-/*
-SuperRequestTimerStart();                                                //Timer
-RequestNotActiveTimerStart();                                            //Timer
-FeedbackTimerTimerStart();                                               //Timer
+        //PresentBenny();
+        /*
+        SuperRequestTimerStart();                                                //Timer
+        RequestNotActiveTimerStart();                                            //Timer
+        FeedbackTimerTimerStart();                                               //Timer
 
-StartRequestRound();
-*/
+        StartRequestRound();
+        */
         // Used to record Sound
         mSensor = new DetectNoise();
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -330,17 +331,9 @@ StartRequestRound();
                 }
             }
 
-                if (!Longpressed) {
-                    //       Toast.makeText(BennyEyes.this, "LongPress", Toast.LENGTH_SHORT).show();
-                    Longpressed = true;
-                    super.onLooongPress();
-                    PresentBenny();
-                }
-            }
 
             public void onClick() {
 
-            public void onClick() {
 
                 if ( OjneView.isPlaying()){
                     //   Toast.makeText(BennyEyes.this, "avavav", Toast.LENGTH_SHORT).show();
@@ -352,12 +345,6 @@ StartRequestRound();
                     OjneView.setVideoURI(uriLang);
                     OjneView.start();
 
-                }
-                else {
-                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
-                    Uri uriLang =Uri.parse(PathToBennyEyes);
-                    OjneView.setVideoURI(uriLang);
-                    OjneView.start();
 
                 }
             }
@@ -431,7 +418,7 @@ StartRequestRound();
 
 
                                 PresentBenny();
-                                Toast.makeText(BennyEyes.this, "Restarted", Toast.LENGTH_SHORT).show();
+                                //      Toast.makeText(ClownEyes.this, "Restarted", Toast.LENGTH_SHORT).show();
 
                                 IsThisFirstTime = 0;
                                 IsStopped=false;
@@ -496,7 +483,7 @@ StartRequestRound();
                         if(upcharecter-downcharecter>5000){
 
 
-                            Intent i = new Intent(BennyEyes.this, ClownEyes.class);
+                            Intent i = new Intent(BennyEyes.this, BennyEyes.class);
                             startActivityForResult(i,1);
 
                             //      StopBenny();
@@ -513,6 +500,236 @@ StartRequestRound();
 
         });
 
+    }
+
+    public void StopBenny(){
+
+
+
+        if (RequestNotActiveCountdownTimer != null) {
+            RequestNotActiveCountdownTimer.cancel();
+
+
+        }
+        if (SuperRequestTidCountdownTimer != null) {
+            SuperRequestTidCountdownTimer.cancel();
+        }
+        if (FeedbackCoolDownCountdowntimer !=null) {
+            FeedbackCoolDownCountdowntimer.cancel();
+        }
+        StopPlayer();
+        stop();
+
+    }
+
+    public void PresentBenny(){
+
+        findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
+        String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.idle;
+        Uri uriLang =Uri.parse(PathToBennyEyes);
+        OjneView.setVideoURI(uriLang);
+        OjneView.start();
+        PlayMusicFile(RobertIntroduction, 0);
+
+        if (!mRunning) {
+            mRunning = true;
+            start();
+        }
+
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+
+                SuperRequestTimerStart();                                                //Timer
+                RequestNotActiveTimerStart();                                            //Timer
+                FeedbackTimerTimerStart();                                               //Timer
+
+
+                StartRequestRound();
+                IsThisFirstTime++;
+                StopPlayer();
+            }
+        });
+
+
+    }
+
+    public void InitializeAllMusicArrays (){
+
+
+        RobertIdle = new ArrayList<>();
+        RobertCollectRequest = new ArrayList<>();
+        RobertKiggeNed = new ArrayList<>();
+        RobertBuildRequest = new ArrayList<>();
+        RobertPretendRequest = new ArrayList<>();
+        RobertHappyFeedback = new ArrayList<>();
+        RobertNeutralFeedback = new ArrayList<>();
+        RobertBaffledFeedback = new ArrayList<>();
+        RobertIntroduction = new ArrayList<>();
+
+        getMusic();
+        //    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
+        //    adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList2);
+
+        //  PlayMusicFile(RobertBuildRequest);
+
+
+
+    }
+
+    public boolean NotLastOne(String lol){
+        if (lol.equals(tempo)){
+            return true;
+
+        }
+        else
+            return false;
+    }
+
+    public void PlayMusicFile (ArrayList arrayList, int numberinArray) {
+
+        String lol;
+        Uri myUri = null;
+
+
+        try {
+            lol = (String) arrayList.get(numberinArray);                // Okay (String) er ikke mig men android studio der har lavet
+
+
+
+
+            myUri = Uri.parse(lol); // initialize Uri here
+            if (mediaPlayer == null) {
+
+                mediaPlayer = new MediaPlayer();
+           /* while (mediaPlayer.isPlaying()) {
+                Toast.makeText(this, "Hvad er det her?", Toast.LENGTH_SHORT).show();
+            }
+*/
+
+
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    mediaPlayer.setDataSource(getApplicationContext(), myUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //       Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
+                }
+                try {
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //           Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
+
+                }
+                mediaPlayer.start();
+
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        //    Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
+                        // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
+                        StopPlayer();
+
+                        //    mediaPlayer.reset();
+                    }
+                });
+
+            }
+        }
+        catch (IndexOutOfBoundsException e){
+            //  Toast.makeText(this, "Outofindex", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void StopPlayer(){
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    public void getMusic(){
+
+        ContentResolver contentResolver = getContentResolver();
+        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor songCurser = contentResolver.query(songUri,null  ,null,null,null);
+        if (songCurser != null && songCurser.moveToFirst()){
+            int SongPathData = songCurser.getColumnIndex(MediaStore.Audio.Media.DATA);
+            int songtitel = songCurser.getColumnIndex(MediaStore.Audio.Media.TITLE);
+
+            do {
+                String currentTitle = songCurser.getString(songtitel);
+                String DataPath = songCurser.getString(SongPathData);
+
+                // arrayList.add(currentTitle + "\n" + currentartist);
+                char FirstCharInSongFile = currentTitle.charAt(0);
+                char SecoundCharInSongFile = currentTitle.charAt(1);
+
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'I' ){
+
+                    RobertIdle.add(DataPath);
+
+                }
+                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'C' ){
+
+                    RobertCollectRequest.add(DataPath);
+                    //  Toast.makeText(this, "Match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
+
+                }
+                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'K' ){
+
+                    RobertKiggeNed.add(DataPath);
+
+                }
+
+                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'B' ){
+
+                    RobertBuildRequest.add(DataPath);
+
+                }
+
+                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'P' ){
+
+                    RobertPretendRequest.add(DataPath);
+
+                }
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Y' ){
+
+                    RobertHappyFeedback.add(DataPath);
+
+                }
+                /*
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Y' ){
+
+                    RobertNeutralFeedback.add(DataPath);
+
+                }
+                */
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'X' ){
+
+                    RobertBaffledFeedback.add(DataPath);
+
+                }
+                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'O' ){
+
+                    RobertIntroduction.add(DataPath);
+
+                }
+                else {
+                    //    Toast.makeText(this, "No match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+
+            } while (songCurser.moveToNext());
+        }
+        //  Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -653,7 +870,6 @@ StartRequestRound();
         }
     }
 
-    public int TempFunction(ArrayList array, int WhatTemp ){
 
     public int TempFunctionNyNyNyNY (ArrayList array, int[] TempArray ) {
 
@@ -767,14 +983,20 @@ StartRequestRound();
         return Randomtal;
     }
 
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void PreventRepetetion(ArrayList array) {
 
+        String NameOfPath;
+
         if (array.equals(RobertBuildRequest)) {
-            //        Toast.makeText(this, "Build", Toast.LENGTH_SHORT).show();
-            // Temp2BuildRequestOfOld = TempBuildRequest;
-            // TempBuildRequest = TempFunctionNy(RobertBuildRequest, TempBuildRequest, Temp2BuildRequestOfOld);
-            TempFunctionNyNyNyyyyyyyyyyy(RobertBuildRequest, TempBuildRequestArray);
             PlayMusicFile(RobertBuildRequest, TempBuildRequestArray[0]);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertBuildRequest, TempBuildRequestArray);
+
+            NameOfPath = RobertBuildRequest.get(TempBuildRequest);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertPretendRequest)) {
@@ -783,6 +1005,11 @@ StartRequestRound();
             //   TempPretendRequest = TempFunctionNy(RobertPretendRequest, TempPretendRequest, Temp2PretendRequestOfOld);
             TempFunctionNyNyNyyyyyyyyyyy(RobertPretendRequest,TempPretendRequestArray);
             PlayMusicFile(RobertPretendRequest, TempPretendRequest);
+
+            NameOfPath = RobertPretendRequest.get(TempPretendRequest);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
 
         }
 
@@ -793,8 +1020,12 @@ StartRequestRound();
             TempFunctionNyNyNyyyyyyyyyyy(RobertCollectRequest, TempCollectRequestArray);
             PlayMusicFile(RobertCollectRequest, TempCollectRequestArray[0]);
 
-
+            NameOfPath = RobertCollectRequest.get(TempCollectRequest);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
+
         if (array.equals(RobertKiggeNed)) {
 
             //     Toast.makeText(this, "kiggened", Toast.LENGTH_SHORT).show();
@@ -802,6 +1033,11 @@ StartRequestRound();
             // TempKiggeNed = TempFunctionNy(RobertKiggeNed, TempKiggeNed, Temp2KiggeNedOfOld);
             TempFunctionNyNyNyyyyyyyyyyy(RobertKiggeNed, TempKiggeNedArray);
             PlayMusicFile(RobertKiggeNed, TempKiggeNedArray[0]);
+
+            NameOfPath = RobertKiggeNed.get(TempKiggeNed);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
 
         }
         if (array.equals(RobertBaffledFeedback)) {
@@ -812,24 +1048,33 @@ StartRequestRound();
             TempFunctionNyNyNyyyyyyyyyyy(RobertBaffledFeedback, TempBaffeldFeedbackArray);
             PlayMusicFile(RobertBaffledFeedback, TempBaffeldFeedbackArray[0]);
 
+            NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedback);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
+
         }
 
         if (array.equals(RobertHappyFeedback)) {
 
-            //   Toast.makeText(this, "happy", Toast.LENGTH_SHORT).show();
-            // Temp2HappyFeedbackOfOld = TempHappyFeedback;
-            // TempHappyFeedback = TempFunctionNy(RobertHappyFeedback, TempHappyFeedback, Temp2HappyFeedbackOfOld);
-            TempFunctionNyNyNyyyyyyyyyyy(RobertHappyFeedback, TempHappyFeedbackArray);
             PlayMusicFile(RobertHappyFeedback, TempHappyFeedbackArray[0]);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertHappyFeedback, TempHappyFeedbackArray);
+
+            NameOfPath = RobertHappyFeedback.get(TempHappyFeedback);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertIdle)) {
 
-            //   Toast.makeText(this, "idle", Toast.LENGTH_SHORT).show();
-            //   Temp2IdleOfOld = TempIdle;
-            //     TempIdle = TempFunctionNy(RobertIdle, TempIdle, Temp2IdleOfOld);
             TempFunctionNyNyNyyyyyyyyyyy(RobertIdle, TempIdleArray);
             PlayMusicFile(RobertIdle, TempIdleArray[0]);
+
+            NameOfPath = RobertIdle.get(TempIdle);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1049,53 +1294,52 @@ StartRequestRound();
 
     public void InitBennyOjneArray(){
 
-            BennyHappyOjneArray = new String[]{
+        BennyHappyOjneArray = new String[]{
 
 
-                    //Insert Happy Eyes
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.briller,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.cool,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.crazy,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.glad,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.hjerteojne,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.idle,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.kiggerned,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.megetglad,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.tilfreds,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.overrasket,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.blinker,
-
-
-
-
-            };
-
-            BennyNoFeelingOjneArray = new String[]{
-
-                    //Insert No feeling eyes
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.idle,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.kiggerned,
-
-
-            };
-
-            BennyNotPleasedOjneArray = new String[]{
-
-                    //Insert Not pleased eyes
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.skeptisk,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.sur,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.syg,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.forvirret,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.overrasket,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.lider,
-                    "android.resource://com.example.morte.bennyapp/" + R.raw.crazy,
+                //Insert Happy Eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.briller,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.cool,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.crazy,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.glad,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.hjerteojne,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.idle,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.kiggerned,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.megetglad,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.tilfreds,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.overrasket,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.blinker,
 
 
 
-            };
-        }      //Arrays til alle Benny's øjne
 
+        };
+
+        BennyNoFeelingOjneArray = new String[]{
+
+                //Insert No feeling eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.idle,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.kiggerned,
+
+
+        };
+
+        BennyNotPleasedOjneArray = new String[]{
+
+                //Insert Not pleased eyes
+                "android.resource://com.example.morte.bennyapp/" + R.raw.skeptisk,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.sur,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.syg,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.forvirret,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.overrasket,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.lider,
+                "android.resource://com.example.morte.bennyapp/" + R.raw.crazy,
+
+
+
+        };
+    }      //Arrays til alle Benny's øjne
 
 
     public int Tempfunction4Eyes(String[] string, int WhatTemp ){
@@ -1358,8 +1602,6 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
         SuperRequestTidIsRunning = true;
     }
 
-
-
     private void RequestNotActiveTimerStart(){
         RequestNotActiveCountdownTimer  = new CountDownTimer(TimeLeftInMillisRequestNotActive, 1000) {
 
@@ -1522,11 +1764,6 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 //        wauwetflottextview.setText(RunningAvergeFormatted);
 
     }
-
-
-
-
-
 
 
     // LOGGING SECTION – Ik smid methods ind i eller under!
@@ -1767,12 +2004,6 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
         String currentTime = timestamp.format(new Date());
 
         return currentTime;
-    }
-
-    public void OpenMicSensitivity(View view) {
-
-        Intent i = new Intent(this, ChangeMicSensitivity.class);
-        startActivityForResult(i, 1);
     }
 }
 

@@ -348,7 +348,7 @@ StartRequestRound();
 
                 }
                 else {
-                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
+                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.piratblinkerbeggeojne;
                     Uri uriLang =Uri.parse(PathToBennyEyes);
                     OjneView.setVideoURI(uriLang);
                     OjneView.start();

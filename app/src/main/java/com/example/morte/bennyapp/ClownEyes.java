@@ -340,7 +340,7 @@ IsThisFirstTime = 0;
 
                 }
                 else {
-                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
+                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.klovnblinkerbeggeojne;
                     Uri uriLang =Uri.parse(PathToBennyEyes);
                     OjneView.setVideoURI(uriLang);
                     OjneView.start();
@@ -1743,6 +1743,7 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
         }
         else {
             String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.klovnblinkerbeggeojne;
+
             Uri uriLang =Uri.parse(PathToBennyEyes);
             OjneView.setVideoURI(uriLang);
             OjneView.start();
