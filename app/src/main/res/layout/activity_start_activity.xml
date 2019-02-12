@@ -22,23 +22,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5.5"
-            android:src="@drawable/bennynaked" />
+            android:src="@drawable/robertvelkommen" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3">
+        android:layout_weight="2"
+        android:layout_marginTop="25dp">
 
         <TextView
             android:id="@+id/headerText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:layout_gravity="center"
-            android:paddingTop="30dp"
-            android:textSize="25sp"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:textColor="#FFFFFFFF"
+            android:autoSizeTextType="uniform"
             android:text="@string/startBennyText"
             android:textAlignment="center"
             />
@@ -48,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom"
+            android:textColor="#FFFFFFFF"
             android:padding="0dp"
             android:gravity="center"
             android:textSize="15sp"
@@ -63,7 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.8"
-        android:layout_marginBottom="35dp">
+        android:layout_marginBottom="35dp"
+        android:layout_marginTop="15dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -73,7 +76,6 @@
             android:layout_gravity="center">
 
             <ImageButton
-                android:contentDescription="empty1"
                 android:id="@+id/empty1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -92,11 +94,11 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:padding="0dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerInside"
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:onClick="english"
-                app:srcCompat="@drawable/en"
+                app:srcCompat="@drawable/english"
                 />
 
             <ImageButton
@@ -106,12 +108,11 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:padding="0dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerInside"
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:onClick="danish"
-                app:srcCompat="@drawable/da"
-                />
+                app:srcCompat="@drawable/danish"/>
 
             <ImageButton
                 android:id="@+id/empty2"
@@ -133,8 +134,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.75"
-        android:layout_marginBottom="40dp">
+        android:layout_weight="0.8"
+        android:layout_marginBottom="30dp">
 
         <ImageButton
             android:id="@+id/startButton"
@@ -144,9 +145,8 @@
             android:layout_weight="1"
             android:background="@null"
             android:onClick="startApp"
+            android:text="START"
             android:scaleType="fitCenter"
-            android:text="@string/playText"
-            android:textColor="@color/white"
             app:srcCompat="@drawable/startbutton2" />
 
     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.morte.bennyapp;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +11,13 @@ import android.media.AudioManager;
 import android.media.JetPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,10 +38,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
+import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 public class ClownEyes extends AppCompatActivity {
@@ -47,7 +68,7 @@ public class ClownEyes extends AppCompatActivity {
     public boolean IsMediaPlayerOccupied;
     public boolean ItsAPretendRound;
     public int HaveBeenInPresentMode;
-public boolean Notgonnastack;
+    public boolean Notgonnastack;
     /* constants */
     private static final int POLL_INTERVAL = 300;
 
@@ -77,6 +98,7 @@ public boolean Notgonnastack;
     // Create runnable thread to Monitor Voice
     private Runnable mPollTask = new Runnable() {
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         public void run() {
             double amp = mSensor.getAmplitude();
             //Log.i("Noise", "runnable mPollTask");
@@ -86,6 +108,10 @@ public boolean Notgonnastack;
             if ((amp > mThreshold)) {
                 //callForHelp(amp);
                 //Log.i("Noise", "==== onCreate ===");
+            }
+
+            if (amp > 7) {
+                save("Bricks Detected");
             }
 
             if (amp > 7  && mediaPlayer == null && !IdleModeIsActive && TimeLeftInMillisSuperRequestTime > 4000){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
@@ -196,19 +222,21 @@ public boolean Notgonnastack;
     int TempHappyFeedback;
     int TempIdle;
 
-ImageButton HoldtoReleasButton;
-Long down, up;
+    ImageButton HoldtoReleasButton;
+    Long down, up;
 
     ImageButton HoldtoChangeCharecter;
     Long downcharecter, upcharecter;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-   //     mediaPlayer = new MediaPlayer();
-     //   NyMp = new MediaPlayer();
+        readFile(LogHashmap, LogInstance);
+
+        //     mediaPlayer = new MediaPlayer();
+        //   NyMp = new MediaPlayer();
         InitializeAllMusicArrays();
         TypeofFeedback = 0;
         CohreneceBetweenEyesAndVoice = 0;
@@ -223,7 +251,7 @@ Long down, up;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         IdleModeIsActive = false;
-Notgonnastack =true;
+        Notgonnastack =true;
         try {
             Language= 0;
             Intent intent = getIntent();
@@ -247,14 +275,14 @@ Notgonnastack =true;
         OjneView = findViewById(R.id.BennyOjne);                                 //OjneView
 
 
-//PresentBenny();
-/*
-SuperRequestTimerStart();                                                //Timer
-RequestNotActiveTimerStart();                                            //Timer
-FeedbackTimerTimerStart();                                               //Timer
+        //PresentBenny();
+        /*
+        SuperRequestTimerStart();                                                //Timer
+        RequestNotActiveTimerStart();                                            //Timer
+        FeedbackTimerTimerStart();                                               //Timer
 
-StartRequestRound();
-*/
+        StartRequestRound();
+        */
         // Used to record Sound
         mSensor = new DetectNoise();
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -423,8 +451,8 @@ StartRequestRound();
 
     public void PlayMusicFile (ArrayList arrayList, int numberinArray) {
 
-String lol;
-Uri myUri = null;
+    String lol;
+    Uri myUri = null;
 
 
       //  Random r = new Random();
@@ -740,13 +768,22 @@ private void StopPlayer(){
         return Randomtal;
     }
 
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void PreventRepetetion(ArrayList array) {
+
+        String NameOfPath;
 
         if (array.equals(RobertBuildRequest)) {
             Toast.makeText(this, "Build", Toast.LENGTH_SHORT).show();
 
             TempBuildRequest = TempFunction(RobertBuildRequest, TempBuildRequest);
             PlayMusicFile(RobertBuildRequest, TempBuildRequest);
+
+            NameOfPath = RobertBuildRequest.get(TempBuildRequest);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertPretendRequest)) {
@@ -755,6 +792,11 @@ private void StopPlayer(){
             TempPretendRequest = TempFunction(RobertPretendRequest, TempPretendRequest);
             PlayMusicFile(RobertPretendRequest, TempPretendRequest);
 
+            NameOfPath = RobertPretendRequest.get(TempPretendRequest);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
+
         }
 
         if (array.equals(RobertCollectRequest)) {
@@ -762,13 +804,22 @@ private void StopPlayer(){
             TempCollectRequest = TempFunction(RobertCollectRequest, TempCollectRequest);
             PlayMusicFile(RobertCollectRequest, TempCollectRequest);
 
-
+            NameOfPath = RobertCollectRequest.get(TempCollectRequest);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
+
         if (array.equals(RobertKiggeNed)) {
 
             Toast.makeText(this, "kiggened", Toast.LENGTH_SHORT).show();
             TempKiggeNed = TempFunction(RobertKiggeNed, TempKiggeNed);
             PlayMusicFile(RobertKiggeNed, TempKiggeNed);
+
+            NameOfPath = RobertKiggeNed.get(TempKiggeNed);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
 
         }
         if (array.equals(RobertBaffledFeedback)) {
@@ -777,6 +828,11 @@ private void StopPlayer(){
             TempBaffeldFeedback = TempFunction(RobertBaffledFeedback, TempBaffeldFeedback);
             PlayMusicFile(RobertBaffledFeedback, TempBaffeldFeedback);
 
+            NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedback);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
+
         }
 
         if (array.equals(RobertHappyFeedback)) {
@@ -784,6 +840,11 @@ private void StopPlayer(){
             Toast.makeText(this, "happy", Toast.LENGTH_SHORT).show();
             TempHappyFeedback = TempFunction(RobertHappyFeedback, TempHappyFeedback);
             PlayMusicFile(RobertHappyFeedback, TempHappyFeedback);
+
+            NameOfPath = RobertHappyFeedback.get(TempHappyFeedback);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertIdle)) {
@@ -791,12 +852,18 @@ private void StopPlayer(){
             Toast.makeText(this, "idle", Toast.LENGTH_SHORT).show();
             TempIdle = TempFunction(RobertIdle, TempIdle);
             PlayMusicFile(RobertIdle, TempIdle);
+
+            NameOfPath = RobertIdle.get(TempIdle);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
     }
 
 
 
 
+        @TargetApi(Build.VERSION_CODES.KITKAT)
         public void LevelOfRequestDifficulty() {
         Random r = new Random();
         int n = r.nextInt(180);
@@ -806,7 +873,7 @@ private void StopPlayer(){
             Log.d("Ny Request", "Det er en svær request ");
             try {
 
-PreventRepetetion(RobertBuildRequest);
+        PreventRepetetion(RobertBuildRequest);
               //  PlayMusicFile(RobertBuildRequest);
             }
             catch (Surface.OutOfResourcesException lol) {
@@ -1497,6 +1564,246 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 
     }
 
+
+    // LOGGING SECTION – Ik smid methods ind i eller under!
+
+    public String subFolder = "/LogData";
+    public String name = "LogFile_";
+    public String currentDate = (String) whichDate();
+    public String csv = ".csv";
+    public String filename = name + currentDate + csv;
+    public String instances = "_instances";
+    public String filenameinstance = currentDate + instances + csv;
+    private static final String TAG = "MEDIA";
+    String eol = System.getProperty("line.separator");
+
+    public HashMap<String, Integer> LogHashmap = new HashMap<String, Integer>();
+    public HashMap<String, String> LogInstance = new HashMap<>();
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void save(String key) {
+
+        if (LogHashmap.containsKey(key)) {
+            LogHashmap.put(key, LogHashmap.get(key)+1);
+
+            if (!key.equals("Bricks Detected")){
+                LogInstance.put(timeStamp(), key);
+            }
+            writeToFile(LogHashmap, LogInstance);
+        }
+
+        else if (!LogHashmap.containsKey(key)) {
+            LogHashmap.put(key, 1);
+
+            if (!key.equals("Bricks Detected")) {
+                LogInstance.put(timeStamp(), key);
+            }
+            writeToFile(LogHashmap, LogInstance);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void writeToFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
+        //write to file
+
+        File cacheDir = null;
+        File appDirectory = null;
+
+        if (android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cacheDir = getApplicationContext().getExternalCacheDir();
+            appDirectory = new File(cacheDir + subFolder);
+        }
+
+        else {
+            cacheDir = getApplicationContext().getCacheDir();
+            String BaseFolder = cacheDir.getAbsolutePath();
+            appDirectory = new File(BaseFolder + subFolder);
+        }
+
+        if (appDirectory != null && !appDirectory.exists()) {
+            appDirectory.mkdirs();
+        }
+
+        File file = new File(appDirectory, filename);
+        File fileInstance = new File(appDirectory, filenameinstance);
+
+        FileOutputStream fos = null;
+        ObjectOutputStream out = null;
+
+        try (Writer writer = new FileWriter(file)) {
+            for (Map.Entry<String, Integer> entry : insertHashmap.entrySet()) {
+                writer.append(entry.getKey()).append(',').append(String.valueOf(entry.getValue())).append(eol);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try (Writer writer = new FileWriter(fileInstance)){
+            for (Map.Entry<String, String> entry : instanceHashmap.entrySet()) {
+                writer.append(entry.getKey()).append(',').append(entry.getValue()).append(eol);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /**try {
+         fos = new FileOutputStream(file);
+         out = new ObjectOutputStream(fos);
+         out.writeObject(LogHashmap);
+         System.out.println(LogHashmap);
+         } catch (IOException ioe) {
+         ioe.printStackTrace();
+         } catch (Exception e) {
+         e.printStackTrace();
+         } finally {
+         try {
+         if (fos != null) {
+         fos.flush();
+         fos.close();
+         if (out != null) {
+         out.flush();
+         out.close();
+         }
+         }
+         } catch (Exception e) {
+
+         }
+         }**/
+    }
+
+    public void readFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
+
+        File cacheDir = null;
+        File appDirectory = null;
+
+        if (android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cacheDir = getApplicationContext().getExternalCacheDir();
+            appDirectory = new File (cacheDir + subFolder);
+        } else {
+            cacheDir = getApplicationContext().getCacheDir();
+            String BaseFolder = cacheDir.getAbsolutePath();
+            appDirectory = new File (BaseFolder + subFolder);
+        }
+
+        if (appDirectory != null && !appDirectory.exists()) {
+            return;
+        }
+
+        File file = new File (appDirectory, filename);
+
+        FileInputStream fis = null;
+        ObjectInputStream in = null;
+
+
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filename));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    insertHashmap.put(key, Integer.valueOf(value));
+                }
+            }
+        }
+
+        /**try {
+         fis = new FileInputStream(file);
+         in = new ObjectInputStream(fis);
+         LogHashmap  = (HashMap<String, Integer>) in.readObject();
+         Toast.makeText(this, "Count of hashmaps:: " + LogHashmap.size() + " " + LogHashmap, Toast.LENGTH_SHORT).show();
+
+
+         }**/ catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        }/** catch (ClassNotFoundException e) {
+         e.printStackTrace();
+         }**/ catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filenameinstance));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    instanceHashmap.put(key, value);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+        Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
+    }
+
+    public String whichDate () {
+        DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");
+        Date date = new Date();
+
+        return dateFormat.format(date);
+    }
+
+    public String timeStamp () {
+        DateFormat timestamp = new SimpleDateFormat("HH:mm:ss");
+        String currentTime = timestamp.format(new Date());
+
+        return currentTime;
+    }
 }
 
 

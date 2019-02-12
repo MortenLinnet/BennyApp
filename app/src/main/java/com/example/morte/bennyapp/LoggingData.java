@@ -1,3 +1,5 @@
+// Nicklas says hello
+
 package com.example.morte.bennyapp;
 
 
@@ -49,17 +51,20 @@ public class LoggingData extends AppCompatActivity {
     public String currentDate = (String) whichDate();
     public String csv = ".csv";
     public String filename = name + currentDate + csv;
+    public String instances = "_instances";
+    public String filenameinstance = currentDate + instances + csv;
     private static final String TAG = "MEDIA";
     String eol = System.getProperty("line.separator");
 
     public HashMap<String, Integer> LogHashmap = new HashMap<String, Integer>();
+    public HashMap<String, String> LogInstance = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging_data);
 
-        readFile(LogHashmap);
+        readFile(LogHashmap, LogInstance);
 
         request1textview = (TextView) findViewById(R.id.request1textview);
         request2textview = (TextView) findViewById(R.id.request2textview);
@@ -76,23 +81,25 @@ public class LoggingData extends AppCompatActivity {
     }
 
     public void requestOne (View v) {
-        save("Request1");
+        save("Request1", "10:56:20");
     }
 
     public void requestTwo (View v) {
-        save("Request2");
+        save("Request2", "13:22:14");
     }
 
-    public void save(String key) {
+    public void save(String key, String time) {
 
         if (LogHashmap.containsKey(key)) {
             LogHashmap.put(key, LogHashmap.get(key)+1);
-            writeToFile(LogHashmap);
+            LogInstance.put(timeStamp(), key);
+            writeToFile(LogHashmap, LogInstance);
         }
 
         else if (!LogHashmap.containsKey(key)) {
             LogHashmap.put(key, 1);
-            writeToFile(LogHashmap);
+            LogInstance.put(timeStamp(), key);
+            writeToFile(LogHashmap, LogInstance);
         }
 
         if (key == "Request1") {
@@ -106,10 +113,7 @@ public class LoggingData extends AppCompatActivity {
         }
     }
 
-    
-
-    // Creates .ser file - Not that useful
-    public void writeToFile(HashMap<String, Integer> insertHashmap) {
+    public void writeToFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
         //write to file
 
         File cacheDir = null;
@@ -131,6 +135,7 @@ public class LoggingData extends AppCompatActivity {
         }
 
         File file = new File(appDirectory, filename);
+        File fileInstance = new File(appDirectory, filenameinstance);
 
         FileOutputStream fos = null;
         ObjectOutputStream out = null;
@@ -138,7 +143,18 @@ public class LoggingData extends AppCompatActivity {
         try (Writer writer = new FileWriter(file)) {
             for (Map.Entry<String, Integer> entry : insertHashmap.entrySet()) {
                 writer.append(entry.getKey()).append(',').append(String.valueOf(entry.getValue())).append(eol);
+
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try (Writer writer = new FileWriter(fileInstance)){
+            for (Map.Entry<String, String> entry : instanceHashmap.entrySet()) {
+                writer.append(entry.getKey()).append(',').append(entry.getValue()).append(eol);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -168,8 +184,7 @@ public class LoggingData extends AppCompatActivity {
         }**/
     }
 
-
-    public void readFile(HashMap<String, Integer> insertHashmap) {
+    public void readFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
 
         File cacheDir = null;
         File appDirectory = null;
@@ -241,6 +256,46 @@ public class LoggingData extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filenameinstance));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    instanceHashmap.put(key, value);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
         Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
@@ -248,7 +303,7 @@ public class LoggingData extends AppCompatActivity {
 
     public void reset (View v) {
         LogHashmap.clear();
-        writeToFile(LogHashmap);
+        writeToFile(LogHashmap, LogInstance);
     }
 
     public String whichDate () {
@@ -256,6 +311,13 @@ public class LoggingData extends AppCompatActivity {
         Date date = new Date();
 
         return dateFormat.format(date);
+    }
+
+    public String timeStamp () {
+        DateFormat timestamp = new SimpleDateFormat("HH:mm:ss");
+        String currentTime = timestamp.format(new Date());
+
+        return currentTime;
     }
     
 }

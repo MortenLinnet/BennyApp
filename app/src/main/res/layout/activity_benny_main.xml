@@ -203,7 +203,7 @@
             android:layout_height="365dp"
             android:paddingBottom="0dp"
             android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/bennykrop" />
+            app:srcCompat="@drawable/bennykrop2" />
 
         <ImageButton
             android:id="@+id/nextbuttton"
@@ -234,7 +234,7 @@
             android:layout_width="190dp"
             android:layout_height="50dp"
             android:alpha="0.8"
-            android:background="@drawable/bennymainstartbutton"
+            android:background="@drawable/pickbutton"
             android:onClick="onClick"
             android:text=""
             android:textColor="@color/white"
