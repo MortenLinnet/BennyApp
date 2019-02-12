@@ -234,10 +234,9 @@ public class BennyEyes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         readFile(LogHashmap, LogInstance);
-
-        //     mediaPlayer = new MediaPlayer();
-        //   NyMp = new MediaPlayer();
-        InitializeAllMusicArrays();
+        mediaPlayer = new MediaPlayer();
+       //NyMp = new MediaPlayer();
+        //InitializeAllMusicArrays();
         TypeofFeedback = 0;
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
@@ -647,10 +646,7 @@ StartRequestRound();
             mediaPlayer.stop();
             mediaPlayer.release();
         }
-        if (NyMp != null) {
-            NyMp.stop();
-            NyMp.release();
-        }
+
         super.onPause();
     }
 
@@ -869,8 +865,8 @@ StartRequestRound();
             Log.d("Ny Request", "Det er en svær request ");
             try {
 
-                PreventRepetetion(RobertBuildRequest);
-                //  PlayMusicFile(RobertBuildRequest);
+
+                PlayMusicFile(RobertBuildRequest);
             }
             catch (Surface.OutOfResourcesException lol) {
                 //       Toast.makeText(this, "Outofressources 1", Toast.LENGTH_SHORT).show();
@@ -896,9 +892,8 @@ StartRequestRound();
         {
             Log.d("Ny request", "Det er en nem opgave ");
             try {
-                PreventRepetetion(RobertCollectRequest);
-                //    PlayMusicFile(RobertCollectRequest);
-            }
+           // PlayMusicFile(RobertCollectRequest);
+        }
             catch (Surface.OutOfResourcesException lol) {
                 //      Toast.makeText(this, "Outofressources 2", Toast.LENGTH_SHORT).show();
 
@@ -924,8 +919,8 @@ StartRequestRound();
             Log.d("Ny Request", "Det er en pretend request ");
             try {
 
-                PreventRepetetion(RobertPretendRequest);
-                //     PlayMusicFile(RobertPretendRequest);
+
+                PlayMusicFile(RobertPretendRequest);
                 ItsAPretendRound = true;
             }
             catch (Surface.OutOfResourcesException lol) {
@@ -1266,6 +1261,7 @@ StartRequestRound();
 
 
             try{
+          //      PlayMusicFile(RobertIdle);
 
                 PreventRepetetion(RobertIdle);
 //                PlayMusicFile(RobertIdle);
@@ -1806,6 +1802,11 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
         return currentTime;
     }
 
+    public void OpenMicSensitivity(View view) {
+
+        Intent i = new Intent(this, ChangeMicSensitivity.class);
+        startActivityForResult(i, 1);
+    }
 }
 
 

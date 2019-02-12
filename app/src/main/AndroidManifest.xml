@@ -55,6 +55,7 @@
             android:screenOrientation="sensorLandscape" />
         <activity android:name=".Oldintro" />
         <activity android:name=".Introduction" />
+        <activity android:name=".ChangeMicSensitivity"></activity>
     </application>
 
 </manifest>

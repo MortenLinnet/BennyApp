@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ import java.io.StreamCorruptedException;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -135,8 +137,6 @@ public class ClownEyes extends AppCompatActivity {
         }
     };
 
-
-
     // Super request (Det omkring liggende)
     private static long SuperRequestTid = 30000;
     private TextView SuperRequestTimeTextView;
@@ -159,7 +159,7 @@ public class ClownEyes extends AppCompatActivity {
     private long TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
 
     // IdleMode
-    private static long IdleModeTime = 7000;
+    private static long IdleModeTime = 25000;
     private CountDownTimer IdleModeCountdowntimer;
 
 
@@ -211,9 +211,9 @@ public class ClownEyes extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter2;
     MediaPlayer mediaPlayer;
-    MediaPlayer NyMp;
+//    MediaPlayer NyMp;
 
-
+//Hvilket nummer i replik arrays der senest er brugt
     int TempBuildRequest;
     int TempCollectRequest;
     int TempPretendRequest;
@@ -224,11 +224,29 @@ public class ClownEyes extends AppCompatActivity {
 
     ImageButton HoldtoReleasButton;
     Long down, up;
+    int[] TempBuildRequestArray = new int[2];
+    int[] TempCollectRequestArray = new int[2];
+    int[] TempPretendRequestArray = new int[2];
+    int[] TempKiggeNedArray = new int[2];
+    int[] TempBaffeldFeedbackArray = new int[2];
+    int[] TempHappyFeedbackArray = new int[2];
+    int[] TempIdleArray = new int[2];
+
+
+
+    int TempKiggeNedOjne; // Som så ikke bliver brugt pt
+    int TempHappyOjne;
+    int TempBaffeledOjne;
+    //Hvilket nummer af ojne i arrays der senest er blevet brugt
 
     ImageButton HoldtoChangeCharecter;
     Long downcharecter, upcharecter;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    int IsThisFirstTime;
+
+   boolean IsStopped;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,7 +260,7 @@ public class ClownEyes extends AppCompatActivity {
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
         setContentView(R.layout.activity_clown_eyes);
-
+IsStopped = false;
 
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
@@ -292,7 +310,7 @@ public class ClownEyes extends AppCompatActivity {
         temp =0;
         ReadyForFeedback = false;
         InitBennyOjneArray();
-
+IsThisFirstTime = 0;
         IdleChanceNumber= 0;
         ItsAPretendRound = false;
         Longpressed = false;
@@ -340,15 +358,27 @@ public class ClownEyes extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN :
-                        Toast.makeText(ClownEyes.this, "Down", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(ClownEyes.this, "Down", Toast.LENGTH_SHORT).show();
                         down=System.currentTimeMillis();
                         break;
                     case MotionEvent.ACTION_UP :
-                        Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
+                   //     Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
                         up=System.currentTimeMillis();
                         if(up-down>3000){
-                            Toast.makeText(ClownEyes.this, "More than 3", Toast.LENGTH_SHORT).show();
-                        finish();
+                      //      Toast.makeText(ClownEyes.this, "More than 3", Toast.LENGTH_SHORT).show();
+                            //   FeedbackCoolDownCountdowntimer.cancel();
+                            if (RequestNotActiveCountdownTimer != null) {
+                                RequestNotActiveCountdownTimer.cancel();
+
+                            }
+                            if (SuperRequestTidCountdownTimer != null) {
+                                SuperRequestTidCountdownTimer.cancel();
+                            }
+
+
+                            StopPlayer();
+
+                            finish();
                         }
                         return true;
                 }
@@ -364,17 +394,31 @@ public class ClownEyes extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN :
-                        Toast.makeText(ClownEyes.this, "Down", Toast.LENGTH_SHORT).show();
+                  //      Toast.makeText(ClownEyes.this, "Down", Toast.LENGTH_SHORT).show();
                         downcharecter=System.currentTimeMillis();
                         break;
                     case MotionEvent.ACTION_UP :
-                        Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
                         upcharecter=System.currentTimeMillis();
                         if(upcharecter-downcharecter>3000){
-                            Toast.makeText(ClownEyes.this, "More than 3", Toast.LENGTH_SHORT).show();
-                           // finish();
-                            Intent i = new Intent(ClownEyes.this, BennyMain.class);
-                            startActivity(i);
+                            if (!IsStopped) {
+                                StopBenny();
+                                Toast.makeText(ClownEyes.this, "Stopped", Toast.LENGTH_SHORT).show();
+                                IsStopped= true;
+                            }
+                            else if (IsStopped){
+                                TimeLeftInMillisSuperRequestTime = SuperRequestTid;
+                                TimeLeftInMillisRequestNotActive= RequestNotActiveTime;
+                                TimeLeftInMillisFeedbackCooldDown = FeedbackCooldown;
+
+
+
+                                PresentBenny();
+                                Toast.makeText(ClownEyes.this, "Restarted", Toast.LENGTH_SHORT).show();
+
+                                IsThisFirstTime = 0;
+                                IsStopped=false;
+                            }
 
                         }
                         return true;
@@ -387,6 +431,26 @@ public class ClownEyes extends AppCompatActivity {
 
     }
 
+    public void StopBenny(){
+
+
+
+        if (RequestNotActiveCountdownTimer != null) {
+            RequestNotActiveCountdownTimer.cancel();
+
+
+        }
+        if (SuperRequestTidCountdownTimer != null) {
+            SuperRequestTidCountdownTimer.cancel();
+        }
+        if (FeedbackCoolDownCountdowntimer !=null) {
+            FeedbackCoolDownCountdowntimer.cancel();
+        }
+    StopPlayer();
+        stop();
+
+    }
+
     public void PresentBenny(){
 
         findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
@@ -396,7 +460,10 @@ public class ClownEyes extends AppCompatActivity {
         OjneView.start();
         PlayMusicFile(RobertIntroduction, 0);
 
-
+        if (!mRunning) {
+            mRunning = true;
+            start();
+        }
 
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -409,7 +476,7 @@ public class ClownEyes extends AppCompatActivity {
 
 
                 StartRequestRound();
-
+IsThisFirstTime++;
       StopPlayer();
             }
         });
@@ -455,43 +522,10 @@ public class ClownEyes extends AppCompatActivity {
     Uri myUri = null;
 
 
-      //  Random r = new Random();
-//        int SizeOfArray = arrayList.size();
-//        int nyrandom = r.nextInt((SizeOfArray - 0)+1)+0;
-    //    int nyrandom = r.nextInt(arrayList.size());
-
-        //  lol = (String) arrayList.get(nyrandom);                // Okay (String) er ikke mig men android studio der har lavet
 try {
     lol = (String) arrayList.get(numberinArray);                // Okay (String) er ikke mig men android studio der har lavet
 
 
-
-
-
-    /*
-        if (NotLastOne(lol)){
-
-            while (NotLastOne(lol)){
-                Random t = new Random();
-                int NYTrandom = t.nextInt(arrayList.size());
-                tempo = (String) arrayList.get(NYTrandom);
-
-                    if (!NotLastOne(tempo)){
-                        myUri = Uri.parse(tempo); // initialize Uri here
-                        Toast.makeText(this, "Samme replik som før", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-
-            }
-
-        }
-        else{
-            Toast.makeText(this, "Ny replik", Toast.LENGTH_SHORT).show();
-             tempo=lol;
-            myUri = Uri.parse(lol); // initialize Uri here
-        }
-
-*/
 
 
         myUri = Uri.parse(lol); // initialize Uri here
@@ -535,16 +569,18 @@ try {
         }
 }
 catch (IndexOutOfBoundsException e){
-    Toast.makeText(this, "Outofindex", Toast.LENGTH_SHORT).show();
+  //  Toast.makeText(this, "Outofindex", Toast.LENGTH_SHORT).show();
 }
 
     }
-private void StopPlayer(){
+
+    private void StopPlayer(){
     if (mediaPlayer != null) {
         mediaPlayer.release();
         mediaPlayer = null;
     }
 }
+
     public void getMusic(){
 
         ContentResolver contentResolver = getContentResolver();
@@ -625,9 +661,6 @@ private void StopPlayer(){
         //  Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
     }
 
-
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -647,10 +680,7 @@ private void StopPlayer(){
             mediaPlayer.stop();
             mediaPlayer.release();
         }
-        if (NyMp != null) {
-            NyMp.stop();
-            NyMp.release();
-        }
+
         super.onPause();
     }
 
@@ -666,6 +696,10 @@ private void StopPlayer(){
         }
         if (SuperRequestTidCountdownTimer != null) {
             SuperRequestTidCountdownTimer.cancel();
+        }
+
+        if (IdleModeCountdowntimer != null){
+            IdleModeCountdowntimer.cancel();
         }
 
         //  SuperRequestTidCountdownTimer.cancel();
@@ -744,13 +778,102 @@ private void StopPlayer(){
         }
     }
 
-    public int TempFunction(ArrayList array, int WhatTemp ){
 
+    public int TempFunctionNyNyNyNY (ArrayList array, int[] TempArray ) {
+
+        int whilerandom = TempArray[0];
+//Morten lav et array det er meeget nemmere istedet for at jonglere rundt med temps.
+        Random r = new Random();
+        int Randomtal = r.nextInt(array.size());
+        //      Toast.makeText(this, "" + array.size(), Toast.LENGTH_SHORT).show();
+     //   Log.d("Tempfunction", "Ny temp er  " + TempArray[0] + "  gammel temp er   " + TempArray[1] + " Randomtal er" + Randomtal);
+        // Array 4 stort, random tal = 2 Temp =3, other temp 2;
+        if (TempArray[0] == Randomtal || TempArray[1] == Randomtal) {
+            Log.d("Tempfunction", " De var sku ens");
+
+           while (whilerandom != TempArray[0] && whilerandom != TempArray[1]) {
+                    Random LocalRandom = new Random();
+                    whilerandom = LocalRandom.nextInt(array.size());
+
+                    Randomtal = whilerandom;
+
+                    if (Randomtal != TempArray[0] && Randomtal != TempArray[1]) {
+
+                        TempArray[1] = TempArray[0];
+                        TempArray[0] = Randomtal;
+                        Log.d("De har været ens men nu", "Ny temp er  " + TempArray[0] + "  gammel temp er   " + TempArray[1] + " Randomtal er" + Randomtal);
+
+                        return Randomtal;
+                    }
+
+                }
+
+            }
+            TempArray[1] = TempArray[0];
+            TempArray[0] = Randomtal;
+            return Randomtal;
+        }
+
+    public int TempFunctionNyNyNyyyyyyyyyyy (ArrayList array, int[] TempArray ) {
+
+
+//Morten lav et array det er meeget nemmere istedet for at jonglere rundt med temps.
+        Random r = new Random();
+        int Randomtal = r.nextInt(array.size());
+        //      Toast.makeText(this, "" + array.size(), Toast.LENGTH_SHORT).show();
+        Log.d("Tempfunction", "Ny temp er  " + TempArray[0]+ "  gammel temp er   " + TempArray[1] + " Randomtal er"  + Randomtal);
+        // Array 4 stort, random tal = 2 Temp =3, other temp 2;
+        if (TempArray[0] == Randomtal || TempArray[1] == Randomtal) {
+
+            for (int i = 0; i <= array.size() - 1; i++) {
+                Randomtal = i;
+
+                if (Randomtal != TempArray[0] && Randomtal != TempArray[1]) {
+
+                    TempArray[1] = TempArray[0];
+                    TempArray[0] = Randomtal;
+                    return Randomtal;
+                }
+
+            }
+
+        }
+        TempArray[1] = TempArray[0];
+        TempArray[0] = Randomtal;
+        return Randomtal;
+    }
+
+    public int TempFunctionNy (ArrayList array, int WhatTemp, int OtherTemp ) {
+        Log.d("Tempfunction", "Ny temp er  " + WhatTemp+ "  gammel temp er   " + OtherTemp);
+
+//Morten lav et array det er meeget nemmere istedet for at jonglere rundt med temps.
+        Random r = new Random();
+        int Randomtal = r.nextInt(array.size());
+        //      Toast.makeText(this, "" + array.size(), Toast.LENGTH_SHORT).show();
+
+        // Array 4 stort, random tal = 2 Temp =3, other temp 2;
+        if (WhatTemp == Randomtal || OtherTemp == Randomtal) {
+
+            for (int i = 0; i <= array.size() - 1; i++) {
+                Randomtal = i;
+
+                if (Randomtal != WhatTemp && Randomtal != OtherTemp) {
+
+                    return Randomtal;
+                }
+
+            }
+
+        }
+        return Randomtal;
+    }
+
+    public int TempFunction(ArrayList array, int WhatTemp ){
 
 
         Random r = new Random();
         int Randomtal = r.nextInt(array.size());
-        Toast.makeText(this, "" + array.size(), Toast.LENGTH_SHORT).show();
+  //      Toast.makeText(this, "" + array.size(), Toast.LENGTH_SHORT).show();
         if (WhatTemp == Randomtal){
             if (Randomtal == array.size()- 1 || Randomtal == array.size()){
                 Log.d("Ens Tal", "Sætter tal til 0");
@@ -775,10 +898,8 @@ private void StopPlayer(){
         String NameOfPath;
 
         if (array.equals(RobertBuildRequest)) {
-            Toast.makeText(this, "Build", Toast.LENGTH_SHORT).show();
-
-            TempBuildRequest = TempFunction(RobertBuildRequest, TempBuildRequest);
-            PlayMusicFile(RobertBuildRequest, TempBuildRequest);
+            PlayMusicFile(RobertBuildRequest, TempBuildRequestArray[0]);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertBuildRequest, TempBuildRequestArray);
 
             NameOfPath = RobertBuildRequest.get(TempBuildRequest);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
@@ -787,9 +908,10 @@ private void StopPlayer(){
         }
 
         if (array.equals(RobertPretendRequest)) {
-            Toast.makeText(this, "Pretend", Toast.LENGTH_SHORT).show();
-
-            TempPretendRequest = TempFunction(RobertPretendRequest, TempPretendRequest);
+      //      Toast.makeText(this, "Pretend", Toast.LENGTH_SHORT).show();
+       //     Temp2PretendRequestOfOld = TempPretendRequest;
+         //   TempPretendRequest = TempFunctionNy(RobertPretendRequest, TempPretendRequest, Temp2PretendRequestOfOld);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertPretendRequest,TempPretendRequestArray);
             PlayMusicFile(RobertPretendRequest, TempPretendRequest);
 
             NameOfPath = RobertPretendRequest.get(TempPretendRequest);
@@ -800,9 +922,11 @@ private void StopPlayer(){
         }
 
         if (array.equals(RobertCollectRequest)) {
-            Toast.makeText(this, "Collect", Toast.LENGTH_SHORT).show();
-            TempCollectRequest = TempFunction(RobertCollectRequest, TempCollectRequest);
-            PlayMusicFile(RobertCollectRequest, TempCollectRequest);
+        //    Toast.makeText(this, "Collect", Toast.LENGTH_SHORT).show();
+        //    Temp2CollectRequestOfOld = TempCollectRequest;
+          //  TempCollectRequest = TempFunctionNy(RobertCollectRequest, TempCollectRequest, Temp2CollectRequestOfOld);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertCollectRequest, TempCollectRequestArray);
+            PlayMusicFile(RobertCollectRequest, TempCollectRequestArray[0]);
 
             NameOfPath = RobertCollectRequest.get(TempCollectRequest);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
@@ -812,9 +936,11 @@ private void StopPlayer(){
 
         if (array.equals(RobertKiggeNed)) {
 
-            Toast.makeText(this, "kiggened", Toast.LENGTH_SHORT).show();
-            TempKiggeNed = TempFunction(RobertKiggeNed, TempKiggeNed);
-            PlayMusicFile(RobertKiggeNed, TempKiggeNed);
+       //     Toast.makeText(this, "kiggened", Toast.LENGTH_SHORT).show();
+          //  Temp2KiggeNedOfOld = TempKiggeNed;
+           // TempKiggeNed = TempFunctionNy(RobertKiggeNed, TempKiggeNed, Temp2KiggeNedOfOld);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertKiggeNed, TempKiggeNedArray);
+            PlayMusicFile(RobertKiggeNed, TempKiggeNedArray[0]);
 
             NameOfPath = RobertKiggeNed.get(TempKiggeNed);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
@@ -824,9 +950,11 @@ private void StopPlayer(){
         }
         if (array.equals(RobertBaffledFeedback)) {
 
-            Toast.makeText(this, "Baffeeld", Toast.LENGTH_SHORT).show();
-            TempBaffeldFeedback = TempFunction(RobertBaffledFeedback, TempBaffeldFeedback);
-            PlayMusicFile(RobertBaffledFeedback, TempBaffeldFeedback);
+         //   Toast.makeText(this, "Baffeeld", Toast.LENGTH_SHORT).show();
+          //  Temp2BaffeldFeedbackOfOld = TempBaffeldFeedback;
+            //TempBaffeldFeedback = TempFunctionNy(RobertBaffledFeedback, TempBaffeldFeedback, Temp2BaffeldFeedbackOfOld);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertBaffledFeedback, TempBaffeldFeedbackArray);
+            PlayMusicFile(RobertBaffledFeedback, TempBaffeldFeedbackArray[0]);
 
             NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedback);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
@@ -837,9 +965,8 @@ private void StopPlayer(){
 
         if (array.equals(RobertHappyFeedback)) {
 
-            Toast.makeText(this, "happy", Toast.LENGTH_SHORT).show();
-            TempHappyFeedback = TempFunction(RobertHappyFeedback, TempHappyFeedback);
-            PlayMusicFile(RobertHappyFeedback, TempHappyFeedback);
+            PlayMusicFile(RobertHappyFeedback, TempHappyFeedbackArray[0]);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertHappyFeedback, TempHappyFeedbackArray);
 
             NameOfPath = RobertHappyFeedback.get(TempHappyFeedback);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
@@ -849,9 +976,8 @@ private void StopPlayer(){
 
         if (array.equals(RobertIdle)) {
 
-            Toast.makeText(this, "idle", Toast.LENGTH_SHORT).show();
-            TempIdle = TempFunction(RobertIdle, TempIdle);
-            PlayMusicFile(RobertIdle, TempIdle);
+            TempFunctionNyNyNyyyyyyyyyyy(RobertIdle, TempIdleArray);
+            PlayMusicFile(RobertIdle, TempIdleArray[0]);
 
             NameOfPath = RobertIdle.get(TempIdle);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
@@ -860,11 +986,7 @@ private void StopPlayer(){
         }
     }
 
-
-
-
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        public void LevelOfRequestDifficulty() {
+    public void LevelOfRequestDifficulty() {
         Random r = new Random();
         int n = r.nextInt(180);
 
@@ -1127,15 +1249,43 @@ PreventRepetetion(RobertKiggeNed);
         };
     }      //Arrays til alle Benny's øjne
 
+    public int Tempfunction4Eyes(String[] string, int WhatTemp ){
+
+
+        Random r = new Random();
+        int Randomtal = r.nextInt(string.length);
+
+        Log.d("Temp for Ojne", "Array navn er" + string + "og maks længden er " + string.length + "vores tal er " + Randomtal + "og det tal vi fik i som paramter er " + WhatTemp);
+
+        //      Toast.makeText(this, "" + array.size(), Toast.LENGTH_SHORT).show();
+        if (WhatTemp == Randomtal){
+            if (Randomtal == string.length- 1 || Randomtal == string.length){
+
+                Randomtal = 0;
+            }
+            else  if (Randomtal != string.length  || Randomtal != string.length-1){
+                //  Toast.makeText(this, "" + Randomtal, Toast.LENGTH_SHORT).show();   //Hvor printer den 1.
+                Log.d("Ens Tal", "Sætter tal ++");
+
+                Randomtal++;
+            }
+        }
+
+        return Randomtal;
+    }
 
     public void PlayBennyHappyOjne(){
 
 
-        Random r = new Random();
+
+       /* Random r = new Random();
         int ArrayLength = BennyHappyOjneArray.length;
         int nyrandom = r.nextInt(ArrayLength - 0)+0;    //Der er noget galt her. Den går udover det tilltdte   har slettet et +1 og nogle parenteser
         // Toast.makeText(this, "Nummmeret er " + nyrandom, Toast.LENGTH_SHORT).show();
         String PathToBennyEyes = BennyHappyOjneArray[nyrandom];
+        */
+        TempHappyOjne = Tempfunction4Eyes(BennyHappyOjneArray, TempHappyOjne);
+        String PathToBennyEyes = BennyHappyOjneArray[TempHappyOjne];
         Uri uriLang =Uri.parse(PathToBennyEyes);
         OjneView.setVideoURI(uriLang);
         OjneView.start();
@@ -1149,7 +1299,7 @@ PreventRepetetion(RobertKiggeNed);
         int nyrandom = r.nextInt(ArrayLength - 0)+0;
 
 
-        String PathToBennyEyes = BennyNoFeelingOjneArray[2];
+        String PathToBennyEyes = BennyNoFeelingOjneArray[2];             //Lig mærke til det kun er en slags øjne her!!
         Uri uriLang =Uri.parse(PathToBennyEyes);
         OjneView.setVideoURI(uriLang);
         OjneView.start();
@@ -1157,13 +1307,21 @@ PreventRepetetion(RobertKiggeNed);
     }
 
     public void PlayBennyNotPleasedOjne(){
-        Random r = new Random();
+      /*  Random r = new Random();
         int ArrayLength = BennyNotPleasedOjneArray.length;
         int nyrandom = r.nextInt(ArrayLength - 0)+0;    //Der er noget galt her. Den går udover det tilltdte   har slettet et +1 og nogle parenteser
         String PathToBennyEyes = BennyNotPleasedOjneArray[nyrandom];
-        Uri uriLang =Uri.parse(PathToBennyEyes);
-        OjneView.setVideoURI(uriLang);
-        OjneView.start();
+        */
+if (IsThisFirstTime != 0){
+    TempBaffeledOjne = Tempfunction4Eyes(BennyNotPleasedOjneArray,TempBaffeledOjne);
+    String PathToBennyEyes = BennyNotPleasedOjneArray[TempBaffeledOjne];
+
+    Uri uriLang =Uri.parse(PathToBennyEyes);
+    OjneView.setVideoURI(uriLang);
+    OjneView.start();
+
+}
+
 
     }
 
@@ -1297,58 +1455,7 @@ PreventRepetetion(RobertKiggeNed);
 
     }
 
-    private void IdleLinesInReqquestNotActive(){
 
-//        PlayMusicFile(RobertIdle);
-        PreventRepetetion(RobertIdle);
-   //     final MediaPlayer NyMp = new MediaPlayer();
-/*
-if (mediaPlayer == null) {
-    BrickDetected = true;
-
-    Random r = new Random();
-//        int SizeOfArray = arrayList.size();
-//        int nyrandom = r.nextInt((SizeOfArray - 0)+1)+0;
-    int nyrandom = r.nextInt(RobertIdle.size());
-
-
-    String lol = (String) RobertIdle.get(nyrandom);                // Okay (String) er ikke mig men android studio der har lavet
-
-    Uri myUri = Uri.parse(lol); // initialize Uri here
-
-    NyMp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-    try {
-        NyMp.setDataSource(getApplicationContext(), myUri);
-    } catch (IOException e) {
-        e.printStackTrace();
-//            Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
-    }
-    try {
-        NyMp.prepare();
-    } catch (IOException e) {
-        e.printStackTrace();
-        //          Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
-
-    }
-    NyMp.start();
-
-    NyMp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-//                Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
-            // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
-            NyMp.release();
-            BrickDetected = false;
-        }
-    });
-
-}
-else {
-    Toast.makeText(this, "Vi er idle", Toast.LENGTH_SHORT).show();
-}
-*/
-    }
 
     private void SuperRequestTimerStart(){
         SuperRequestTidCountdownTimer = new CountDownTimer(TimeLeftInMillisSuperRequestTime, 1000) {
@@ -1399,8 +1506,6 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
         SuperRequestTidIsRunning = true;
     }
 
-
-
     private void RequestNotActiveTimerStart(){
         RequestNotActiveCountdownTimer  = new CountDownTimer(TimeLeftInMillisRequestNotActive, 1000) {
 
@@ -1417,7 +1522,7 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
                     }
                     if (!ItsAPretendRound) {
                         Log.d("Over 9000", "Vi giver en idle line" + millisuntillfinish2);
-                        IdleLinesInReqquestNotActive();
+                        PreventRepetetion(RobertIdle);
                     }
                 }
 /*            if (millisuntillfinish2 < 6000 && millisuntillfinish2 > 5000){
