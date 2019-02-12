@@ -10,10 +10,13 @@ import android.media.AudioManager;
 import android.media.JetPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,11 +38,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
+import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 public class PirateEyes extends AppCompatActivity {
@@ -79,6 +99,7 @@ public class PirateEyes extends AppCompatActivity {
     // Create runnable thread to Monitor Voice
     private Runnable mPollTask = new Runnable() {
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         public void run() {
             double amp = mSensor.getAmplitude();
             //Log.i("Noise", "runnable mPollTask");
@@ -90,7 +111,11 @@ public class PirateEyes extends AppCompatActivity {
                 //Log.i("Noise", "==== onCreate ===");
             }
 
-            if (amp > 7  && mediaPlayer == null && !IdleModeIsActive && TimeLeftInMillisSuperRequestTime > 4000){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+            if (amp > 7) {
+                save("Bricks Detected");
+            }
+
+            if (amp > 7 && !mediaPlayer.isPlaying() && !IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
 
@@ -238,6 +263,7 @@ public class PirateEyes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        readFile(LogHashmap, LogInstance);
         //     mediaPlayer = new MediaPlayer();
         //   NyMp = new MediaPlayer();
         InitializeAllMusicArrays();
@@ -1717,6 +1743,248 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 
     }
 
+
+
+
+    // LOGGING SECTION – Ik smid methods ind i eller under!
+
+    public String subFolder = "/LogData";
+    public String name = "LogFile_";
+    public String currentDate = (String) whichDate();
+    public String csv = ".csv";
+    public String filename = name + currentDate + csv;
+    public String instances = "_instances";
+    public String filenameinstance = currentDate + instances + csv;
+    private static final String TAG = "MEDIA";
+    String eol = System.getProperty("line.separator");
+
+    public HashMap<String, Integer> LogHashmap = new HashMap<String, Integer>();
+    public HashMap<String, String> LogInstance = new HashMap<>();
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void save(String key) {
+
+        if (LogHashmap.containsKey(key)) {
+            LogHashmap.put(key, LogHashmap.get(key)+1);
+
+            if (!key.equals("Bricks Detected")){
+                LogInstance.put(timeStamp(), key);
+            }
+            writeToFile(LogHashmap, LogInstance);
+        }
+
+        else if (!LogHashmap.containsKey(key)) {
+            LogHashmap.put(key, 1);
+
+            if (!key.equals("Bricks Detected")) {
+                LogInstance.put(timeStamp(), key);
+            }
+            writeToFile(LogHashmap, LogInstance);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void writeToFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
+        //write to file
+
+        File cacheDir = null;
+        File appDirectory = null;
+
+        if (android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cacheDir = getApplicationContext().getExternalCacheDir();
+            appDirectory = new File(cacheDir + subFolder);
+        }
+
+        else {
+            cacheDir = getApplicationContext().getCacheDir();
+            String BaseFolder = cacheDir.getAbsolutePath();
+            appDirectory = new File(BaseFolder + subFolder);
+        }
+
+        if (appDirectory != null && !appDirectory.exists()) {
+            appDirectory.mkdirs();
+        }
+
+        File file = new File(appDirectory, filename);
+        File fileInstance = new File(appDirectory, filenameinstance);
+
+        FileOutputStream fos = null;
+        ObjectOutputStream out = null;
+
+        try (Writer writer = new FileWriter(file)) {
+            for (Map.Entry<String, Integer> entry : insertHashmap.entrySet()) {
+                writer.append(entry.getKey()).append(',').append(String.valueOf(entry.getValue())).append(eol);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try (Writer writer = new FileWriter(fileInstance)){
+            for (Map.Entry<String, String> entry : instanceHashmap.entrySet()) {
+                writer.append(entry.getKey()).append(',').append(entry.getValue()).append(eol);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /**try {
+         fos = new FileOutputStream(file);
+         out = new ObjectOutputStream(fos);
+         out.writeObject(LogHashmap);
+         System.out.println(LogHashmap);
+         } catch (IOException ioe) {
+         ioe.printStackTrace();
+         } catch (Exception e) {
+         e.printStackTrace();
+         } finally {
+         try {
+         if (fos != null) {
+         fos.flush();
+         fos.close();
+         if (out != null) {
+         out.flush();
+         out.close();
+         }
+         }
+         } catch (Exception e) {
+
+         }
+         }**/
+    }
+
+    public void readFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
+
+        File cacheDir = null;
+        File appDirectory = null;
+
+        if (android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cacheDir = getApplicationContext().getExternalCacheDir();
+            appDirectory = new File (cacheDir + subFolder);
+        } else {
+            cacheDir = getApplicationContext().getCacheDir();
+            String BaseFolder = cacheDir.getAbsolutePath();
+            appDirectory = new File (BaseFolder + subFolder);
+        }
+
+        if (appDirectory != null && !appDirectory.exists()) {
+            return;
+        }
+
+        File file = new File (appDirectory, filename);
+
+        FileInputStream fis = null;
+        ObjectInputStream in = null;
+
+
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filename));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    insertHashmap.put(key, Integer.valueOf(value));
+                }
+            }
+        }
+
+        /**try {
+         fis = new FileInputStream(file);
+         in = new ObjectInputStream(fis);
+         LogHashmap  = (HashMap<String, Integer>) in.readObject();
+         Toast.makeText(this, "Count of hashmaps:: " + LogHashmap.size() + " " + LogHashmap, Toast.LENGTH_SHORT).show();
+
+
+         }**/ catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        }/** catch (ClassNotFoundException e) {
+         e.printStackTrace();
+         }**/ catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filenameinstance));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    instanceHashmap.put(key, value);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+        Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
+    }
+
+    public String whichDate () {
+        DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");
+        Date date = new Date();
+
+        return dateFormat.format(date);
+    }
+
+    public String timeStamp () {
+        DateFormat timestamp = new SimpleDateFormat("HH:mm:ss");
+        String currentTime = timestamp.format(new Date());
+
+        return currentTime;
+    }
 }
 
 

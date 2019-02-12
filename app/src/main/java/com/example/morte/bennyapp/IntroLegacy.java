@@ -2,7 +2,10 @@ package com.example.morte.bennyapp;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +13,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class Oldintro extends AppCompatActivity {
+public class IntroLegacy extends AppCompatActivity {
+    public static final String BennyPreferences = "BennyPreferences";
     ImageView SwipeView;
     int CurrentPlace;
+    public static Integer AppLanguage;
 
     ImageView FourDotsView;
     AnimatorSet animatorSet;
@@ -20,8 +25,10 @@ public class Oldintro extends AppCompatActivity {
     TextView textbobltext;
     ImageView talebobl;
     TextView infotext;
-
+    TextView introduction;
+    TextView buttontext;
     ImageButton NextButton;
+    TextView robertText;
 
     String TextboblinformationOne;
     String TextboblinformationTwo;
@@ -31,27 +38,39 @@ public class Oldintro extends AppCompatActivity {
     String InfroTextTwo;
     String InfoTextThree;
     String InfoTextFour;
+    String Robert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStrings(1);
         setContentView(R.layout.activity_intro_legacy);
 
+        SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
+        AppLanguage = pref.getInt("AppLanguage", 0);
+        setStrings(AppLanguage);
+
+        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/effra_Heavy.ttf");
+        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
 
         infotext = findViewById(R.id.infotext);
+        infotext.setTypeface(standard_font);
         infotext.setText(InfoTextOne);
-        TextView introduction = findViewById(R.id.IntroductionTextview);
+        introduction = findViewById(R.id.IntroductionText);
+        introduction.setTypeface(bold_font);
         introduction.setText(Headline);
 
-        TextView buttontext = findViewById(R.id.ButtonTextIntroduction);
+        buttontext = findViewById(R.id.ButtonTextIntroduction);
+        buttontext.setTypeface(bold_font);
         buttontext.setText(ButtonText);
 
+        robertText = findViewById(R.id.robertText);
+        robertText.setTypeface(bold_font);
+        robertText.setText(Robert);
 
         SwipeView = findViewById(R.id.SwipeView);
         talebobl = findViewById(R.id.talebobl);
         textbobltext = findViewById(R.id.talebobltextintroduction);
-
+        textbobltext.setTypeface(standard_font);
 
         FourDotsView = findViewById(R.id.FourDotsImageView);
         haandview= findViewById(R.id.haandview);
@@ -97,15 +116,15 @@ public class Oldintro extends AppCompatActivity {
 
         if (Id == 1){
 
-            TextboblinformationOne = "I would like you to find a green brick for me";
-            TextboblinformationTwo = "What a cool brick you found";
+            TextboblinformationOne = "I'm hungry for a green brick! Can you find  one for me?";
+            TextboblinformationTwo = "Mmmhhh, that tasted delicious!";
             Headline = "IntroLegacy";
             ButtonText = "Next";
-            InfoTextOne = "Benny bot is an embodied conversational agent, who facilitates play, through speech and tasks. He provides request for both building and collecting";
-            InfroTextTwo = "The child then picks up the bricks Benny requested for and feeds him the brick";
-            InfoTextThree = "Benny then provides engaging humoroues feedback";
-            InfoTextFour = "Before the play begin you need to choose which personality to play with. Each personality have different traits and requests";
-
+            InfoTextOne = "Benny bot is an embodied conversational agent, who facilitates play, through speech and tasks. He provides request for both building and collecting.";
+            InfroTextTwo = "The child then picks up the bricks Benny requested for and feeds him the brick.";
+            InfoTextThree = "Benny then provides engaging humoroues feedback.";
+            InfoTextFour = "Before the play begin you need to choose which personality to play with. Each personality have different traits and requests.";
+            Robert = "Robert";
 
 
         }
@@ -121,7 +140,7 @@ public class Oldintro extends AppCompatActivity {
             InfroTextTwo = "";
             InfoTextThree ="";
             InfoTextFour = "";
-
+            Robert = "Robert";
         }
 
     }
@@ -274,7 +293,3 @@ public class Oldintro extends AppCompatActivity {
 
     }
 }
-
-
-
-

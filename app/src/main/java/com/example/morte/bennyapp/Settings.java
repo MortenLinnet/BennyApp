@@ -70,13 +70,13 @@ public class Settings extends AppCompatActivity {
     }
 
     public void ActivityNilan (View v) {
-        Intent i = new Intent(this, Introduction.class);
+        Intent i = new Intent(this, LoggingData.class);
         startActivity(i);
     }
 
     public void openMortenactiivty(View view) {
 
-        Intent i = new Intent(this, Introduction.class);
+        Intent i = new Intent(this, IntroLegacy.class);
         startActivity(i);
     }
 

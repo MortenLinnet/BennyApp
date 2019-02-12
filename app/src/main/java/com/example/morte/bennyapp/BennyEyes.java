@@ -1,6 +1,7 @@
 package com.example.morte.bennyapp;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +12,10 @@ import android.media.JetPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.annotation.RequiresApi;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -35,11 +38,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 public class BennyEyes extends AppCompatActivity {
@@ -79,6 +93,7 @@ public class BennyEyes extends AppCompatActivity {
     // Create runnable thread to Monitor Voice
     private Runnable mPollTask = new Runnable() {
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         public void run() {
             double amp = mSensor.getAmplitude();
             //Log.i("Noise", "runnable mPollTask");
@@ -93,6 +108,7 @@ public class BennyEyes extends AppCompatActivity {
             if (amp > 7  && mediaPlayer == null && !IdleModeIsActive && TimeLeftInMillisSuperRequestTime > 4000){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
+            else {
 
             if (amp > 7 && mediaPlayer == null && IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 IdleModeIsActive = false;
@@ -241,6 +257,7 @@ public class BennyEyes extends AppCompatActivity {
         //     mediaPlayer = new MediaPlayer();
         //   NyMp = new MediaPlayer();
         InitializeAllMusicArrays();
+        readFile(LogHashmap, LogInstance);
         TypeofFeedback = 0;
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
@@ -313,9 +330,17 @@ StartRequestRound();
                 }
             }
 
+                if (!Longpressed) {
+                    //       Toast.makeText(BennyEyes.this, "LongPress", Toast.LENGTH_SHORT).show();
+                    Longpressed = true;
+                    super.onLooongPress();
+                    PresentBenny();
+                }
+            }
 
             public void onClick() {
 
+            public void onClick() {
 
                 if ( OjneView.isPlaying()){
                     //   Toast.makeText(BennyEyes.this, "avavav", Toast.LENGTH_SHORT).show();
@@ -327,6 +352,12 @@ StartRequestRound();
                     OjneView.setVideoURI(uriLang);
                     OjneView.start();
 
+                }
+                else {
+                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
+                    Uri uriLang =Uri.parse(PathToBennyEyes);
+                    OjneView.setVideoURI(uriLang);
+                    OjneView.start();
 
                 }
             }
@@ -484,239 +515,6 @@ StartRequestRound();
 
     }
 
-    public void StopBenny(){
-
-
-
-        if (RequestNotActiveCountdownTimer != null) {
-            RequestNotActiveCountdownTimer.cancel();
-
-
-        }
-        if (SuperRequestTidCountdownTimer != null) {
-            SuperRequestTidCountdownTimer.cancel();
-        }
-        if (FeedbackCoolDownCountdowntimer !=null) {
-            FeedbackCoolDownCountdowntimer.cancel();
-        }
-        StopPlayer();
-        stop();
-
-    }
-
-    public void PresentBenny(){
-
-
-        findViewById(R.id.BennyOjne).setAlpha(1);  //Fjern baggrund
-        String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.idle;
-        Uri uriLang =Uri.parse(PathToBennyEyes);
-        OjneView.setVideoURI(uriLang);
-        OjneView.start();
-        PlayMusicFile(RobertIntroduction, 0);
-
-
-
-        if (!mRunning) {
-            mRunning = true;
-            start();
-        }
-
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-
-                SuperRequestTimerStart();                                                //Timer
-                RequestNotActiveTimerStart();                                            //Timer
-                FeedbackTimerTimerStart();                                               //Timer
-
-
-                StartRequestRound();
-                IsThisFirstTime++;
-                StopPlayer();
-            }
-        });
-
-
-    }
-
-    public void InitializeAllMusicArrays (){
-
-
-        RobertIdle = new ArrayList<>();
-        RobertCollectRequest = new ArrayList<>();
-        RobertKiggeNed = new ArrayList<>();
-        RobertBuildRequest = new ArrayList<>();
-        RobertPretendRequest = new ArrayList<>();
-        RobertHappyFeedback = new ArrayList<>();
-        RobertNeutralFeedback = new ArrayList<>();
-        RobertBaffledFeedback = new ArrayList<>();
-        RobertIntroduction = new ArrayList<>();
-
-        getMusic();
-        //    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
-        //    adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList2);
-
-        //  PlayMusicFile(RobertBuildRequest);
-
-
-
-    }
-
-    public boolean NotLastOne(String lol){
-        if (lol.equals(tempo)){
-            return true;
-
-        }
-        else
-            return false;
-    }
-
-    public void PlayMusicFile (ArrayList arrayList, int numberinArray) {
-
-        String lol;
-        Uri myUri = null;
-
-
-        try {
-            lol = (String) arrayList.get(numberinArray);                // Okay (String) er ikke mig men android studio der har lavet
-
-
-
-
-            myUri = Uri.parse(lol); // initialize Uri here
-            if (mediaPlayer == null) {
-
-                mediaPlayer = new MediaPlayer();
-           /* while (mediaPlayer.isPlaying()) {
-                Toast.makeText(this, "Hvad er det her?", Toast.LENGTH_SHORT).show();
-            }
-*/
-
-
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mediaPlayer.setDataSource(getApplicationContext(), myUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //       Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
-                }
-                try {
-                    mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //           Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
-
-                }
-                mediaPlayer.start();
-
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        //    Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
-                        // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
-                        StopPlayer();
-
-                        //    mediaPlayer.reset();
-                    }
-                });
-
-            }
-        }
-        catch (IndexOutOfBoundsException e){
-            //  Toast.makeText(this, "Outofindex", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private void StopPlayer(){
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
-
-    public void getMusic(){
-
-        ContentResolver contentResolver = getContentResolver();
-        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor songCurser = contentResolver.query(songUri,null  ,null,null,null);
-        if (songCurser != null && songCurser.moveToFirst()){
-            int SongPathData = songCurser.getColumnIndex(MediaStore.Audio.Media.DATA);
-            int songtitel = songCurser.getColumnIndex(MediaStore.Audio.Media.TITLE);
-
-            do {
-                String currentTitle = songCurser.getString(songtitel);
-                String DataPath = songCurser.getString(SongPathData);
-
-                // arrayList.add(currentTitle + "\n" + currentartist);
-                char FirstCharInSongFile = currentTitle.charAt(0);
-                char SecoundCharInSongFile = currentTitle.charAt(1);
-
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'I' ){
-
-                    RobertIdle.add(DataPath);
-
-                }
-                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'C' ){
-
-                    RobertCollectRequest.add(DataPath);
-                    //  Toast.makeText(this, "Match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
-
-                }
-                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'K' ){
-
-                    RobertKiggeNed.add(DataPath);
-
-                }
-
-                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'B' ){
-
-                    RobertBuildRequest.add(DataPath);
-
-                }
-
-                else if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'P' ){
-
-                    RobertPretendRequest.add(DataPath);
-
-                }
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Y' ){
-
-                    RobertHappyFeedback.add(DataPath);
-
-                }
-                /*
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'Y' ){
-
-                    RobertNeutralFeedback.add(DataPath);
-
-                }
-                */
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'X' ){
-
-                    RobertBaffledFeedback.add(DataPath);
-
-                }
-                if (FirstCharInSongFile == 'R' && SecoundCharInSongFile == 'O' ){
-
-                    RobertIntroduction.add(DataPath);
-
-                }
-                else {
-                    //    Toast.makeText(this, "No match for " + FirstCharInSongFile + "and " + SecoundCharInSongFile, Toast.LENGTH_SHORT).show();
-
-
-                }
-
-
-
-            } while (songCurser.moveToNext());
-        }
-        //  Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -855,6 +653,7 @@ StartRequestRound();
         }
     }
 
+    public int TempFunction(ArrayList array, int WhatTemp ){
 
     public int TempFunctionNyNyNyNY (ArrayList array, int[] TempArray ) {
 
@@ -1559,6 +1358,8 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
         SuperRequestTidIsRunning = true;
     }
 
+
+
     private void RequestNotActiveTimerStart(){
         RequestNotActiveCountdownTimer  = new CountDownTimer(TimeLeftInMillisRequestNotActive, 1000) {
 
@@ -1722,6 +1523,257 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 
     }
 
+
+
+
+
+
+
+    // LOGGING SECTION – Ik smid methods ind i eller under!
+
+    public String subFolder = "/LogData";
+    public String name = "LogFile_";
+    public String currentDate = (String) whichDate();
+    public String csv = ".csv";
+    public String filename = name + currentDate + csv;
+    public String instances = "_instances";
+    public String filenameinstance = currentDate + instances + csv;
+    private static final String TAG = "MEDIA";
+    String eol = System.getProperty("line.separator");
+
+    public HashMap<String, Integer> LogHashmap = new HashMap<String, Integer>();
+    public HashMap<String, String> LogInstance = new HashMap<>();
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void save(String key) {
+
+        if (LogHashmap.containsKey(key)) {
+            LogHashmap.put(key, LogHashmap.get(key)+1);
+
+            if (!key.equals("Bricks Detected")){
+                LogInstance.put(timeStamp(), key);
+            }
+            writeToFile(LogHashmap, LogInstance);
+        }
+
+        else if (!LogHashmap.containsKey(key)) {
+            LogHashmap.put(key, 1);
+
+            if (!key.equals("Bricks Detected")) {
+                LogInstance.put(timeStamp(), key);
+            }
+            writeToFile(LogHashmap, LogInstance);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void writeToFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
+        //write to file
+
+        File cacheDir = null;
+        File appDirectory = null;
+
+        if (android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cacheDir = getApplicationContext().getExternalCacheDir();
+            appDirectory = new File(cacheDir + subFolder);
+        }
+
+        else {
+            cacheDir = getApplicationContext().getCacheDir();
+            String BaseFolder = cacheDir.getAbsolutePath();
+            appDirectory = new File(BaseFolder + subFolder);
+        }
+
+        if (appDirectory != null && !appDirectory.exists()) {
+            appDirectory.mkdirs();
+        }
+
+        File file = new File(appDirectory, filename);
+        File fileInstance = new File(appDirectory, filenameinstance);
+
+        FileOutputStream fos = null;
+        ObjectOutputStream out = null;
+
+        try (Writer writer = new FileWriter(file)) {
+            for (Map.Entry<String, Integer> entry : insertHashmap.entrySet()) {
+                writer.append(entry.getKey()).append(',').append(String.valueOf(entry.getValue())).append(eol);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try (Writer writer = new FileWriter(fileInstance)){
+            for (Map.Entry<String, String> entry : instanceHashmap.entrySet()) {
+                writer.append(entry.getKey()).append(',').append(entry.getValue()).append(eol);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /**try {
+         fos = new FileOutputStream(file);
+         out = new ObjectOutputStream(fos);
+         out.writeObject(LogHashmap);
+         System.out.println(LogHashmap);
+         } catch (IOException ioe) {
+         ioe.printStackTrace();
+         } catch (Exception e) {
+         e.printStackTrace();
+         } finally {
+         try {
+         if (fos != null) {
+         fos.flush();
+         fos.close();
+         if (out != null) {
+         out.flush();
+         out.close();
+         }
+         }
+         } catch (Exception e) {
+
+         }
+         }**/
+    }
+
+    public void readFile(HashMap<String, Integer> insertHashmap, HashMap<String, String> instanceHashmap) {
+
+        File cacheDir = null;
+        File appDirectory = null;
+
+        if (android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            cacheDir = getApplicationContext().getExternalCacheDir();
+            appDirectory = new File (cacheDir + subFolder);
+        } else {
+            cacheDir = getApplicationContext().getCacheDir();
+            String BaseFolder = cacheDir.getAbsolutePath();
+            appDirectory = new File (BaseFolder + subFolder);
+        }
+
+        if (appDirectory != null && !appDirectory.exists()) {
+            return;
+        }
+
+        File file = new File (appDirectory, filename);
+
+        FileInputStream fis = null;
+        ObjectInputStream in = null;
+
+
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filename));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    insertHashmap.put(key, Integer.valueOf(value));
+                }
+            }
+        }
+
+        /**try {
+         fis = new FileInputStream(file);
+         in = new ObjectInputStream(fis);
+         LogHashmap  = (HashMap<String, Integer>) in.readObject();
+         Toast.makeText(this, "Count of hashmaps:: " + LogHashmap.size() + " " + LogHashmap, Toast.LENGTH_SHORT).show();
+
+
+         }**/ catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        }/** catch (ClassNotFoundException e) {
+         e.printStackTrace();
+         }**/ catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(appDirectory + "/" + filenameinstance));
+            String line = "";
+            StringTokenizer st = null;
+
+
+            while ((line = br.readLine()) != null) {
+
+                st = new StringTokenizer(line, ",");
+                while (st.hasMoreTokens()) {
+
+                    String key = st.nextToken();
+                    String value = st.nextToken();
+
+                    instanceHashmap.put(key, value);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+        Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
+    }
+
+    public String whichDate () {
+        DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");
+        Date date = new Date();
+
+        return dateFormat.format(date);
+    }
+
+    public String timeStamp () {
+        DateFormat timestamp = new SimpleDateFormat("HH:mm:ss");
+        String currentTime = timestamp.format(new Date());
+
+        return currentTime;
+    }
+
+    public void OpenMicSensitivity(View view) {
+
+        Intent i = new Intent(this, ChangeMicSensitivity.class);
+        startActivityForResult(i, 1);
+    }
 }
 
 

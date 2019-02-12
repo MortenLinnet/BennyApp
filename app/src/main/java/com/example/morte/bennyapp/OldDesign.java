@@ -42,7 +42,7 @@ public class OldDesign extends AppCompatActivity {
         setContentView(R.layout.activity_benny_main);
 
         TextView playModeText = (TextView) findViewById(R.id.playButton);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/bennyNormal.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
         playModeText.setTypeface(custom_font);
 
 

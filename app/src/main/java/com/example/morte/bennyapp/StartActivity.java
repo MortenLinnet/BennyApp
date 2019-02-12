@@ -48,13 +48,11 @@ public class StartActivity extends AppCompatActivity {
         header_Text = (TextView) findViewById(R.id.headerText);
         main_Text = (TextView) findViewById(R.id.mainText);
 
-        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/webfont.ttf");
-        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/Effra Light.ttf");
-        header_Text.setTypeface(bold_font);
-        main_Text.setTypeface(standard_font);
+        Typeface headline = Typeface.createFromAsset(getAssets(), "font/effra_Heavy.ttf");
+        Typeface bodyText = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
+        header_Text.setTypeface(headline);
+        main_Text.setTypeface(bodyText);
         animatorSet = new AnimatorSet();
-
-
 
 
         SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
@@ -63,15 +61,15 @@ public class StartActivity extends AppCompatActivity {
         if (AppLanguage != 0) {
             if (AppLanguage.equals(1)) {
                 SwitchBetweenLang(1);
-                animations(R.drawable.british);
+                animations(R.drawable.robertenglish);
             }
             else if (AppLanguage.equals(2) ) {
                 SwitchBetweenLang(2);
-                animations(R.drawable.danish);
+                animations(R.drawable.robertdanish);
             }
         }
 
-        Toast.makeText(this, "Applang = " + AppLanguage, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Applang = " + AppLanguage, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -89,10 +87,10 @@ public class StartActivity extends AppCompatActivity {
                 booleanEnglishActive = true;
 
                 if (booleanDanishActive) {
-                    danishButton.setImageResource(R.drawable.da);
+                    danishButton.setImageResource(R.drawable.danish);
                 }
-                englishButton.setImageResource(R.drawable.eng);
-                SetStrings(1);
+                englishButton.setImageResource(R.drawable.englishg);
+                //SetStrings(1);
 
                 isStartButtonChanged(true);
                 save(1);
@@ -103,10 +101,10 @@ public class StartActivity extends AppCompatActivity {
                 booleanDanishActive = true;
 
                 if (booleanEnglishActive) {
-                    englishButton.setImageResource(R.drawable.en);
+                    englishButton.setImageResource(R.drawable.english);
                 }
-                danishButton.setImageResource(R.drawable.dag);
-                SetStrings(2);
+                danishButton.setImageResource(R.drawable.danishg);
+                //SetStrings(2);
 
                 isStartButtonChanged(true);
                 save(2);
@@ -135,13 +133,13 @@ public class StartActivity extends AppCompatActivity {
 
     public void english (View v) {
         SwitchBetweenLang(1);
-        animations(R.drawable.british);
+        animations(R.drawable.robertenglish);
 
     }
 
     public void danish (View v) {
      //   danishButton = (ImageButton) findViewById(R.id.danish);  // Det er mig der lige har taget det med fra merge 13/12
-        animations(R.drawable.danish);                                   // samme som oven
+        animations(R.drawable.robertdanish);                                   // samme som oven
         SwitchBetweenLang(2);
     }
 
@@ -182,6 +180,6 @@ public class StartActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("AppLanguage", input);
         editor.apply();
-        Toast.makeText(this, "Language saved: " + input, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Language saved: " + input, Toast.LENGTH_SHORT).show();
     }
 }

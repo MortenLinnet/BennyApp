@@ -94,8 +94,8 @@ public class BennyMain extends AppCompatActivity {
         setContentView(R.layout.activity_benny_main);
 
 
-        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/webfont.ttf");
-        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/Effra Light.ttf");
+        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
+        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
 
 
 
@@ -661,7 +661,7 @@ int debugtime= 1;
             Clown = "Benny Balloon";
             Settings = "Settings";
             LetsPlay = "Let us play ";
-            SelectMode = "Select Mode";
+            SelectMode = "CHOOSE";
             ChoosePHeader = "Choose personality";
 
 
@@ -672,7 +672,7 @@ int debugtime= 1;
             Clown = "Benny Ballon";
             Settings = "Settings";
             LetsPlay = "Lad os lege ";
-            SelectMode = "Vælg karakter";
+            SelectMode = "VÆLG";
             ChoosePHeader = "Vælg personlighed";
         }
     }
