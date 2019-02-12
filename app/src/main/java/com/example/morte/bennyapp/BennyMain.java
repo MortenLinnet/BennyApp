@@ -659,7 +659,7 @@ int debugtime= 1;
         //Toast.makeText(this, "lang  er:" + lang, Toast.LENGTH_SHORT).show();
         if (lang == 1) {
             Benny = "Robert";
-            Pirate = "Captain Pirate";
+            Pirate = "Captain Brick";
             Clown = "Robert Balloon";
             Settings = "Settings";
             LetsPlay = "Let us play ";
@@ -670,7 +670,7 @@ int debugtime= 1;
         }
         if (lang == 2) {
             Benny = "Robert";
-            Pirate = "Kaptajn Pirat";
+            Pirate = "Kaptajn Klods";
             Clown = "Robert Ballon";
             Settings = "Indstillinger";
             LetsPlay = "Lad os lege ";
