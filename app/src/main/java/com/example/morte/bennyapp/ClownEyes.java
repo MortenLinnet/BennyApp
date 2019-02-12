@@ -49,7 +49,7 @@ public class ClownEyes extends AppCompatActivity {
     public boolean IsMediaPlayerOccupied;
     public boolean ItsAPretendRound;
     public int HaveBeenInPresentMode;
-public boolean Notgonnastack;
+    public boolean Notgonnastack;
     /* constants */
     private static final int POLL_INTERVAL = 300;
 
@@ -680,6 +680,10 @@ catch (IndexOutOfBoundsException e){
             SuperRequestTidCountdownTimer.cancel();
         }
 
+        if (IdleModeCountdowntimer != null){
+            IdleModeCountdowntimer.cancel();
+        }
+
         //  SuperRequestTidCountdownTimer.cancel();
         //mediaPlayer.stop();
         //mediaPlayer.release();
@@ -1198,7 +1202,6 @@ PreventRepetetion(RobertKiggeNed);
         };
     }      //Arrays til alle Benny's øjne
 
-
     public int Tempfunction4Eyes(String[] string, int WhatTemp ){
 
 
@@ -1223,10 +1226,6 @@ PreventRepetetion(RobertKiggeNed);
 
         return Randomtal;
     }
-
-
-
-
 
     public void PlayBennyHappyOjne(){
 
@@ -1409,58 +1408,7 @@ if (IsThisFirstTime != 0){
 
     }
 
-    private void IdleLinesInReqquestNotActive(){
 
-//        PlayMusicFile(RobertIdle);
-        PreventRepetetion(RobertIdle);
-   //     final MediaPlayer NyMp = new MediaPlayer();
-/*
-if (mediaPlayer == null) {
-    BrickDetected = true;
-
-    Random r = new Random();
-//        int SizeOfArray = arrayList.size();
-//        int nyrandom = r.nextInt((SizeOfArray - 0)+1)+0;
-    int nyrandom = r.nextInt(RobertIdle.size());
-
-
-    String lol = (String) RobertIdle.get(nyrandom);                // Okay (String) er ikke mig men android studio der har lavet
-
-    Uri myUri = Uri.parse(lol); // initialize Uri here
-
-    NyMp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-    try {
-        NyMp.setDataSource(getApplicationContext(), myUri);
-    } catch (IOException e) {
-        e.printStackTrace();
-//            Toast.makeText(this, "Exception 1", Toast.LENGTH_SHORT).show();
-    }
-    try {
-        NyMp.prepare();
-    } catch (IOException e) {
-        e.printStackTrace();
-        //          Toast.makeText(this, "Exception 2", Toast.LENGTH_SHORT).show();
-
-    }
-    NyMp.start();
-
-    NyMp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-//                Toast.makeText(BennyEyes.this, "MP reset", Toast.LENGTH_SHORT).show();
-            // mediaPlayer.stop();  https://stackoverflow.com/questions/10453691/mediaplayer-throwing-illegalstateexception-when-calling-onstop
-            NyMp.release();
-            BrickDetected = false;
-        }
-    });
-
-}
-else {
-    Toast.makeText(this, "Vi er idle", Toast.LENGTH_SHORT).show();
-}
-*/
-    }
 
     private void SuperRequestTimerStart(){
         SuperRequestTidCountdownTimer = new CountDownTimer(TimeLeftInMillisSuperRequestTime, 1000) {
@@ -1527,7 +1475,7 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
                     }
                     if (!ItsAPretendRound) {
                         Log.d("Over 9000", "Vi giver en idle line" + millisuntillfinish2);
-                        IdleLinesInReqquestNotActive();
+                        PreventRepetetion(RobertIdle);
                     }
                 }
 /*            if (millisuntillfinish2 < 6000 && millisuntillfinish2 > 5000){

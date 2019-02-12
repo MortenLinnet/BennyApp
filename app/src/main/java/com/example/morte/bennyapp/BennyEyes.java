@@ -167,14 +167,14 @@ public class BennyEyes extends AppCompatActivity {
     ArrayList<String> RobertBaffledFeedback;
     ArrayList<String> RobertIntroduction;
 
-
+MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mediaPlayer = new MediaPlayer();
-       NyMp = new MediaPlayer();
-        InitializeAllMusicArrays();
+       //NyMp = new MediaPlayer();
+        //InitializeAllMusicArrays();
         TypeofFeedback = 0;
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
@@ -262,10 +262,7 @@ IdleChanceNumber= 0;
         mediaPlayer.stop();
         mediaPlayer.release();
         }
-        if (NyMp != null) {
-            NyMp.stop();
-            NyMp.release();
-        }
+
         super.onPause();
     }
 
@@ -375,7 +372,7 @@ IdleChanceNumber= 0;
             try {
 
 
-                PlayMusicFile(RobertBuildRequest);
+                //PlayMusicFile(RobertBuildRequest);
             }
             catch (Surface.OutOfResourcesException lol) {
          //       Toast.makeText(this, "Outofressources 1", Toast.LENGTH_SHORT).show();
@@ -401,7 +398,7 @@ IdleChanceNumber= 0;
         {
             Log.d("Ny request", "Det er en nem opgave ");
             try {
-            PlayMusicFile(RobertCollectRequest);
+           // PlayMusicFile(RobertCollectRequest);
         }
             catch (Surface.OutOfResourcesException lol) {
       //      Toast.makeText(this, "Outofressources 2", Toast.LENGTH_SHORT).show();
@@ -429,7 +426,7 @@ IdleChanceNumber= 0;
             try {
 
 
-                PlayMusicFile(RobertPretendRequest);
+           //     PlayMusicFile(RobertPretendRequest);
                 ItsAPretendRound = true;
             }
             catch (Surface.OutOfResourcesException lol) {
@@ -468,7 +465,7 @@ IdleChanceNumber= 0;
 
 
          try{
-               PlayMusicFile(RobertHappyFeedback);
+        //       PlayMusicFile(RobertHappyFeedback);
             }
             catch (Surface.OutOfResourcesException lol) {
         //        Toast.makeText(this, "Outofressources 3", Toast.LENGTH_SHORT).show();
@@ -492,7 +489,7 @@ IdleChanceNumber= 0;
             {
 
              try{
-                PlayMusicFile(RobertBaffledFeedback);
+         //       PlayMusicFile(RobertBaffledFeedback);
 
             }
             catch (Surface.OutOfResourcesException lol) {
@@ -522,7 +519,7 @@ IdleChanceNumber= 0;
         {
 
         try{
-            PlayMusicFile(RobertHappyFeedback);
+        //    PlayMusicFile(RobertHappyFeedback);
         }
             catch (Surface.OutOfResourcesException lol) {
      //       Toast.makeText(this, "Outofressources 6", Toast.LENGTH_SHORT).show();
@@ -732,7 +729,7 @@ IdleChanceNumber= 0;
 
 
             try{
-                PlayMusicFile(RobertIdle);
+          //      PlayMusicFile(RobertIdle);
 
             }
             catch (Surface.OutOfResourcesException lol) {
