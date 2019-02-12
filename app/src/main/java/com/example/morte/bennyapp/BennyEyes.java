@@ -262,7 +262,7 @@ public class BennyEyes extends AppCompatActivity {
         TypeofFeedback = 0;
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
-        setContentView(R.layout.activity_clown_eyes);
+        setContentView(R.layout.activity_benny_eyes);
         IsStopped = false;
 
 
@@ -483,7 +483,7 @@ public class BennyEyes extends AppCompatActivity {
                         if(upcharecter-downcharecter>5000){
 
 
-                            Intent i = new Intent(BennyEyes.this, BennyEyes.class);
+                            Intent i = new Intent(BennyEyes.this, ClownEyes.class);
                             startActivityForResult(i,1);
 
                             //      StopBenny();
@@ -993,7 +993,7 @@ public class BennyEyes extends AppCompatActivity {
             PlayMusicFile(RobertBuildRequest, TempBuildRequestArray[0]);
             TempFunctionNyNyNyyyyyyyyyyy(RobertBuildRequest, TempBuildRequestArray);
 
-            NameOfPath = RobertBuildRequest.get(TempBuildRequest);
+            NameOfPath = RobertBuildRequest.get(TempBuildRequestArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1006,7 +1006,7 @@ public class BennyEyes extends AppCompatActivity {
             TempFunctionNyNyNyyyyyyyyyyy(RobertPretendRequest,TempPretendRequestArray);
             PlayMusicFile(RobertPretendRequest, TempPretendRequest);
 
-            NameOfPath = RobertPretendRequest.get(TempPretendRequest);
+            NameOfPath = RobertPretendRequest.get(TempPretendRequestArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1020,7 +1020,7 @@ public class BennyEyes extends AppCompatActivity {
             TempFunctionNyNyNyyyyyyyyyyy(RobertCollectRequest, TempCollectRequestArray);
             PlayMusicFile(RobertCollectRequest, TempCollectRequestArray[0]);
 
-            NameOfPath = RobertCollectRequest.get(TempCollectRequest);
+            NameOfPath = RobertCollectRequest.get(TempCollectRequestArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1034,7 +1034,7 @@ public class BennyEyes extends AppCompatActivity {
             TempFunctionNyNyNyyyyyyyyyyy(RobertKiggeNed, TempKiggeNedArray);
             PlayMusicFile(RobertKiggeNed, TempKiggeNedArray[0]);
 
-            NameOfPath = RobertKiggeNed.get(TempKiggeNed);
+            NameOfPath = RobertKiggeNed.get(TempKiggeNedArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1048,7 +1048,7 @@ public class BennyEyes extends AppCompatActivity {
             TempFunctionNyNyNyyyyyyyyyyy(RobertBaffledFeedback, TempBaffeldFeedbackArray);
             PlayMusicFile(RobertBaffledFeedback, TempBaffeldFeedbackArray[0]);
 
-            NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedback);
+            NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedbackArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1060,7 +1060,7 @@ public class BennyEyes extends AppCompatActivity {
             PlayMusicFile(RobertHappyFeedback, TempHappyFeedbackArray[0]);
             TempFunctionNyNyNyyyyyyyyyyy(RobertHappyFeedback, TempHappyFeedbackArray);
 
-            NameOfPath = RobertHappyFeedback.get(TempHappyFeedback);
+            NameOfPath = RobertHappyFeedback.get(TempHappyFeedbackArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1071,7 +1071,7 @@ public class BennyEyes extends AppCompatActivity {
             TempFunctionNyNyNyyyyyyyyyyy(RobertIdle, TempIdleArray);
             PlayMusicFile(RobertIdle, TempIdleArray[0]);
 
-            NameOfPath = RobertIdle.get(TempIdle);
+            NameOfPath = RobertIdle.get(TempIdleArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1987,9 +1987,9 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 
 
 
-        Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
     }
 
     public String whichDate () {

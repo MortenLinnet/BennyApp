@@ -114,23 +114,25 @@ public class PirateEyes extends AppCompatActivity {
             if (amp > 7) {
                 save("Bricks Detected");
             }
-
-            if (amp > 7 && !mediaPlayer.isPlaying() && !IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+        try {
+            if (amp > 7 && !mediaPlayer.isPlaying() && !IdleModeIsActive) {  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
 
-            if (amp > 7 && mediaPlayer == null && IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+            if (amp > 7 && mediaPlayer == null && IdleModeIsActive) {  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 IdleModeIsActive = false;
                 //    Toast.makeText(BennyEyes.this, "Vi har været i idlemode og nu begynder vi forfra", Toast.LENGTH_SHORT).show();
                 IdleModeCountdowntimer.cancel();
-                AmounfOfIdleRounds=0;
+                AmounfOfIdleRounds = 0;
                 StartRequestRound();
-            }
-
-
-            else {
+            } else {
 
             }
+        }
+        catch (NullPointerException e ) {
+            //Toast.makeText(PirateEyes.this, ".......", Toast.LENGTH_SHORT).show();
+        }
+            
             // Runnable(mPollTask) will again execute after POLL_INTERVAL
             mHandler.postDelayed(mPollTask, POLL_INTERVAL);
         }
@@ -456,7 +458,7 @@ StartRequestRound();
                         if(upcharecter-downcharecter>5000){
 
 
-                            Intent i = new Intent(PirateEyes.this, PirateEyes.class);
+                            Intent i = new Intent(PirateEyes.this, ClownEyes.class);
                             startActivityForResult(i,1);
 
 
@@ -994,7 +996,10 @@ StartRequestRound();
         return Randomtal;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void PreventRepetetion(ArrayList array) {
+
+        String NameOfPath;
 
         if (array.equals(RobertBuildRequest)) {
             //        Toast.makeText(this, "Build", Toast.LENGTH_SHORT).show();
@@ -1002,6 +1007,11 @@ StartRequestRound();
             // TempBuildRequest = TempFunctionNy(RobertBuildRequest, TempBuildRequest, Temp2BuildRequestOfOld);
             TempFunctionNyNyNyyyyyyyyyyy(RobertBuildRequest, TempBuildRequestArray);
             PlayMusicFile(RobertBuildRequest, TempBuildRequestArray[0]);
+
+            NameOfPath = RobertBuildRequest.get(TempBuildRequestArray[0]);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertPretendRequest)) {
@@ -1011,6 +1021,10 @@ StartRequestRound();
             TempFunctionNyNyNyyyyyyyyyyy(RobertPretendRequest,TempPretendRequestArray);
             PlayMusicFile(RobertPretendRequest, TempPretendRequest);
 
+            NameOfPath = RobertPretendRequest.get(TempPretendRequestArray[0]);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertCollectRequest)) {
@@ -1020,8 +1034,12 @@ StartRequestRound();
             TempFunctionNyNyNyyyyyyyyyyy(RobertCollectRequest, TempCollectRequestArray);
             PlayMusicFile(RobertCollectRequest, TempCollectRequestArray[0]);
 
-
+            NameOfPath = RobertCollectRequest.get(TempCollectRequestArray[0]);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
+
         if (array.equals(RobertKiggeNed)) {
 
             //     Toast.makeText(this, "kiggened", Toast.LENGTH_SHORT).show();
@@ -1030,7 +1048,12 @@ StartRequestRound();
             TempFunctionNyNyNyyyyyyyyyyy(RobertKiggeNed, TempKiggeNedArray);
             PlayMusicFile(RobertKiggeNed, TempKiggeNedArray[0]);
 
+            NameOfPath = RobertKiggeNed.get(TempKiggeNedArray[0]);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
+
         if (array.equals(RobertBaffledFeedback)) {
 
             //   Toast.makeText(this, "Baffeeld", Toast.LENGTH_SHORT).show();
@@ -1039,6 +1062,10 @@ StartRequestRound();
             TempFunctionNyNyNyyyyyyyyyyy(RobertBaffledFeedback, TempBaffeldFeedbackArray);
             PlayMusicFile(RobertBaffledFeedback, TempBaffeldFeedbackArray[0]);
 
+            NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedbackArray[0]);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertHappyFeedback)) {
@@ -1048,6 +1075,11 @@ StartRequestRound();
             // TempHappyFeedback = TempFunctionNy(RobertHappyFeedback, TempHappyFeedback, Temp2HappyFeedbackOfOld);
             TempFunctionNyNyNyyyyyyyyyyy(RobertHappyFeedback, TempHappyFeedbackArray);
             PlayMusicFile(RobertHappyFeedback, TempHappyFeedbackArray[0]);
+
+            NameOfPath = RobertHappyFeedback.get(TempHappyFeedbackArray[0]);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
 
         if (array.equals(RobertIdle)) {
@@ -1057,9 +1089,15 @@ StartRequestRound();
             //     TempIdle = TempFunctionNy(RobertIdle, TempIdle, Temp2IdleOfOld);
             TempFunctionNyNyNyyyyyyyyyyy(RobertIdle, TempIdleArray);
             PlayMusicFile(RobertIdle, TempIdleArray[0]);
+
+            NameOfPath = RobertIdle.get(TempIdleArray[0]);
+            String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
+            save(NameOfFile);
+            //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void LevelOfRequestDifficulty() {
         Random r = new Random();
         int n = r.nextInt(180);
@@ -1967,9 +2005,9 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 
 
 
-        Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
     }
 
     public String whichDate () {

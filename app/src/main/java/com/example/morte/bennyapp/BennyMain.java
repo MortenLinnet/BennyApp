@@ -106,8 +106,8 @@ public class BennyMain extends AppCompatActivity {
         playModeText = (TextView) findViewById(R.id.playButton);
         charectername.setText(Benny);
         playModeText.setTypeface(effra_Medium);
-        charectername.setTypeface(bold_font);
-        playModeText.setTypeface(bold_font);
+        charectername.setTypeface(effra_Medium);
+        playModeText.setTypeface(effra_Medium);
 
 
         ChoosePersonality = findViewById(R.id.ChoosePersonality);
