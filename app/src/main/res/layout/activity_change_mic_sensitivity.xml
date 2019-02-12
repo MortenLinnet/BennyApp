@@ -11,59 +11,78 @@
         android:id="@+id/highersens"
         android:layout_width="147dp"
         android:layout_height="133dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:onClick="Plus"
         android:text="+"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/button8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/LowerSens"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeMicLevelNumber" />
 
     <Button
         android:id="@+id/LowerSens"
-        android:onClick="Minus"
         android:layout_width="147dp"
         android:layout_height="133dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:onClick="Minus"
         android:text="-"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintEnd_toStartOf="@+id/highersens"
-        app:layout_constraintHorizontal_bias="0.086"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeMicLevelNumber" />
 
     <TextView
         android:id="@+id/ChangeMicLevelNumber"
         android:layout_width="103dp"
         android:layout_height="99dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
         android:gravity="center"
+        android:text="TextView"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.53"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.79" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 
     <TextView
         android:id="@+id/senslignu"
         android:layout_width="88dp"
         android:layout_height="58dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/ChangeMicLevelNumber"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.432" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:text="SAVE"
+        android:textSize="20sp"
+        android:onClick="save"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/pickbutton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -94,8 +94,9 @@ public class BennyMain extends AppCompatActivity {
         setContentView(R.layout.activity_benny_main);
 
 
-        Typeface bold_font = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
-        Typeface standard_font = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
+        Typeface effra_Heavy = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
+        Typeface effra_Regular = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
+        Typeface effra_Medium = Typeface.createFromAsset(getAssets(), "font/effra_Medium.ttf");
 
 
 
@@ -103,8 +104,8 @@ public class BennyMain extends AppCompatActivity {
         prev = findViewById(R.id.BackButton);
         heading = findViewById(R.id.CharecterTexxtview);
         playModeText = (TextView) findViewById(R.id.playButton);
-        playModeText.setTypeface(bold_font);
-        heading.setTypeface(bold_font);
+        playModeText.setTypeface(effra_Medium);
+        heading.setTypeface(effra_Medium);
 
 
         ChoosePersonality = findViewById(R.id.ChoosePersonality);
@@ -115,10 +116,10 @@ public class BennyMain extends AppCompatActivity {
 
 
 
-        ChoosePersonality.setTypeface(bold_font);
-        TextViewBobleHojre.setTypeface(standard_font);
-        TextViewBobleDownLeft.setTypeface(standard_font);
-        TextviewBobleOverstLeft.setTypeface(standard_font);
+        ChoosePersonality.setTypeface(effra_Heavy);
+        TextViewBobleHojre.setTypeface(effra_Regular);
+        TextViewBobleDownLeft.setTypeface(effra_Regular);
+        TextviewBobleOverstLeft.setTypeface(effra_Regular);
 
         ChoosePersonality.setText(ChoosePHeader);
         playModeText.setText(SelectMode);
@@ -653,11 +654,11 @@ int debugtime= 1;
 
     public void SetStrings(Integer lang) {
 
-        Toast.makeText(this, "lang  er:" + lang, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "lang  er:" + lang, Toast.LENGTH_SHORT).show();
         if (lang == 1) {
-            Benny = "Benny Brickeater";
-            Pirate = "Cap'n Brick";
-            Clown = "Benny Balloon";
+            Benny = "Robert";
+            Pirate = "Captain Pirate";
+            Clown = "Robert Balloon";
             Settings = "Settings";
             LetsPlay = "Let us play ";
             SelectMode = "CHOOSE";
@@ -666,10 +667,10 @@ int debugtime= 1;
 
         }
         if (lang == 2) {
-            Benny = "Benny Brickeater";
-            Pirate = "Kaptajn Klods";
-            Clown = "Benny Ballon";
-            Settings = "Settings";
+            Benny = "Robert";
+            Pirate = "Kaptajn Pirat";
+            Clown = "Robert Ballon";
+            Settings = "Indstillinger";
             LetsPlay = "Lad os lege ";
             SelectMode = "VÆLG";
             ChoosePHeader = "Vælg personlighed";
@@ -705,9 +706,9 @@ int debugtime= 1;
 
         if (id== 1) {
 
-            TextbobbleRIGHT = "Sulten eftrer røde klodser";
-            TextbobbleLowLeft = "Bygge mig et hus";
-            TextBobbleTopRight = "Jeg er uslten efter noget der siger miav";
+            TextbobbleRIGHT = "Hvad er din yndlingsfarve? Vil du give mig en klods i den farve til min legetøjskasse?";
+            TextbobbleLowLeft = "Ej hvor klodset!";
+            TextBobbleTopRight = "Jeg vil gerne have røde klodser!";
         }
 
 

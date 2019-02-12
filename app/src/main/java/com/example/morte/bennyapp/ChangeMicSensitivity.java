@@ -2,6 +2,8 @@ package com.example.morte.bennyapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.os.Handler;
@@ -20,20 +22,23 @@ import org.w3c.dom.Text;
 
 public class ChangeMicSensitivity extends AppCompatActivity {
 
+    public static final String BennyPreferences = "BennyPreferences";
+    public Integer Sensitivity;
+    Integer SensNumber;
+    TextView display;
 
-
-    int SensNumber;
-TextView display;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_mic_sensitivity);
 
-         display = findViewById(R.id.ChangeMicLevelNumber);
+        SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
+        Sensitivity = pref.getInt("Sensitivity", 7);
 
 
-        SensNumber = 7;
-display.setText("7");
+        display = findViewById(R.id.ChangeMicLevelNumber);
+
+        display.setText("" + Sensitivity);
 
     }
 
@@ -41,19 +46,16 @@ display.setText("7");
 
     public void Minus(View view) {
 
-        SensNumber--;
+        Sensitivity--;
 
-        updatedisplay(SensNumber);
-
-
+        updatedisplay(Sensitivity);
     }
 
     public void Plus(View view) {
 
-        SensNumber++;
+        Sensitivity++;
 
-                updatedisplay(SensNumber);
-
+        updatedisplay(Sensitivity);
     }
 
     public void updatedisplay(int currentnumber){
@@ -63,5 +65,18 @@ String lol;
         display.setText(lol);
 
 
+    }
+
+    public void save (View v) {
+        saveInShared(Sensitivity);
+
+    }
+
+    public void saveInShared (Integer input) {
+        SharedPreferences prefs = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("Sensitivity", input);
+        editor.apply();
+        //Toast.makeText(this, "Language saved: " + input, Toast.LENGTH_SHORT).show();
     }
 }

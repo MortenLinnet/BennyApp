@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class Introduction extends AppCompatActivity {
@@ -16,6 +17,8 @@ public class Introduction extends AppCompatActivity {
     TextView BodyTextView;
     String HeadlineString;
     String BodyText;
+    String NextText;
+    Button Next;
 
 
     @Override
@@ -29,6 +32,7 @@ public class Introduction extends AppCompatActivity {
 
         Typeface effra_Heavy = Typeface.createFromAsset(getAssets(), "font/effra_Heavy.ttf");
         Typeface effra_Regular = Typeface.createFromAsset(getAssets(), "font/effra_Regular.ttf");
+        Typeface effra_Medium = Typeface.createFromAsset(getAssets(), "font/effra_Medium.ttf");
 
         introduction = findViewById(R.id.Headline);
         introduction.setTypeface(effra_Heavy);
@@ -38,8 +42,9 @@ public class Introduction extends AppCompatActivity {
         BodyTextView.setTypeface(effra_Regular);
         BodyTextView.setText(BodyText);
 
-
-
+        Next = findViewById(R.id.next);
+        Next.setTypeface(effra_Medium);
+        Next.setText(NextText);
     }
 
     public void startBennyMain (View v) {
@@ -52,11 +57,13 @@ public class Introduction extends AppCompatActivity {
         if (Id == 1){
             HeadlineString = "INTRODUCTION";
             BodyText = "Before you begin to play, you need to\nchoose which personality to play\nwith. Each of the personalities have\ndifferent traits and requests.";
+            NextText = "Next";
         }
 
         if (Id == 2){
             HeadlineString = "INTRODUKTION";
             BodyText = "Før du begynder at lege, skal du vælge en personlighed at lege med.\nHver personlighed har forskellige karaktertræk og anmodninger.";
+            NextText = "Næste";
         }
 
     }

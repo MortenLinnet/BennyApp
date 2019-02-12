@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -112,15 +113,15 @@ public class ClownEyes extends AppCompatActivity {
                 //Log.i("Noise", "==== onCreate ===");
             }
 
-            if (amp > 7) {
+            if (amp > Sensitivity) {
                 save("Bricks Detected");
             }
 
-            if (amp > 7  && mediaPlayer == null && !IdleModeIsActive && TimeLeftInMillisSuperRequestTime > 4000){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+            if (amp > Sensitivity  && mediaPlayer == null && !IdleModeIsActive && TimeLeftInMillisSuperRequestTime > 4000){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 FeedbackWhenMicrohoneIsTriggered();
             }
 
-            if (amp > 7 && mediaPlayer == null && IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
+            if (amp > Sensitivity && mediaPlayer == null && IdleModeIsActive){  //Tjekker om mediaplayer kører for at forhindre den i at give en falsk positvi pga lyd efter Benny selv har sagt noget
                 IdleModeIsActive = false;
                 //    Toast.makeText(BennyEyes.this, "Vi har været i idlemode og nu begynder vi forfra", Toast.LENGTH_SHORT).show();
                 IdleModeCountdowntimer.cancel();
@@ -245,13 +246,18 @@ public class ClownEyes extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     int IsThisFirstTime;
 
-   boolean IsStopped;
+    boolean IsStopped;
+    public static final String BennyPreferences = "BennyPreferences";
+    public static Integer Sensitivity;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         readFile(LogHashmap, LogInstance);
+        SharedPreferences pref = getSharedPreferences(BennyPreferences, Context.MODE_PRIVATE);
+        Sensitivity = pref.getInt("Sensitivity", 7);
 
         //     mediaPlayer = new MediaPlayer();
         //   NyMp = new MediaPlayer();
@@ -260,7 +266,7 @@ public class ClownEyes extends AppCompatActivity {
         CohreneceBetweenEyesAndVoice = 0;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  // fjerner notifikationsbar
         setContentView(R.layout.activity_clown_eyes);
-IsStopped = false;
+        IsStopped = false;
 
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
@@ -310,7 +316,7 @@ IsStopped = false;
         temp =0;
         ReadyForFeedback = false;
         InitBennyOjneArray();
-IsThisFirstTime = 0;
+        IsThisFirstTime = 0;
         IdleChanceNumber= 0;
         ItsAPretendRound = false;
         Longpressed = false;
@@ -429,6 +435,8 @@ IsThisFirstTime = 0;
 
         });
 
+        Toast.makeText(this, "Morten værdien er: " + Sensitivity, Toast.LENGTH_SHORT).show();
+
     }
 
     public void StopBenny(){
@@ -467,6 +475,7 @@ IsThisFirstTime = 0;
 
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
 
@@ -476,7 +485,7 @@ IsThisFirstTime = 0;
 
 
                 StartRequestRound();
-IsThisFirstTime++;
+                IsThisFirstTime++;
       StopPlayer();
             }
         });
@@ -898,10 +907,10 @@ catch (IndexOutOfBoundsException e){
         String NameOfPath;
 
         if (array.equals(RobertBuildRequest)) {
-            PlayMusicFile(RobertBuildRequest, TempBuildRequestArray[0]);
             TempFunctionNyNyNyyyyyyyyyyy(RobertBuildRequest, TempBuildRequestArray);
+            PlayMusicFile(RobertBuildRequest, TempBuildRequestArray[0]);
 
-            NameOfPath = RobertBuildRequest.get(TempBuildRequest);
+            NameOfPath = RobertBuildRequest.get(TempBuildRequestArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -914,7 +923,7 @@ catch (IndexOutOfBoundsException e){
             TempFunctionNyNyNyyyyyyyyyyy(RobertPretendRequest,TempPretendRequestArray);
             PlayMusicFile(RobertPretendRequest, TempPretendRequest);
 
-            NameOfPath = RobertPretendRequest.get(TempPretendRequest);
+            NameOfPath = RobertPretendRequest.get(TempPretendRequestArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -928,7 +937,7 @@ catch (IndexOutOfBoundsException e){
             TempFunctionNyNyNyyyyyyyyyyy(RobertCollectRequest, TempCollectRequestArray);
             PlayMusicFile(RobertCollectRequest, TempCollectRequestArray[0]);
 
-            NameOfPath = RobertCollectRequest.get(TempCollectRequest);
+            NameOfPath = RobertCollectRequest.get(TempCollectRequestArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -942,7 +951,7 @@ catch (IndexOutOfBoundsException e){
             TempFunctionNyNyNyyyyyyyyyyy(RobertKiggeNed, TempKiggeNedArray);
             PlayMusicFile(RobertKiggeNed, TempKiggeNedArray[0]);
 
-            NameOfPath = RobertKiggeNed.get(TempKiggeNed);
+            NameOfPath = RobertKiggeNed.get(TempKiggeNedArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -956,7 +965,7 @@ catch (IndexOutOfBoundsException e){
             TempFunctionNyNyNyyyyyyyyyyy(RobertBaffledFeedback, TempBaffeldFeedbackArray);
             PlayMusicFile(RobertBaffledFeedback, TempBaffeldFeedbackArray[0]);
 
-            NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedback);
+            NameOfPath = RobertBaffledFeedback.get(TempBaffeldFeedbackArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -965,10 +974,10 @@ catch (IndexOutOfBoundsException e){
 
         if (array.equals(RobertHappyFeedback)) {
 
-            PlayMusicFile(RobertHappyFeedback, TempHappyFeedbackArray[0]);
             TempFunctionNyNyNyyyyyyyyyyy(RobertHappyFeedback, TempHappyFeedbackArray);
+            PlayMusicFile(RobertHappyFeedback, TempHappyFeedbackArray[0]);
 
-            NameOfPath = RobertHappyFeedback.get(TempHappyFeedback);
+            NameOfPath = RobertHappyFeedback.get(TempHappyFeedbackArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -979,7 +988,7 @@ catch (IndexOutOfBoundsException e){
             TempFunctionNyNyNyyyyyyyyyyy(RobertIdle, TempIdleArray);
             PlayMusicFile(RobertIdle, TempIdleArray[0]);
 
-            NameOfPath = RobertIdle.get(TempIdle);
+            NameOfPath = RobertIdle.get(TempIdleArray[0]);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
             save(NameOfFile);
             //Toast.makeText(this, NameOfFile, Toast.LENGTH_SHORT).show();
@@ -1891,9 +1900,9 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 
 
 
-        Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, ""+ appDirectory, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Complete hashmap: " + LogHashmap, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "currentDate: " + currentDate, Toast.LENGTH_SHORT).show();
     }
 
     public String whichDate () {

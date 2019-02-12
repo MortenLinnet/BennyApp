@@ -90,7 +90,7 @@ public class StartActivity extends AppCompatActivity {
                     danishButton.setImageResource(R.drawable.danish);
                 }
                 englishButton.setImageResource(R.drawable.englishg);
-                //SetStrings(1);
+                SetStrings(1);
 
                 isStartButtonChanged(true);
                 save(1);
@@ -104,7 +104,7 @@ public class StartActivity extends AppCompatActivity {
                     englishButton.setImageResource(R.drawable.english);
                 }
                 danishButton.setImageResource(R.drawable.danishg);
-                //SetStrings(2);
+                SetStrings(2);
 
                 isStartButtonChanged(true);
                 save(2);
@@ -166,12 +166,12 @@ public class StartActivity extends AppCompatActivity {
     public void SetStrings(Integer lang) {
         if (lang == 1) {
             header_Text.setText("HI FRIENDS!");
-            main_Text.setText("You have chosen English!");
+            main_Text.setText("Get ready to play! \n First, you need to choose \n which language Robert \n should speak in:");
         }
 
         if (lang == 2) {
             header_Text.setText("HEJ VENNER!");
-            main_Text.setText("Du har valgt dansk!");
+            main_Text.setText("Gør jer klar til at lege! \n Først skal i vælge \n hvilket sprog Robert \n skal snakke:");
         }
     }
 

@@ -844,7 +844,7 @@ StartRequestRound();
 
             Toast.makeText(this, "idle", Toast.LENGTH_SHORT).show();
             TempIdle = TempFunction(RobertIdle, TempIdle);
-            PlayMusicFile(RobertIdle, TempIdle);
+            //PlayMusicFile(RobertIdle, TempIdle);
 
             NameOfPath = RobertIdle.get(TempIdle);
             String NameOfFile = NameOfPath.substring(NameOfPath.lastIndexOf("/")+1);
@@ -866,7 +866,7 @@ StartRequestRound();
             try {
 
 
-                PlayMusicFile(RobertBuildRequest);
+                //PlayMusicFile(RobertBuildRequest);
             }
             catch (Surface.OutOfResourcesException lol) {
                 //       Toast.makeText(this, "Outofressources 1", Toast.LENGTH_SHORT).show();
@@ -920,7 +920,7 @@ StartRequestRound();
             try {
 
 
-                PlayMusicFile(RobertPretendRequest);
+                //PlayMusicFile(RobertPretendRequest);
                 ItsAPretendRound = true;
             }
             catch (Surface.OutOfResourcesException lol) {

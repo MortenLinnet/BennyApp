@@ -33,12 +33,14 @@
         <activity
             android:name=".PirateEyes"
             android:screenOrientation="sensorLandscape" />
-        <activity android:name=".Settings" />
+        <activity android:name=".Settings"
+            android:screenOrientation="portrait"/>
         <activity android:name=".LoggingData" />
         <activity
             android:name=".SizeOfEyes"
             android:screenOrientation="landscape" />
-        <activity android:name=".LevelOfDifficulty" />
+        <activity android:name=".LevelOfDifficulty"
+            android:screenOrientation="portrait"/>
         <activity android:name=".OldDesign" />
         <activity
             android:name=".BennyMain"
@@ -54,7 +56,8 @@
             android:name=".Linestest"
             android:screenOrientation="sensorLandscape" />
         <activity android:name=".Oldintro" />
-        <activity android:name=".Introduction" />
+        <activity android:name=".Introduction"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ChangeMicSensitivity"></activity>
     </application>
 

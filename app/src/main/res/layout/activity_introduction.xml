@@ -91,18 +91,39 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.20"
+        android:layout_weight="1.0"
         android:layout_marginBottom="30dp">
 
         <ImageButton
-            android:id="@+id/startButton"
+            android:id="@+id/empty3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="0.4"
             android:background="@null"
-            android:onClick="startBennyMain"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/next" />
+            android:scaleType="fitCenter" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/pickbutton"
+            android:adjustViewBounds="true"
+            android:text="NEXT"
+            android:textSize="25sp"
+            android:textAlignment="center"
+            android:onClick="startBennyMain" />
+
+
+        <ImageButton
+            android:id="@+id/empty4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.4"
+            android:background="@null"
+            android:scaleType="fitCenter" />
     </LinearLayout>
 </LinearLayout>
