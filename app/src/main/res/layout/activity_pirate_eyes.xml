@@ -124,4 +124,66 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@color/white" />
 
+    <ImageButton
+        android:id="@+id/HoldToRelease"
+        android:layout_width="191dp"
+        android:layout_height="84dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/Blinkable"
+        app:layout_constraintHorizontal_bias="0.985"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.027"
+        app:srcCompat="@drawable/bennymainstartbutton" />
+
+    <ImageButton
+        android:id="@+id/HoldTchangeCharecter"
+        android:layout_width="197dp"
+        android:layout_height="84dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:alpha="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/HoldToRelease"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/bennymainstartbutton" />
+
+    <ImageButton
+        android:id="@+id/NextPersonality"
+        android:layout_width="223dp"
+        android:layout_height="86dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="180dp"
+        android:alpha="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/bennymainstartbutton" />
+
+    <ImageButton
+        android:id="@+id/PreviousPersonality"
+        android:layout_width="209dp"
+        android:layout_height="86dp"
+        android:alpha="0.2"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="144dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/NextPersonality"
+        app:layout_constraintTop_toBottomOf="@+id/HoldToRelease"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/bennymainstartbutton" />
+
 </android.support.constraint.ConstraintLayout>

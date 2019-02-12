@@ -62,7 +62,7 @@ public class BennyMain extends AppCompatActivity {
     Animation fade;
     ImageButton prev;
     ImageButton next;
-    TextView heading;
+    TextView charectername;
     ImageView CurrentImageview;
     ImageView NextImageview;
 
@@ -101,10 +101,11 @@ public class BennyMain extends AppCompatActivity {
 
         next = findViewById(R.id.nextbuttton);
         prev = findViewById(R.id.BackButton);
-        heading = findViewById(R.id.CharecterTexxtview);
+        charectername = findViewById(R.id.CharecterTexxtview);
         playModeText = (TextView) findViewById(R.id.playButton);
         playModeText.setTypeface(bold_font);
-        heading.setTypeface(bold_font);
+        charectername.setTypeface(bold_font);
+        charectername.setText(Benny);
 
 
         ChoosePersonality = findViewById(R.id.ChoosePersonality);
@@ -446,8 +447,8 @@ int debugtime= 1;
     public void currentImage() {
 
         Button playB = (Button) findViewById(R.id.playButton);
-        TextView charectername = findViewById(R.id.CharecterTexxtview);
-        if (id > 3) {
+
+       if (id > 3) {
             id = 1;
         }
 
@@ -794,6 +795,11 @@ int debugtime= 1;
 
     public void info(View view) {
 
+        Intent i = new Intent(this, Introduction.class);
+        startActivity(i);
+
+
+        /*
         String StringBenny1 = null;
         String StringBenny2 = null;
         String StringBenny3 = null;
@@ -843,7 +849,7 @@ int debugtime= 1;
                 startActivity(i);
          break;
         }
-
+*/
 
 
 
