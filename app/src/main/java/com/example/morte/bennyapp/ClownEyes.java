@@ -240,6 +240,9 @@ public class ClownEyes extends AppCompatActivity {
     int TempBaffeledOjne;
     //Hvilket nummer af ojne i arrays der senest er blevet brugt
 
+ImageButton nextPersonalityButton;
+ImageButton PrevioisPersonalityButton;
+
     ImageButton HoldtoChangeCharecter;
     Long downcharecter, upcharecter;
 
@@ -343,7 +346,7 @@ public class ClownEyes extends AppCompatActivity {
 
                 }
                 else {
-                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
+                    String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.klovnblinkerbeggeojne;
                     Uri uriLang =Uri.parse(PathToBennyEyes);
                     OjneView.setVideoURI(uriLang);
                     OjneView.start();
@@ -370,7 +373,7 @@ public class ClownEyes extends AppCompatActivity {
                     case MotionEvent.ACTION_UP :
                    //     Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
                         up=System.currentTimeMillis();
-                        if(up-down>3000){
+                        if(up-down>5000){
                       //      Toast.makeText(ClownEyes.this, "More than 3", Toast.LENGTH_SHORT).show();
                             //   FeedbackCoolDownCountdowntimer.cancel();
                             if (RequestNotActiveCountdownTimer != null) {
@@ -406,10 +409,11 @@ public class ClownEyes extends AppCompatActivity {
                     case MotionEvent.ACTION_UP :
                      //   Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
                         upcharecter=System.currentTimeMillis();
-                        if(upcharecter-downcharecter>3000){
+                        if(upcharecter-downcharecter>5000){
                             if (!IsStopped) {
+
                                 StopBenny();
-                                Toast.makeText(ClownEyes.this, "Stopped", Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(ClownEyes.this, "Stopped", Toast.LENGTH_SHORT).show();
                                 IsStopped= true;
                             }
                             else if (IsStopped){
@@ -420,7 +424,7 @@ public class ClownEyes extends AppCompatActivity {
 
 
                                 PresentBenny();
-                                Toast.makeText(ClownEyes.this, "Restarted", Toast.LENGTH_SHORT).show();
+                          //      Toast.makeText(ClownEyes.this, "Restarted", Toast.LENGTH_SHORT).show();
 
                                 IsThisFirstTime = 0;
                                 IsStopped=false;
@@ -435,7 +439,72 @@ public class ClownEyes extends AppCompatActivity {
 
         });
 
-        Toast.makeText(this, "Morten værdien er: " + Sensitivity, Toast.LENGTH_SHORT).show();
+        PrevioisPersonalityButton = findViewById(R.id.PreviousPersonality);
+        PrevioisPersonalityButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN :
+                        //      Toast.makeText(ClownEyes.this, "Down", Toast.LENGTH_SHORT).show();
+                        downcharecter=System.currentTimeMillis();
+                        break;
+                    case MotionEvent.ACTION_UP :
+                        //   Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
+                        upcharecter=System.currentTimeMillis();
+                        if(upcharecter-downcharecter>5000){
+
+
+                                Intent i = new Intent(ClownEyes.this, PirateEyes.class);
+                                startActivityForResult(i,1);
+
+
+
+
+                                //      StopBenny();
+                                //    Toast.makeText(ClownEyes.this, "Stopped", Toast.LENGTH_SHORT).show();
+                                //  IsStopped= true;
+
+
+                        }
+                        return true;
+                }
+                return false;
+            }
+
+
+        });
+
+        nextPersonalityButton = findViewById(R.id.NextPersonality);
+        nextPersonalityButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN :
+                        //      Toast.makeText(ClownEyes.this, "Down", Toast.LENGTH_SHORT).show();
+                        downcharecter=System.currentTimeMillis();
+                        break;
+                    case MotionEvent.ACTION_UP :
+                        //   Toast.makeText(ClownEyes.this, "Up", Toast.LENGTH_SHORT).show();
+                        upcharecter=System.currentTimeMillis();
+                        if(upcharecter-downcharecter>5000){
+
+
+                                Intent i = new Intent(ClownEyes.this, BennyEyes.class);
+                                startActivityForResult(i,1);
+
+                                //      StopBenny();
+                                //    Toast.makeText(ClownEyes.this, "Stopped", Toast.LENGTH_SHORT).show();
+                                //  IsStopped= true;
+
+
+                        }
+                        return true;
+                }
+                return false;
+            }
+
+
+        });
 
     }
 
@@ -685,10 +754,31 @@ catch (IndexOutOfBoundsException e){
     @Override
     protected void onPause() {
 
-        if (mediaPlayer != null){
-            mediaPlayer.stop();
-            mediaPlayer.release();
+        if (RequestNotActiveCountdownTimer != null) {
+            RequestNotActiveCountdownTimer.cancel();
+
         }
+        if (SuperRequestTidCountdownTimer != null) {
+            SuperRequestTidCountdownTimer.cancel();
+        }
+
+        if (IdleModeCountdowntimer != null){
+            IdleModeCountdowntimer.cancel();
+        }
+
+        //  SuperRequestTidCountdownTimer.cancel();
+        //mediaPlayer.stop();
+        //mediaPlayer.release();
+        StopPlayer();
+        //NyMp.stop();
+        //NyMp.release();
+        //   Toast.makeText(this, "", Toast.LENGTH_SHORT).cancel();
+        // Log.i("Noise", "==== onStop ===");
+        //Stop noise monitoring
+        stop();
+finish();
+
+
 
         super.onPause();
     }
@@ -1330,6 +1420,9 @@ if (IsThisFirstTime != 0){
     OjneView.start();
 
 }
+else{
+
+}
 
 
     }
@@ -1656,7 +1749,8 @@ if (TimeLeftInMillisSuperRequestTime > 21000 && TimeLeftInMillisSuperRequestTime
 
         }
         else {
-            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.blinkerbeggeojne;
+            String PathToBennyEyes =   "android.resource://com.example.morte.bennyapp/" + R.raw.klovnblinkerbeggeojne;
+
             Uri uriLang =Uri.parse(PathToBennyEyes);
             OjneView.setVideoURI(uriLang);
             OjneView.start();
